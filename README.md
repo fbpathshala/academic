@@ -26,7 +26,7 @@ The project uses Supabase project `ydvbnalhcnfqpxkkmywr` with separate `academic
 
 ## Important setup still required
 
-1. Create/confirm the first Supabase Auth account and add its UUID to `public.academic_care_admins`. Until this is done, nobody should be able to enter the admin dashboard.
+1. The existing project's `super_admin` account has been copied into `public.academic_care_admins`; sign in to the admin dashboard with that account's existing Supabase Auth email and password.
 2. The repository now includes a GitHub Pages deployment workflow. Enable GitHub Pages with GitHub Actions as the source in repository Settings, then verify the published URL.
 3. Test a full published exam on mobile, including timer expiry, MCQ grading, typed CQ, photo upload, and private-result handling.
 4. Confirm the required result visibility and thank-you text per exam before production use.
