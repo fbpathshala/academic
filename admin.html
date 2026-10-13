@@ -120,7 +120,7 @@
 const SUPABASE_URL="https://ydvbnalhcnfqpxkkmywr.supabase.co";
 const SUPABASE_KEY="sb_publishable_xCbSWDkASsbUPl-WmygyMw_eVrJY_9a";
 const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-const bnDigits=n=>String(n).replace(/\\d/g,d=>"০১২৩৪৫৬৭৮৯"[Number(d)]);
+const bnDigits=n=>String(n).replace(/\d/g,d=>"০১২৩৪৫৬৭৮৯"[Number(d)]);
 const exams=[],materials=[];
 const titles={home:"ড্যাশবোর্ড",exams:"পরীক্ষা পরিচালনা",materials:"স্টাডি ম্যাটেরিয়াল",settings:"সিস্টেম সেটআপ"};
 const gate=document.getElementById("loginGate"),shell=document.querySelector(".shell"),authMessage=document.getElementById("authMessage");
