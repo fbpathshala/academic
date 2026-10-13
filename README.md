@@ -1,24 +1,39 @@
 # Academic Care
 
-Academic Care is a focused academic platform for students, combining:
-
+Academic Care is a focused learning platform for:
 - MCQ exams with a timer and automatic grading
-- CQ/written exams with both typed answers and answer-sheet photo uploads
-- Study materials such as PDFs, images, and notes
-- A simple administration dashboard for managing exams and materials
+- CQ/written exams with typed answers or answer-sheet photo uploads
+- Public study materials such as PDFs, images, and notes
+- A separate administrator dashboard for exams, questions, and materials
 
-## Access and privacy
+## Pages
 
-Published exams and study materials should be publicly accessible to students. Administrative controls and student submissions, identity details, and private result data must be protected by server-side authorization. Do not place service-role keys, database passwords, or other secrets in frontend files.
+- Public landing page: `index.html`
+- Student experience: `student.html`
+- Admin dashboard: `admin.html`
 
-## Current status
+## Backend
 
-The initial `index.html` is only a public landing-page scaffold. Exam delivery, answer submissions, results, file storage, authentication/authorization, and admin workflows are not implemented yet.
+The project uses Supabase project `ydvbnalhcnfqpxkkmywr` with separate `academic_care_*` tables. Legacy MCQ Exam tables are not used by this project.
 
-## Planned implementation
+- Admin authentication uses Supabase Auth plus the server-side `academic_care_is_admin()` check.
+- Published exams/materials can be read publicly; drafts remain private.
+- Answer keys are stored separately from question text.
+- Student submissions are written through `academic_care_submit_exam()`; submissions are not directly readable by anonymous visitors.
+- Study-material files are in the public `academic-care-materials` bucket.
+- Answer-sheet images are stored in the private `academic-care-answers` bucket; only authorized admins can read them.
+- The frontend contains only the Supabase publishable key. Never put a service-role key or database password in browser code.
 
-1. Choose and configure a secure backend/database and file storage.
-2. Build the admin workflow for creating and publishing MCQ and CQ exams and study materials.
-3. Implement student exam flows, including typed CQ answers and photo uploads.
-4. Implement grading/results with per-exam settings.
-5. Test privacy, mobile usability, and the complete student flow before public launch.
+## Important setup still required
+
+1. Create/confirm the first Supabase Auth account and add its UUID to `public.academic_care_admins`. Until this is done, nobody should be able to enter the admin dashboard.
+2. Enable/deploy the site (for example with GitHub Pages or another static host) and configure the correct public URL.
+3. Test a full published exam on mobile, including timer expiry, MCQ grading, typed CQ, photo upload, and private-result handling.
+4. Confirm the required result visibility and thank-you text per exam before production use.
+
+## Current implementation limits
+
+- The admin dashboard can create exams, add MCQ/CQ questions, save answer keys, and upload material files. It uses the database, not temporary browser arrays.
+- The student page lists published exams/materials, starts a timed exam, submits MCQ answers and CQ text/photo, and shows a submission receipt.
+- The UI does not yet include all advanced per-exam settings, result/position display controls, or a polished admin review/marking interface for CQ answers.
+- A hosting URL and first-admin account still need owner-side configuration. Do not describe the project as fully production-tested until the end-to-end checks are complete.
