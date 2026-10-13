@@ -4,37 +4,41 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#155e75">
-  <title>Academic Care | একাডেমিক প্ল্যাটফর্ম</title>
+  <title>Academic Care | পড়াশোনা ও পরীক্ষা</title>
   <style>
-    :root{font-family:system-ui,-apple-system,"Noto Sans Bengali",sans-serif;color:#163047;background:#f4f8fb}
-    *{box-sizing:border-box}body{margin:0}header{background:#fff;border-bottom:1px solid #dce7ee}
-    .nav{max-width:1080px;margin:auto;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px}
-    .brand{font-size:1.15rem;font-weight:800;color:#155e75}.tag{font-size:.86rem;color:#5c7180}
-    main{max-width:1080px;margin:auto;padding:32px 20px 56px}.hero{background:linear-gradient(135deg,#155e75,#0f766e);color:white;border-radius:22px;padding:32px;box-shadow:0 12px 30px #155e7520}
-    h1{font-size:clamp(1.8rem,5vw,2.7rem);line-height:1.25;margin:0 0 12px}.hero p{max-width:650px;line-height:1.8;margin:0;color:#e6fffb}
-    .section-title{margin:30px 0 14px;font-size:1.35rem}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px}
-    .card{background:white;border:1px solid #dce7ee;border-radius:16px;padding:22px}.icon{font-size:1.8rem}.card h3{margin:10px 0 8px}.card p{color:#617482;line-height:1.7;margin:0 0 16px}
-    .button{display:inline-block;border:0;border-radius:10px;padding:11px 15px;background:#155e75;color:#fff;text-decoration:none;font:inherit;font-weight:700;cursor:pointer}
-    .button.secondary{background:#e6f4f5;color:#155e75}.note{margin-top:20px;padding:14px 16px;background:#fff8e6;border:1px solid #f2dfaa;border-radius:12px;color:#725b24;line-height:1.65}
-    footer{text-align:center;padding:20px;color:#71818d;font-size:.9rem}
+    :root{font-family:system-ui,-apple-system,"Noto Sans Bengali",sans-serif;color:#183447;background:#f3f7fa;--teal:#155e75;--line:#dce7ed;--muted:#637987}
+    *{box-sizing:border-box}body{margin:0}header{background:#fff;border-bottom:1px solid var(--line)}.nav{max-width:1080px;margin:auto;padding:15px 20px;display:flex;justify-content:space-between;align-items:center;gap:12px}.brand{font-weight:850;color:var(--teal);font-size:1.12rem}.nav a{color:var(--teal);text-decoration:none;font-weight:700;font-size:.92rem}
+    main{max-width:1080px;margin:auto;padding:28px 20px 52px}.hero{padding:clamp(24px,4vw,38px);border-radius:22px;background:linear-gradient(125deg,#155e75,#0f766e);color:white}.hero h1{font-size:clamp(1.8rem,5vw,2.65rem);line-height:1.25;margin:0 0 12px}.hero p{line-height:1.8;max-width:720px;margin:0;color:#e4fffb}
+    .heading{margin:30px 0 13px;font-size:1.35rem}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}.card{background:#fff;border:1px solid var(--line);border-radius:17px;padding:22px;display:flex;flex-direction:column;align-items:flex-start;min-height:245px}.icon{font-size:2rem}.card h2{font-size:1.22rem;margin:12px 0 8px}.card p{margin:0 0 18px;color:var(--muted);line-height:1.7;flex:1}.button{display:inline-block;border:0;border-radius:10px;padding:11px 15px;background:var(--teal);color:white;text-decoration:none;font:inherit;font-weight:750;cursor:pointer}.button.alt{background:#e6f4f5;color:var(--teal)}.status{display:inline-block;margin-top:3px;padding:5px 9px;border-radius:999px;background:#e4f5ed;color:#176b50;font-size:.78rem;font-weight:750}
+    .admin{margin-top:20px;background:white;border:1px solid var(--line);border-radius:14px;padding:17px 19px;display:flex;justify-content:space-between;align-items:center;gap:16px}.admin p{margin:4px 0 0;color:var(--muted);line-height:1.6;font-size:.92rem}footer{text-align:center;padding:22px;color:#71818d;font-size:.9rem}
+    @media(max-width:520px){.nav{align-items:flex-start}.nav a{font-size:.82rem}.admin{align-items:flex-start;flex-direction:column}}
   </style>
 </head>
 <body>
-<header><div class="nav"><div class="brand">🎓 Academic Care</div><div class="tag">পরীক্ষা ও স্টাডি ম্যাটেরিয়াল</div></div></header>
+<header><div class="nav"><div class="brand">🎓 Academic Care</div><a href="admin.html">অ্যাডমিন লগইন ↗</a></div></header>
 <main>
   <section class="hero">
-    <h1>শেখা, অনুশীলন ও মূল্যায়ন—এক জায়গায়</h1>
-    <p>একাডেমিক শিক্ষার্থীদের জন্য MCQ ও CQ পরীক্ষা এবং প্রয়োজনীয় স্টাডি ম্যাটেরিয়াল সহজে খুঁজে পাওয়ার একটি প্ল্যাটফর্ম। প্রকাশিত কনটেন্ট সবার জন্য উন্মুক্ত থাকবে।</p>
+    <h1>পড়াশোনা, অনুশীলন ও মূল্যায়ন—এক জায়গায়</h1>
+    <p>পরীক্ষা দিন, বিষয়ভিত্তিক শিক্ষাসামগ্রী পড়ুন এবং প্রয়োজনীয় নোট ও PDF খুঁজে নিন। প্রকাশিত কনটেন্ট শিক্ষার্থীরা সরাসরি ব্যবহার করতে পারবে।</p>
   </section>
-  <h2 class="section-title">আপনি কী করতে চান?</h2>
+  <h2 class="heading">আপনার প্রয়োজনীয় বিভাগ বেছে নিন</h2>
   <section class="grid">
-    <article class="card"><div class="icon">📝</div><h3>পরীক্ষা দিন</h3><p>প্রকাশিত MCQ ও CQ পরীক্ষার তালিকা এখানে দেখা যাবে।</p><button class="button" type="button" onclick="location.href='student.html'">পরীক্ষা দেখুন</button></article>
-    <article class="card"><div class="icon">📚</div><h3>স্টাডি ম্যাটেরিয়াল</h3><p>PDF, নোট, ছবি ও অন্যান্য শিক্ষাসামগ্রী বিষয়ভিত্তিকভাবে সাজানো থাকবে।</p><button class="button secondary" type="button" onclick="location.href='student.html#materials'">ম্যাটেরিয়াল দেখুন</button></article>
-    <article class="card"><div class="icon">✍️</div><h3>CQ উত্তর জমা</h3><p>পরীক্ষা অনুযায়ী ওয়েবসাইটে লিখে অথবা উত্তরপত্রের ছবি আপলোড করে জমা দেওয়া যাবে।</p><button class="button secondary" type="button" onclick="location.href='student.html'">জমা দেওয়ার পদ্ধতি</button></article>
+    <article class="card">
+      <div class="icon">📚</div><h2>স্টাডি মেটেরিয়াল</h2><span class="status">চালু</span>
+      <p>প্রকাশিত নোট, PDF, ছবি ও অন্যান্য পড়ার উপকরণ দেখুন। নতুন উপকরণ অ্যাডমিন ড্যাশবোর্ড থেকে যোগ ও প্রকাশ করা যাবে।</p>
+      <a class="button alt" href="student.html#materials">মেটেরিয়াল দেখুন</a>
+    </article>
+    <article class="card">
+      <div class="icon">📝</div><h2>একাডেমিক কেয়ার</h2><span class="status">চালু</span>
+      <p>প্রকাশিত MCQ, CQ এবং MCQ + CQ পরীক্ষা দিন। CQ উত্তরের জন্য লিখিত উত্তর জমা দেওয়ার সুবিধাও রয়েছে।</p>
+      <a class="button" href="student.html">পরীক্ষার তালিকা দেখুন</a>
+    </article>
   </section>
-  <div class="note">প্রকাশিত পরীক্ষা ও স্টাডি ম্যাটেরিয়াল দেখতে উপরের বাটন ব্যবহার করুন। অ্যাডমিন প্যানেল আলাদা লগইন-সুরক্ষিত পৃষ্ঠায় রয়েছে।</div>
+  <section class="admin">
+    <div><strong>কনটেন্ট ও পরীক্ষা পরিচালনা</strong><p>পরীক্ষা তৈরি, প্রশ্ন যোগ, ফলাফলের সেটিংস, উত্তর মূল্যায়ন এবং স্টাডি মেটেরিয়াল পরিচালনা করুন।</p></div>
+    <a class="button alt" href="admin.html">ড্যাশবোর্ড খুলুন</a>
+  </section>
 </main>
 <footer>Academic Care · শিক্ষা সবার জন্য</footer>
-<script>function notice(message){window.alert(message)}</script>
 </body>
 </html>
