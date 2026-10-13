@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="bn">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#155e75">
+  <title>Academic Care — Admin Dashboard</title>
+  <style>
+    :root{font-family:system-ui,-apple-system,"Noto Sans Bengali",sans-serif;color:#193449;background:#f3f7fa;--teal:#155e75;--line:#dce6ec;--muted:#667987}
+    *{box-sizing:border-box}body{margin:0}button,input,select,textarea{font:inherit}button{cursor:pointer}
+    .shell{display:grid;grid-template-columns:245px 1fr;min-height:100vh}.side{background:#123b4a;color:#e8f5f7;padding:24px 16px}.brand{font-weight:800;font-size:1.2rem;padding:0 10px 26px}.navlabel{font-size:.78rem;color:#a9c7cf;margin:14px 10px 8px}.navbtn{display:block;width:100%;text-align:left;color:#e8f5f7;background:transparent;border:0;padding:12px 13px;border-radius:10px;margin:3px 0}.navbtn.active,.navbtn:hover{background:#23576a}.side small{display:block;color:#b7d0d7;line-height:1.6;margin:28px 10px}
+    main{min-width:0;padding:26px clamp(16px,3vw,36px) 50px}.top{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:24px}.top h1{font-size:1.65rem;margin:0 0 5px}.muted{color:var(--muted);font-size:.92rem}.pill{background:#e1f3ef;color:#146b5b;border-radius:999px;padding:7px 11px;font-size:.8rem;font-weight:700}
+    .hero{background:linear-gradient(120deg,#155e75,#0f766e);border-radius:18px;padding:24px;color:white;margin-bottom:22px}.hero h2{margin:0 0 8px;font-size:1.4rem}.hero p{margin:0;line-height:1.7;color:#e3fffa}
+    .stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-bottom:24px}.stat,.panel,.quick{background:white;border:1px solid var(--line);border-radius:15px;padding:18px}.stat span{font-size:.88rem;color:var(--muted)}.stat strong{display:block;font-size:1.8rem;margin-top:8px}.sectionhead{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:22px 0 12px}.sectionhead h2{font-size:1.15rem;margin:0}.quickgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.quick .emoji{font-size:1.7rem}.quick h3{margin:10px 0 6px;font-size:1.02rem}.quick p{font-size:.88rem;color:var(--muted);line-height:1.6;min-height:44px;margin:0 0 15px}
+    .btn{border:0;background:var(--teal);color:white;border-radius:9px;padding:10px 13px;font-weight:700}.btn.light{background:#e7f3f5;color:var(--teal)}.btn.ghost{background:#f0f4f6;color:#35505f}.btnrow{display:flex;flex-wrap:wrap;gap:9px}.status{padding:13px 15px;background:#fff8e7;border:1px solid #f1dfa8;color:#715b26;border-radius:12px;line-height:1.65;margin-top:18px}
+    .view{display:none}.view.active{display:block}.formgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.field{display:flex;flex-direction:column;gap:6px}.field.full{grid-column:1/-1}.field label{font-weight:650;font-size:.9rem}.field input,.field select,.field textarea{width:100%;padding:11px 12px;border:1px solid #ccd9e1;border-radius:9px;background:white;color:#193449}.field textarea{min-height:90px;resize:vertical}.notice{padding:12px 14px;border-radius:10px;background:#eef6f8;color:#285565;line-height:1.6;margin-bottom:14px}.listempty{text-align:center;padding:28px;color:var(--muted)}.item{padding:13px 0;border-bottom:1px solid var(--line)}.item:last-child{border-bottom:0}.item strong{display:block;margin-bottom:4px}
+    @media(max-width:800px){.shell{grid-template-columns:1fr}.side{padding:14px}.brand{padding:0 8px 12px}.navlabel,.side small{display:none}.navlinks{display:flex;overflow:auto;gap:5px}.navbtn{width:auto;white-space:nowrap;margin:0;padding:9px 12px}.stats{grid-template-columns:repeat(3,minmax(0,1fr))}.quickgrid{grid-template-columns:1fr}.quick p{min-height:0}.top{align-items:flex-start}.formgrid{grid-template-columns:1fr}.field.full{grid-column:auto}}@media(max-width:430px){.stats{grid-template-columns:1fr}.stat{padding:14px}.stat strong{font-size:1.45rem}.top{flex-direction:column}.hero{padding:20px}}
+  </style>
+</head>
+<body>
+<div class="shell">
+  <aside class="side">
+    <div class="brand">🎓 Academic Care</div>
+    <div class="navlabel">অ্যাডমিন মেনু</div>
+    <nav class="navlinks">
+      <button class="navbtn active" data-view="home">▦ ড্যাশবোর্ড</button>
+      <button class="navbtn" data-view="exams">▣ পরীক্ষা পরিচালনা</button>
+      <button class="navbtn" data-view="materials">▤ স্টাডি ম্যাটেরিয়াল</button>
+      <button class="navbtn" data-view="settings">⚙ সেটআপ নোট</button>
+    </nav>
+    <small>Academic Care<br>MCQ · CQ · Study Materials</small>
+  </aside>
+  <main>
+    <header class="top"><div><h1 id="pageTitle">ড্যাশবোর্ড</h1><div class="muted">পরীক্ষা ও শিক্ষাসামগ্রী পরিচালনার কেন্দ্র</div></div><span class="pill">প্রাথমিক ডেমো</span></header>
+    <section id="home" class="view active">
+      <div class="hero"><h2>স্বাগতম Academic Care-এ</h2><p>এখান থেকে MCQ ও CQ পরীক্ষার পরিকল্পনা এবং স্টাডি ম্যাটেরিয়াল প্রকাশের কাজ সাজানো যাবে। এই সংস্করণটি ইন্টারফেসের প্রাথমিক ডেমো; ডেটা এখনো সার্ভারে সংরক্ষিত হয় না।</p></div>
+      <div class="stats">
+        <div class="stat"><span>তৈরি করা পরীক্ষা</span><strong id="examCount">০</strong></div>
+        <div class="stat"><span>স্টাডি ম্যাটেরিয়াল</span><strong id="materialCount">০</strong></div>
+        <div class="stat"><span>প্রকাশিত আইটেম</span><strong id="publishedCount">০</strong></div>
+      </div>
+      <div class="sectionhead"><h2>দ্রুত কাজ</h2></div>
+      <div class="quickgrid">
+        <article class="quick"><div class="emoji">📝</div><h3>নতুন পরীক্ষা পরিকল্পনা</h3><p>MCQ অথবা CQ পরীক্ষার শিরোনাম ও মৌলিক সেটিংস নির্ধারণ করুন।</p><button class="btn" data-go="exams">পরীক্ষা তৈরি</button></article>
+        <article class="quick"><div class="emoji">📚</div><h3>স্টাডি ম্যাটেরিয়াল যোগ</h3><p>PDF, নোট, ছবি বা অন্য শিক্ষাসামগ্রীর বিবরণ তৈরি করুন।</p><button class="btn" data-go="materials">ম্যাটেরিয়াল যোগ</button></article>
+        <article class="quick"><div class="emoji">🔐</div><h3>সিস্টেম প্রস্তুতি</h3><p>পাবলিক অ্যাক্সেস ও ব্যক্তিগত ডেটার সুরক্ষার জন্য প্রয়োজনীয় বিষয় দেখুন।</p><button class="btn light" data-go="settings">সেটআপ দেখুন</button></article>
+      </div>
+      <div class="status"><strong>গুরুত্বপূর্ণ:</strong> এই ড্যাশবোর্ড এখনো নিরাপদ অ্যাডমিন লগইন, ডেটাবেস, ফাইল আপলোড বা আসল পরীক্ষা প্রকাশের সঙ্গে যুক্ত নয়।</div>
+    </section>
+    <section id="exams" class="view">
+      <div class="panel">
+        <div class="sectionhead"><h2>পরীক্ষার খসড়া পরিকল্পনা</h2></div>
+        <div class="notice">এই ফর্মটি শুধু ব্রাউজারে ডেমো তালিকা তৈরি করে। বাস্তব পরীক্ষা প্রকাশ বা শিক্ষার্থীর উত্তর নেওয়ার আগে নিরাপদ ব্যাকএন্ড যুক্ত করতে হবে।</div>
+        <form id="examForm" class="formgrid">
+          <div class="field"><label for="examTitle">পরীক্ষার নাম</label><input id="examTitle" required placeholder="যেমন: বাংলা মডেল টেস্ট"></div>
+          <div class="field"><label for="examType">পরীক্ষার ধরন</label><select id="examType"><option value="MCQ">MCQ — স্বয়ংক্রিয় মূল্যায়ন</option><option value="CQ">CQ — লিখিত পরীক্ষা</option><option value="MCQ + CQ">MCQ + CQ</option></select></div>
+          <div class="field"><label for="examDuration">সময় (মিনিট)</label><input id="examDuration" type="number" min="1" value="30" required></div>
+          <div class="field"><label for="examVisibility">পরিকল্পনার অবস্থা</label><select id="examVisibility"><option value="খসড়া">খসড়া</option><option value="প্রকাশের জন্য প্রস্তুত">প্রকাশের জন্য প্রস্তুত</option></select></div>
+          <div class="field full"><label for="examNotes">নোট (ঐচ্ছিক)</label><textarea id="examNotes" placeholder="বিষয়, শ্রেণি বা প্রস্তুতি-সংক্রান্ত নোট"></textarea></div>
+          <div class="field full"><div class="btnrow"><button class="btn" type="submit">খসড়া যোগ করুন</button><button class="btn ghost" type="reset">ফর্ম পরিষ্কার</button></div></div>
+        </form>
+      </div>
+      <div class="sectionhead"><h2>এই সেশনের খসড়া</h2><span class="muted" id="examListCount">০টি</span></div>
+      <div class="panel" id="examList"><div class="listempty">এখনো কোনো খসড়া যোগ করা হয়নি।</div></div>
+    </section>
+    <section id="materials" class="view">
+      <div class="panel">
+        <div class="sectionhead"><h2>স্টাডি ম্যাটেরিয়ালের খসড়া</h2></div>
+        <div class="notice">এখানে শুধু উপকরণের বিবরণ রাখা হবে, ফাইল আপলোড নয়। বাস্তব ফাইল সংরক্ষণ ও পাবলিক লিংকের জন্য নিরাপদ স্টোরেজ যুক্ত করা বাকি।</div>
+        <form id="materialForm" class="formgrid">
+          <div class="field"><label for="materialTitle">ম্যাটেরিয়ালের নাম</label><input id="materialTitle" required placeholder="যেমন: অধ্যায় ১-এর নোট"></div>
+          <div class="field"><label for="materialType">ধরন</label><select id="materialType"><option>PDF</option><option>নোট</option><option>ছবি</option><option>অন্যান্য</option></select></div>
+          <div class="field"><label for="materialSubject">বিষয় / বিভাগ</label><input id="materialSubject" placeholder="যেমন: বাংলা"></div>
+          <div class="field"><label for="materialStatus">পরিকল্পনার অবস্থা</label><select id="materialStatus"><option>খসড়া</option><option>প্রকাশের জন্য প্রস্তুত</option></select></div>
+          <div class="field full"><label for="materialNotes">বিবরণ (ঐচ্ছিক)</label><textarea id="materialNotes" placeholder="এই উপকরণে কী আছে"></textarea></div>
+          <div class="field full"><div class="btnrow"><button class="btn" type="submit">খসড়া যোগ করুন</button><button class="btn ghost" type="reset">ফর্ম পরিষ্কার</button></div></div>
+        </form>
+      </div>
+      <div class="sectionhead"><h2>এই সেশনের খসড়া</h2><span class="muted" id="materialListCount">০টি</span></div>
+      <div class="panel" id="materialList"><div class="listempty">এখনো কোনো ম্যাটেরিয়াল যোগ করা হয়নি।</div></div>
+    </section>
+    <section id="settings" class="view">
+      <div class="panel">
+        <div class="sectionhead"><h2>বাস্তব সিস্টেম চালুর আগে</h2></div>
+        <div class="item"><strong>১. অ্যাডমিন প্রবেশাধিকার</strong><div class="muted">শুধু অনুমোদিত প্রশাসক পরীক্ষা ও ম্যাটেরিয়াল পরিচালনা করবেন। UI-তে লুকানো বাটন নিরাপত্তা নয়; সার্ভারেও অনুমতি যাচাই করতে হবে।</div></div>
+        <div class="item"><strong>২. ডেটাবেস ও পরীক্ষার লজিক</strong><div class="muted">প্রশ্ন, সময়সীমা, প্রতিটি পরীক্ষার সেটিংস, উত্তর, নম্বর ও ফলাফল নিরাপদভাবে সংরক্ষণ করতে হবে।</div></div>
+        <div class="item"><strong>৩. CQ উত্তর জমা</strong><div class="muted">শিক্ষার্থী ওয়েবসাইটে লিখতে পারবে অথবা উত্তরপত্রের ছবি আপলোড করতে পারবে। ফাইলের ধরন, আকার ও অ্যাক্সেস যাচাই প্রয়োজন।</div></div>
+        <div class="item"><strong>৪. পাবলিক কনটেন্ট</strong><div class="muted">প্রকাশিত পরীক্ষা ও ম্যাটেরিয়াল সবার জন্য উন্মুক্ত থাকবে; ব্যক্তিগত উত্তরপত্র ও পরিচয়-সংক্রান্ত তথ্য পাবলিক হবে না।</div></div>
+        <div class="item"><strong>৫. প্রকাশ ও পরীক্ষা</strong><div class="muted">মোবাইলে পরীক্ষা, সময় শেষ হলে জমা, পুনরায় লোড, ফলাফল দেখানোর নিয়ম এবং ব্যাকআপ যাচাই করতে হবে।</div></div>
+      </div>
+    </section>
+  </main>
+</div>
+<script>
+const bnDigits=n=>String(n).replace(/\d/g,d=>"০১২৩৪৫৬৭৮৯"[Number(d)]);
+const exams=[], materials=[];
+const titles={home:"ড্যাশবোর্ড",exams:"পরীক্ষা পরিচালনা",materials:"স্টাডি ম্যাটেরিয়াল",settings:"সিস্টেম সেটআপ"};
+function showView(id){document.querySelectorAll(".view").forEach(v=>v.classList.toggle("active",v.id===id));document.querySelectorAll("[data-view]").forEach(b=>b.classList.toggle("active",b.dataset.view===id));document.getElementById("pageTitle").textContent=titles[id]||"ড্যাশবোর্ড";window.scrollTo({top:0,behavior:"smooth"})}
+document.querySelectorAll("[data-view]").forEach(b=>b.addEventListener("click",()=>showView(b.dataset.view)));
+document.querySelectorAll("[data-go]").forEach(b=>b.addEventListener("click",()=>showView(b.dataset.go)));
+function renderItems(arr,elId,countId,kind){const el=document.getElementById(elId);document.getElementById(countId).textContent=bnDigits(arr.length)+"টি";if(!arr.length){el.innerHTML='<div class="listempty">এখনো কোনো খসড়া যোগ করা হয়নি।</div>';return}el.innerHTML=arr.map((x,i)=>'<div class="item"><strong>'+escapeHtml(x.title)+'</strong><div class="muted">'+escapeHtml(x.meta)+' · '+escapeHtml(x.status)+'</div>'+(x.notes?'<p class="muted">'+escapeHtml(x.notes)+'</p>':'')+'<div style="margin-top:10px"><button class="btn ghost" data-remove="'+kind+'" data-index="'+i+'">খসড়া মুছুন</button></div></div>').join("")}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function updateCounts(){document.getElementById("examCount").textContent=bnDigits(exams.length);document.getElementById("materialCount").textContent=bnDigits(materials.length);document.getElementById("publishedCount").textContent=bnDigits([...exams,...materials].filter(x=>x.status==="প্রকাশের জন্য প্রস্তুত").length)}
+document.getElementById("examForm").addEventListener("submit",e=>{e.preventDefault();exams.push({title:document.getElementById("examTitle").value.trim(),meta:document.getElementById("examType").value+" · "+bnDigits(document.getElementById("examDuration").value)+" মিনিট",status:document.getElementById("examVisibility").value,notes:document.getElementById("examNotes").value.trim()});e.target.reset();document.getElementById("examDuration").value=30;renderItems(exams,"examList","examListCount","exam");updateCounts()});
+document.getElementById("materialForm").addEventListener("submit",e=>{e.preventDefault();materials.push({title:document.getElementById("materialTitle").value.trim(),meta:document.getElementById("materialType").value+" · "+(document.getElementById("materialSubject").value.trim()||"বিষয় নির্ধারিত নয়"),status:document.getElementById("materialStatus").value,notes:document.getElementById("materialNotes").value.trim()});e.target.reset();renderItems(materials,"materialList","materialListCount","material");updateCounts()});
+document.addEventListener("click",e=>{const b=e.target.closest("[data-remove]");if(!b)return;const arr=b.dataset.remove==="exam"?exams:materials;arr.splice(Number(b.dataset.index),1);if(b.dataset.remove==="exam")renderItems(exams,"examList","examListCount","exam");else renderItems(materials,"materialList","materialListCount","material");updateCounts()});
+</script>
+</body>
+</html>
