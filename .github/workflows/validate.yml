@@ -1,0 +1,72 @@
+name: Validate Academic Care static site
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Check required pages, local links, and inline JavaScript
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re, subprocess, tempfile, sys
+
+          root = Path(".")
+          pages = [Path("index.html"), Path("student.html"), Path("admin.html")]
+          errors = []
+          for page in pages:
+              if not page.is_file():
+                  errors.append(f"Required page is missing: {page}")
+
+          if errors:
+              print("\n".join(errors))
+              sys.exit(1)
+
+          for page in pages:
+              text = page.read_text(encoding="utf-8")
+              # Check file-based href/src targets. Ignore external URLs, in-page anchors,
+              # data URLs, mailto links, and JavaScript URLs.
+              for attr, target in re.findall(r'\b(href|src)\s*=\s*["\']([^"\']+)["\']', text, re.I):
+                  target = target.strip()
+                  if (not target or target.startswith(("#", "http://", "https://", "//", "data:", "mailto:", "javascript:"))):
+                      continue
+                  path = target.split("#", 1)[0].split("?", 1)[0]
+                  if path and not (page.parent / path).is_file():
+                      errors.append(f"{page}: local {attr} target does not exist: {target}")
+
+              # Parse every inline script with Node to catch JavaScript syntax errors.
+              for index, match in enumerate(re.finditer(r'<script\b([^>]*)>(.*?)</script\s*>', text, re.I | re.S), 1):
+                  attrs, script = match.group(1), match.group(2)
+                  if re.search(r'\bsrc\s*=', attrs, re.I) or not script.strip():
+                      continue
+                  with tempfile.NamedTemporaryFile("w", suffix=".js", encoding="utf-8", delete=False) as f:
+                      f.write(script)
+                      filename = f.name
+                  result = subprocess.run(["node", "--check", filename], text=True, capture_output=True)
+                  Path(filename).unlink(missing_ok=True)
+                  if result.returncode:
+                      errors.append(f"{page}: inline script #{index} has a syntax error:\n{result.stderr.strip()}")
+
+          if errors:
+              print("Academic Care validation failed:")
+              print("\n".join(errors))
+              sys.exit(1)
+
+          print("Academic Care validation passed: required pages exist, local links resolve, and inline JavaScript parses.")
+          PY
