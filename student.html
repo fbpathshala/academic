@@ -23,7 +23,7 @@
 const SUPABASE_URL="https://ydvbnalhcnfqpxkkmywr.supabase.co",SUPABASE_KEY="sb_publishable_xCbSWDkASsbUPl-WmygyMw_eVrJY_9a";
 const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 const $=id=>document.getElementById(id);let currentExam=null,questions=[],deadline=0,timerHandle=null,uploadedPath=null;
-const bn=n=>String(n).replace(/\\d/g,d=>"০১২৩৪৫৬৭৮৯"[+d]);
+const bn=n=>String(n).replace(/\d/g,d=>"০১২৩৪৫৬৭৮৯"[+d]);
 function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
 function msg(s){$("message").textContent=s}
 async function loadListings(){const [e,m]=await Promise.all([sb.from("academic_care_exams").select("id,title,exam_type,duration_minutes,description,public_token,settings").eq("status","published").order("created_at",{ascending:false}),sb.from("academic_care_materials").select("id,title,material_type,subject,description,external_url,storage_path").eq("status","published").order("created_at",{ascending:false})]);if(e.error||m.error){msg("তথ্য লোড করা যায়নি। কিছুক্ষণ পর আবার চেষ্টা করুন।");return}
