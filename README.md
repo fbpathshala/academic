@@ -27,13 +27,13 @@ The project uses Supabase project `ydvbnalhcnfqpxkkmywr` with separate `academic
 ## Important setup still required
 
 1. Create/confirm the first Supabase Auth account and add its UUID to `public.academic_care_admins`. Until this is done, nobody should be able to enter the admin dashboard.
-2. Enable/deploy the site (for example with GitHub Pages or another static host) and configure the correct public URL.
+2. The repository now includes a GitHub Pages deployment workflow. Enable GitHub Pages with GitHub Actions as the source in repository Settings, then verify the published URL.
 3. Test a full published exam on mobile, including timer expiry, MCQ grading, typed CQ, photo upload, and private-result handling.
 4. Confirm the required result visibility and thank-you text per exam before production use.
 
 ## Current implementation limits
 
-- The admin dashboard can create exams, add MCQ/CQ questions, save answer keys, and upload material files. It uses the database, not temporary browser arrays.
+- The admin dashboard can create exams, add MCQ/CQ questions, save answer keys, upload material files, and change each exam’s result visibility, position display, thank-you message, and Facebook group link after creation. It uses the database, not temporary browser arrays.
 - The student page lists published exams/materials, starts a timed exam, submits MCQ answers and CQ text/photo, and shows a submission receipt.
-- The UI does not yet include all advanced per-exam settings, result/position display controls, or a polished admin review/marking interface for CQ answers.
+- A polished admin review/marking interface for CQ answers and a private answer-sheet viewing workflow are still needed. Position display is currently based on available numeric scores; CQ answers remain pending manual grading.
 - A hosting URL and first-admin account still need owner-side configuration. Do not describe the project as fully production-tested until the end-to-end checks are complete.
