@@ -20,7 +20,17 @@
   </style>
 </head>
 <body>
-<div class="shell">
+<div id="loginGate">
+  <h1>Academic Care অ্যাডমিন লগইন</h1>
+  <p class="muted">শুধু অনুমোদিত অ্যাডমিন অ্যাকাউন্ট প্রবেশ করতে পারবে।</p>
+  <form id="loginForm">
+    <div class="field"><label for="loginEmail">ইমেইল</label><input id="loginEmail" type="email" autocomplete="username" required></div>
+    <div class="field"><label for="loginPassword">পাসওয়ার্ড</label><input id="loginPassword" type="password" autocomplete="current-password" required></div>
+    <button class="btn" type="submit">নিরাপদে লগইন</button>
+    <div id="authMessage" role="status" aria-live="polite"></div>
+  </form>
+</div>
+<div class="shell" hidden>
   <aside class="side">
     <div class="brand">🎓 Academic Care</div>
     <div class="navlabel">অ্যাডমিন মেনু</div>
