@@ -33,7 +33,7 @@ The project uses Supabase project `ydvbnalhcnfqpxkkmywr` with separate `academic
 
 ## Current implementation limits
 
-- The admin dashboard can create exams, add MCQ/CQ questions, save answer keys, upload material files, and change each exam’s result visibility, position display, thank-you message, and Facebook group link after creation. It uses the database, not temporary browser arrays.
+- The admin dashboard can create exams, add MCQ/CQ questions, save answer keys, upload material files, change each exam’s result visibility, position display, thank-you message, and Facebook group link, review private submissions, open private answer-sheet images with temporary signed links, and save manual CQ marks. It uses the database, not temporary browser arrays.
 - The student page lists published exams/materials, starts a timed exam, submits MCQ answers and CQ text/photo, and shows a submission receipt.
-- A polished admin review/marking interface for CQ answers and a private answer-sheet viewing workflow are still needed. Position display is currently based on available numeric scores; CQ answers remain pending manual grading.
+- Position display is currently based on available numeric scores; CQ answers remain pending until an administrator records their marks. The full flow still needs an end-to-end live test.
 - A hosting URL and first-admin account still need owner-side configuration. Do not describe the project as fully production-tested until the end-to-end checks are complete.
