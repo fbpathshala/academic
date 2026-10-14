@@ -81,6 +81,10 @@
           <div class="field full"><label for="questionExam">পরীক্ষা নির্বাচন</label><select id="questionExam" required><option value="">প্রথমে পরীক্ষা তৈরি করুন</option></select></div>
           <div class="field"><label for="questionType">প্রশ্নের ধরন</label><select id="questionType"><option value="mcq">MCQ</option><option value="cq">CQ</option></select></div>
           <div class="field"><label for="questionMarks">নম্বর</label><input id="questionMarks" type="number" min="0" step="0.5" value="1" required></div>
+          <div class="field"><label for="questionCategory">ক্যাটাগরি</label><select id="questionCategory"><option value="">ক্যাটাগরি নির্বাচন করুন</option></select></div>
+          <div class="field"><label for="questionFolder">ফোল্ডার</label><select id="questionFolder"><option value="">ফোল্ডার নির্বাচন করুন</option></select></div>
+          <div class="field"><label for="questionSet">সেট</label><select id="questionSet"><option value="">সেট নির্বাচন করুন</option></select></div>
+          <div class="field"><label for="questionSubject">বিষয়</label><input id="questionSubject" placeholder="যেমন: বাংলা ব্যাকরণ"></div>
           <div class="field full"><label for="questionText">প্রশ্ন</label><textarea id="questionText" required></textarea></div>
           <div class="field"><label for="optionA">ক অপশন</label><input id="optionA"></div><div class="field"><label for="optionB">খ অপশন</label><input id="optionB"></div>
           <div class="field"><label for="optionC">গ অপশন</label><input id="optionC"></div><div class="field"><label for="optionD">ঘ অপশন</label><input id="optionD"></div>
@@ -105,10 +109,30 @@
       <div class="panel">
         <div class="sectionhead"><h2>প্রশ্ন ব্যাংক</h2><button class="btn light" id="refreshQuestionBank" type="button">রিফ্রেশ</button></div>
         <p class="muted">পরীক্ষায় যোগ করা প্রশ্ন এখানে স্বয়ংক্রিয়ভাবে আসবে। আপাতত প্রতিটি পরীক্ষা একটি ফোল্ডার এবং MCQ/CQ প্রশ্নের ধরন অনুযায়ী ভাগ করে দেখানো হবে।</p>
+        <div class="panel" style="margin:16px 0;background:#f5fafb">
+          <h3>ক্যাটাগরি, ফোল্ডার ও সেট ব্যবস্থাপনা</h3>
+          <p class="muted">নাম পরিবর্তন করলে প্রশ্নের সোর্সে বর্তমান নামই দেখাবে। প্রশ্ন বা সেট থাকা অবস্থায় মুছতে দেওয়া হবে না।</p>
+          <div class="formgrid">
+            <div class="field"><label for="categoryManager">ক্যাটাগরি</label><select id="categoryManager"><option value="">ক্যাটাগরি নির্বাচন</option></select></div>
+            <div class="field"><label for="newCategory">নতুন ক্যাটাগরি</label><input id="newCategory" placeholder="ক্যাটাগরির নাম"></div>
+            <div class="field full"><div class="btnrow"><button class="btn" id="createCategory" type="button">＋ ক্যাটাগরি যোগ</button><button class="btn light" id="renameCategory" type="button">✏️ ক্যাটাগরি নাম বদল</button><button class="btn ghost" id="deleteCategory" type="button">🗑️ ক্যাটাগরি মুছুন</button></div></div>
+            <div class="field"><label for="folderManager">ফোল্ডার</label><select id="folderManager"><option value="">ফোল্ডার নির্বাচন</option></select></div>
+            <div class="field"><label for="newFolder">নতুন ফোল্ডার</label><input id="newFolder" placeholder="ফোল্ডারের নাম"></div>
+            <div class="field full"><div class="btnrow"><button class="btn" id="createFolder" type="button">＋ ফোল্ডার যোগ</button><button class="btn light" id="renameFolder" type="button">✏️ ফোল্ডার নাম বদল</button><button class="btn ghost" id="deleteFolder" type="button">🗑️ ফোল্ডার মুছুন</button></div></div>
+            <div class="field"><label for="setManager">সেট</label><select id="setManager"><option value="">সেট নির্বাচন</option></select></div>
+            <div class="field"><label for="newSet">নতুন সেট</label><input id="newSet" placeholder="সেটের নাম"></div>
+            <div class="field full"><div class="btnrow"><button class="btn" id="createSet" type="button">＋ সেট যোগ</button><button class="btn light" id="renameSet" type="button">✏️ সেট নাম বদল</button><button class="btn ghost" id="deleteSet" type="button">🗑️ সেট মুছুন</button></div></div>
+            <div class="field full"><div id="categoryManagerMessage" class="notice" role="status" aria-live="polite"></div></div>
+          </div>
+        </div>
         <div class="bank-tools">
-          <input id="bankSearch" type="search" placeholder="প্রশ্ন বা পরীক্ষার নাম খুঁজুন">
+          <input id="bankSearch" type="search" placeholder="প্রশ্ন, বিষয় বা পরীক্ষার নাম খুঁজুন">
           <select id="bankExamFilter"><option value="">সব পরীক্ষা</option></select>
           <select id="bankTypeFilter"><option value="">সব ধরনের প্রশ্ন</option><option value="mcq">MCQ</option><option value="cq">CQ</option></select>
+          <select id="bankCategoryFilter"><option value="">সব ক্যাটাগরি</option></select>
+          <select id="bankFolderFilter"><option value="">সব ফোল্ডার</option></select>
+          <select id="bankSetFilter"><option value="">সব সেট</option></select>
+          <input id="bankSubjectFilter" type="search" placeholder="বিষয় দিয়ে ফিল্টার">
         </div>
         <div id="questionBankList"><div class="listempty">প্রশ্ন ব্যাংক লোড হচ্ছে…</div></div>
       </div>
