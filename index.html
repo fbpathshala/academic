@@ -40,5 +40,20 @@
   </section>
 </main>
 <footer>Academic Care · শিক্ষা সবার জন্য</footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(function(){
+  try {
+    var keyName="academic_care_visitor_key";
+    var visitorKey=localStorage.getItem(keyName);
+    if(!visitorKey){
+      visitorKey=(window.crypto&&crypto.randomUUID)?crypto.randomUUID():"ac-"+Date.now().toString(36)+"-"+Math.random().toString(36).slice(2)+Math.random().toString(36).slice(2);
+      localStorage.setItem(keyName,visitorKey);
+    }
+    var client=window.supabase.createClient("https://ydvbnalhcnfqpxkkmywr.supabase.co","sb_publishable_xCbSWDkASsbUPl-WmygyMw_eVrJY_9a");
+    client.rpc("register_site_visitor",{p_visitor_key:visitorKey}).then(function(){});
+  } catch(e) {}
+})();
+</script>
 </body>
 </html>
