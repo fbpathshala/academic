@@ -9,9 +9,11 @@
     :root{font-family:system-ui,-apple-system,"Noto Sans Bengali",sans-serif;color:#183447;background:#f3f7fa;--teal:#155e75;--line:#dce7ed;--muted:#637987}
     *{box-sizing:border-box}body{margin:0}header{background:#fff;border-bottom:1px solid var(--line)}.nav{max-width:1080px;margin:auto;padding:15px 20px;display:flex;justify-content:space-between;align-items:center;gap:12px}.brand{font-weight:850;color:var(--teal);font-size:1.12rem}.nav a{color:var(--teal);text-decoration:none;font-weight:700;font-size:.92rem}
     main{max-width:1080px;margin:auto;padding:28px 20px 52px}.hero{padding:clamp(24px,4vw,38px);border-radius:22px;background:linear-gradient(125deg,#155e75,#0f766e);color:white}.hero h1{font-size:clamp(1.8rem,5vw,2.65rem);line-height:1.25;margin:0 0 12px}.hero p{line-height:1.8;max-width:720px;margin:0;color:#e4fffb}
+    .live-info{margin-top:22px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:17px 20px;display:flex;align-items:center;gap:14px}.live-info-icon{font-size:2rem}.live-info-label{font-size:.88rem;color:var(--muted)}.live-info-value{font-weight:800;font-size:1.25rem;color:var(--teal);margin-top:3px}.live-info-zone{font-size:.78rem;color:var(--muted);margin-top:3px}
+    .summary-section{margin-top:24px}.summary-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}.summary-card{min-width:0;min-height:155px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:17px 10px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;box-shadow:0 4px 14px #123b4a08}.summary-icon{font-size:1.65rem;margin-bottom:8px}.summary-label{font-size:.88rem;line-height:1.55;color:var(--muted);min-height:2.8em}.summary-card strong{font-size:1.8rem;color:var(--teal);margin-top:7px;font-variant-numeric:tabular-nums}.visitor-summary-card{background:linear-gradient(145deg,#fff,#eaf8f5);border-color:#c8e6df}.summary-note{font-size:.82rem;color:var(--muted);margin:10px 2px 0}
     .heading{margin:30px 0 13px;font-size:1.35rem}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}.card{background:#fff;border:1px solid var(--line);border-radius:17px;padding:22px;display:flex;flex-direction:column;align-items:flex-start;min-height:245px}.icon{font-size:2rem}.card h2{font-size:1.22rem;margin:12px 0 8px}.card p{margin:0 0 18px;color:var(--muted);line-height:1.7;flex:1}.button{display:inline-block;border:0;border-radius:10px;padding:11px 15px;background:var(--teal);color:white;text-decoration:none;font:inherit;font-weight:750;cursor:pointer}.button.alt{background:#e6f4f5;color:var(--teal)}.status{display:inline-block;margin-top:3px;padding:5px 9px;border-radius:999px;background:#e4f5ed;color:#176b50;font-size:.78rem;font-weight:750}
     .admin{margin-top:20px;background:white;border:1px solid var(--line);border-radius:14px;padding:17px 19px;display:flex;justify-content:space-between;align-items:center;gap:16px}.admin p{margin:4px 0 0;color:var(--muted);line-height:1.6;font-size:.92rem}footer{text-align:center;padding:22px;color:#71818d;font-size:.9rem}
-    @media(max-width:520px){.nav{align-items:flex-start}.nav a{font-size:.82rem}.admin{align-items:flex-start;flex-direction:column}}
+    @media(max-width:900px){.summary-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}@media(max-width:650px){.summary-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.summary-card{min-height:140px}}@media(max-width:520px){.nav{align-items:flex-start}.nav a{font-size:.82rem}.admin{align-items:flex-start;flex-direction:column}.summary-card{padding:14px 8px}.summary-label{font-size:.81rem}.summary-card strong{font-size:1.55rem}.live-info-value{font-size:1.08rem}}
   </style>
 </head>
 <body>
@@ -20,6 +22,21 @@
   <section class="hero">
     <h1>পড়াশোনা, অনুশীলন ও মূল্যায়ন—এক জায়গায়</h1>
     <p>পরীক্ষা দিন, বিষয়ভিত্তিক শিক্ষাসামগ্রী পড়ুন এবং প্রয়োজনীয় নোট ও PDF খুঁজে নিন। প্রকাশিত কনটেন্ট শিক্ষার্থীরা সরাসরি ব্যবহার করতে পারবে।</p>
+  </section>
+  <section class="live-info" aria-label="তারিখ ও সময়">
+    <div class="live-info-icon">🗓️</div>
+    <div><div class="live-info-label">আজকের তারিখ ও বর্তমান সময়</div><div id="bangladeshDateTime" class="live-info-value">সময় লোড হচ্ছে…</div><div class="live-info-zone">বাংলাদেশ সময় (BST, UTC+৬)</div></div>
+  </section>
+  <section class="summary-section" aria-labelledby="summary-title">
+    <h2 id="summary-title" class="heading">📊 ওয়েবসাইটের সারসংক্ষেপ</h2>
+    <div class="summary-grid">
+      <article class="summary-card"><span class="summary-icon">📝</span><div class="summary-label">এক্সাম সিস্টেমের মোট প্রশ্ন</div><strong id="legacyQuestionCount">লোড হচ্ছে…</strong></article>
+      <article class="summary-card"><span class="summary-icon">🎓</span><div class="summary-label">একাডেমিক কেয়ারের মোট প্রশ্ন</div><strong id="academicQuestionCount">লোড হচ্ছে…</strong></article>
+      <article class="summary-card"><span class="summary-icon">👩‍🎓</span><div class="summary-label">এক্সাম সিস্টেমের মোট পরীক্ষার্থী</div><strong id="legacyExamineeCount">লোড হচ্ছে…</strong></article>
+      <article class="summary-card"><span class="summary-icon">👥</span><div class="summary-label">একাডেমিক কেয়ারের মোট পরীক্ষার্থী</div><strong id="academicExamineeCount">লোড হচ্ছে…</strong></article>
+      <article class="summary-card visitor-summary-card"><span class="summary-icon">🌐</span><div class="summary-label">সব সাইট মিলিয়ে মোট ইউনিক ভিজিটর</div><strong id="totalSiteVisitors">লোড হচ্ছে…</strong></article>
+    </div>
+    <p class="summary-note">দুই পরীক্ষাব্যবস্থার তথ্য আলাদা রাখা হয়েছে। ভিজিটর সংখ্যা সব সাইটের শেয়ার করা ভিজিটর রেকর্ড থেকে দেখানো হয়।</p>
   </section>
   <h2 class="heading">আপনার প্রয়োজনীয় বিভাগ বেছে নিন</h2>
   <section class="grid">
@@ -52,6 +69,30 @@
     }
     var client=window.supabase.createClient("https://ydvbnalhcnfqpxkkmywr.supabase.co","sb_publishable_xCbSWDkASsbUPl-WmygyMw_eVrJY_9a");
     client.rpc("register_site_visitor",{p_visitor_key:visitorKey}).then(function(){});
+    function bnDigits(value){return String(value).replace(/\\d/g,function(d){return "০১২৩৪৫৬৭৮৯"[Number(d)]})}
+    function updateBangladeshClock(){
+      var now=new Date();
+      var dateText=new Intl.DateTimeFormat("bn-BD",{timeZone:"Asia/Dhaka",weekday:"long",year:"numeric",month:"long",day:"numeric"}).format(now);
+      var timeText=new Intl.DateTimeFormat("bn-BD",{timeZone:"Asia/Dhaka",hour:"numeric",minute:"2-digit",second:"2-digit",hour12:true}).format(now);
+      document.getElementById("bangladeshDateTime").textContent=dateText+" · "+timeText;
+    }
+    updateBangladeshClock();
+    window.setInterval(updateBangladeshClock,1000);
+    Promise.all([client.rpc("get_home_dashboard_summary"),client.rpc("count_site_visitors")]).then(function(results){
+      var summaryResult=results[0],visitorResult=results[1],data=summaryResult&&summaryResult.data;
+      if(summaryResult&&summaryResult.error) throw summaryResult.error;
+      if(visitorResult&&visitorResult.error) throw visitorResult.error;
+      if(!data) throw new Error("Summary unavailable");
+      document.getElementById("legacyQuestionCount").textContent=bnDigits(data.exam_system_questions||0);
+      document.getElementById("academicQuestionCount").textContent=bnDigits(data.academic_care_questions||0);
+      document.getElementById("legacyExamineeCount").textContent=bnDigits(data.exam_system_examinees||0);
+      document.getElementById("academicExamineeCount").textContent=bnDigits(data.academic_care_examinees||0);
+      var visitorCount=visitorResult.data;
+      if(visitorCount&&typeof visitorCount==="object"&&"count" in visitorCount) visitorCount=visitorCount.count;
+      document.getElementById("totalSiteVisitors").textContent=bnDigits(Number(visitorCount)||0);
+    }).catch(function(){
+      ["legacyQuestionCount","academicQuestionCount","legacyExamineeCount","academicExamineeCount","totalSiteVisitors"].forEach(function(id){document.getElementById(id).textContent="—";});
+    });
   } catch(e) {}
 })();
 </script>
