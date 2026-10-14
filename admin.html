@@ -180,6 +180,144 @@ const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 const bnDigits=n=>String(n).replace(/\d/g,d=>"০১২৩৪৫৬৭৮৯"[Number(d)]);
 const exams=[],materials=[],bankQuestions=[];
 let editingQuestionId=null;
+const categoryRows=[];
+function categoryMessage(text,error=false){const el=document.getElementById("categoryManagerMessage");if(el){el.textContent=text;el.className=error?"notice error":"notice";}}
+function optionHtml(rows,idKey,labelKey,placeholder){return '<option value="">'+escapeHtml(placeholder)+'</option>'+rows.map(x=>'<option value="'+escapeHtml(x[idKey])+'">'+escapeHtml(x[labelKey])+'</option>').join("");}
+async function loadAcademicCategories(){
+ const {data,error}=await sb.from("academic_care_categories").select("id,name").order("name");
+ if(error){categoryMessage("ক্যাটাগরি লোড হয়নি: "+error.message,true);return}
+ categoryRows.splice(0,categoryRows.length,...(data||[]));
+ for(const id of ["categoryManager","questionCategory","bankCategoryFilter"]){
+  const el=document.getElementById(id),current=el.value;
+  el.innerHTML=optionHtml(categoryRows,"id","name",id==="bankCategoryFilter"?"সব ক্যাটাগরি":"ক্যাটাগরি নির্বাচন করুন");
+  if(categoryRows.some(x=>String(x.id)===current))el.value=current;
+ }
+ await loadManagerFolders();
+ await loadQuestionFolders();
+ await loadBankFolders();
+}
+async function loadManagerFolders(selected=""){
+ const catId=document.getElementById("categoryManager").value,el=document.getElementById("folderManager");
+ const {data,error}=await sb.from("academic_care_folders").select("id,folder_name").eq("category_id",catId||0).order("folder_name");
+ if(error){categoryMessage("ফোল্ডার লোড হয়নি: "+error.message,true);return}
+ el.innerHTML=optionHtml(data||[],"id","folder_name","ফোল্ডার নির্বাচন করুন");
+ if(selected)el.value=String(selected);
+ await loadManagerSets();
+}
+async function loadManagerSets(selected=""){
+ const folderId=document.getElementById("folderManager").value,el=document.getElementById("setManager");
+ const {data,error}=await sb.from("academic_care_sets").select("id,set_name").eq("folder_id",folderId||0).order("set_name");
+ if(error){categoryMessage("সেট লোড হয়নি: "+error.message,true);return}
+ el.innerHTML=optionHtml(data||[],"id","set_name","সেট নির্বাচন করুন");
+ if(selected)el.value=String(selected);
+}
+async function loadQuestionFolders(selected=""){
+ const catId=document.getElementById("questionCategory").value,el=document.getElementById("questionFolder");
+ const {data,error}=await sb.from("academic_care_folders").select("id,folder_name").eq("category_id",catId||0).order("folder_name");
+ if(error){categoryMessage("প্রশ্নের ফোল্ডার লোড হয়নি: "+error.message,true);return}
+ el.innerHTML=optionHtml(data||[],"id","folder_name","ফোল্ডার নির্বাচন করুন");
+ if(selected)el.value=String(selected);
+ await loadQuestionSets();
+}
+async function loadQuestionSets(selected=""){
+ const folderId=document.getElementById("questionFolder").value,el=document.getElementById("questionSet");
+ const {data,error}=await sb.from("academic_care_sets").select("id,set_name").eq("folder_id",folderId||0).order("set_name");
+ if(error){categoryMessage("প্রশ্নের সেট লোড হয়নি: "+error.message,true);return}
+ el.innerHTML=optionHtml(data||[],"id","set_name","সেট নির্বাচন করুন");
+ if(selected)el.value=String(selected);
+}
+async function loadBankFolders(selected=""){
+ const catId=document.getElementById("bankCategoryFilter").value,el=document.getElementById("bankFolderFilter");
+ let q=sb.from("academic_care_folders").select("id,folder_name,category_id").order("folder_name");
+ if(catId)q=q.eq("category_id",catId);
+ const {data,error}=await q;
+ if(error){categoryMessage("ফিল্টার ফোল্ডার লোড হয়নি: "+error.message,true);return}
+ el.innerHTML=optionHtml(data||[],"id","folder_name","সব ফোল্ডার");
+ if(selected)el.value=String(selected);
+ await loadBankSets();
+}
+async function loadBankSets(selected=""){
+ const folderId=document.getElementById("bankFolderFilter").value,el=document.getElementById("bankSetFilter");
+ const {data,error}=await sb.from("academic_care_sets").select("id,set_name").eq("folder_id",folderId||0).order("set_name");
+ if(error){categoryMessage("ফিল্টার সেট লোড হয়নি: "+error.message,true);return}
+ el.innerHTML=optionHtml(data||[],"id","set_name","সব সেট");
+ if(selected)el.value=String(selected);
+}
+async function createAcademicCategory(){
+ const name=document.getElementById("newCategory").value.trim();if(!name)return categoryMessage("নতুন ক্যাটাগরির নাম লিখুন।",true);
+ const {data,error}=await sb.from("academic_care_categories").insert({name}).select("id,name").single();
+ if(error)return categoryMessage(error.message,true);
+ document.getElementById("newCategory").value="";await loadAcademicCategories();document.getElementById("categoryManager").value=String(data.id);document.getElementById("questionCategory").value=String(data.id);await loadManagerFolders();await loadQuestionFolders();categoryMessage("নতুন ক্যাটাগরি তৈরি হয়েছে।");
+}
+async function renameAcademicCategory(){
+ const id=document.getElementById("categoryManager").value;if(!id)return categoryMessage("আগে ক্যাটাগরি নির্বাচন করুন।",true);
+ const old=categoryRows.find(x=>String(x.id)===id)?.name||"",name=prompt("নতুন ক্যাটাগরির নাম লিখুন:",old);if(name===null)return;
+ if(!name.trim())return categoryMessage("ক্যাটাগরির নাম খালি রাখা যাবে না।",true);
+ const {error}=await sb.from("academic_care_categories").update({name:name.trim()}).eq("id",id);if(error)return categoryMessage(error.message,true);
+ await loadAcademicCategories();categoryMessage("ক্যাটাগরির নাম পরিবর্তন হয়েছে। প্রশ্নের সোর্সে নতুন নাম দেখাবে।");
+}
+async function deleteAcademicCategory(){
+ const id=document.getElementById("categoryManager").value;if(!id)return categoryMessage("আগে ক্যাটাগরি নির্বাচন করুন।",true);
+ const [fr,qr]=await Promise.all([sb.from("academic_care_folders").select("id",{count:"exact",head:true}).eq("category_id",id),sb.from("academic_care_questions").select("id",{count:"exact",head:true}).eq("category_id",id)]);
+ if(fr.error||qr.error)return categoryMessage((fr.error||qr.error).message,true);
+ if((fr.count||0)||(qr.count||0))return categoryMessage("এই ক্যাটাগরিতে ফোল্ডার বা প্রশ্ন আছে। আগে সেগুলো অন্য ক্যাটাগরিতে সরান; কোনো রেকর্ড মুছে ফেলা হয়নি।",true);
+ if(!confirm("নির্বাচিত ক্যাটাগরি মুছে ফেলবেন?"))return;
+ const {error}=await sb.from("academic_care_categories").delete().eq("id",id);if(error)return categoryMessage(error.message,true);
+ await loadAcademicCategories();categoryMessage("ক্যাটাগরি মুছে ফেলা হয়েছে।");
+}
+async function createAcademicFolder(){
+ const category_id=document.getElementById("categoryManager").value,name=document.getElementById("newFolder").value.trim();
+ if(!category_id)return categoryMessage("আগে ক্যাটাগরি নির্বাচন করুন।",true);if(!name)return categoryMessage("ফোল্ডারের নাম লিখুন।",true);
+ const {data,error}=await sb.from("academic_care_folders").insert({category_id:Number(category_id),folder_name:name}).select("id").single();if(error)return categoryMessage(error.message,true);
+ document.getElementById("newFolder").value="";await loadManagerFolders(data.id);await loadQuestionFolders();await loadBankFolders();categoryMessage("ফোল্ডার তৈরি হয়েছে।");
+}
+async function renameAcademicFolder(){
+ const id=document.getElementById("folderManager").value;if(!id)return categoryMessage("আগে ফোল্ডার নির্বাচন করুন।",true);
+ const old=document.getElementById("folderManager").selectedOptions[0]?.textContent||"",name=prompt("নতুন ফোল্ডারের নাম লিখুন:",old);if(name===null)return;if(!name.trim())return categoryMessage("ফোল্ডারের নাম খালি রাখা যাবে না।",true);
+ const {error}=await sb.from("academic_care_folders").update({folder_name:name.trim()}).eq("id",id);if(error)return categoryMessage(error.message,true);
+ await loadManagerFolders(id);await loadQuestionFolders();await loadBankFolders();categoryMessage("ফোল্ডারের নাম পরিবর্তন হয়েছে; প্রশ্নের সোর্সে নতুন নাম দেখাবে।");
+}
+async function deleteAcademicFolder(){
+ const id=document.getElementById("folderManager").value;if(!id)return categoryMessage("আগে ফোল্ডার নির্বাচন করুন।",true);
+ const [sr,qr]=await Promise.all([sb.from("academic_care_sets").select("id",{count:"exact",head:true}).eq("folder_id",id),sb.from("academic_care_questions").select("id",{count:"exact",head:true}).eq("folder_id",id)]);
+ if(sr.error||qr.error)return categoryMessage((sr.error||qr.error).message,true);if((sr.count||0)||(qr.count||0))return categoryMessage("এই ফোল্ডারে সেট বা প্রশ্ন আছে। আগে সেগুলো সরান; কোনো রেকর্ড মুছে ফেলা হয়নি।",true);
+ if(!confirm("নির্বাচিত ফোল্ডার মুছে ফেলবেন?"))return;const {error}=await sb.from("academic_care_folders").delete().eq("id",id);if(error)return categoryMessage(error.message,true);
+ await loadManagerFolders();await loadQuestionFolders();await loadBankFolders();categoryMessage("ফোল্ডার মুছে ফেলা হয়েছে।");
+}
+async function createAcademicSet(){
+ const folder_id=document.getElementById("folderManager").value,name=document.getElementById("newSet").value.trim();
+ if(!folder_id)return categoryMessage("আগে ফোল্ডার নির্বাচন করুন।",true);if(!name)return categoryMessage("সেটের নাম লিখুন।",true);
+ const {data,error}=await sb.from("academic_care_sets").insert({folder_id:Number(folder_id),set_name:name}).select("id").single();if(error)return categoryMessage(error.message,true);
+ document.getElementById("newSet").value="";await loadManagerSets(data.id);await loadQuestionSets();await loadBankSets();categoryMessage("সেট তৈরি হয়েছে।");
+}
+async function renameAcademicSet(){
+ const id=document.getElementById("setManager").value;if(!id)return categoryMessage("আগে সেট নির্বাচন করুন।",true);
+ const old=document.getElementById("setManager").selectedOptions[0]?.textContent||"",name=prompt("নতুন সেটের নাম লিখুন:",old);if(name===null)return;if(!name.trim())return categoryMessage("সেটের নাম খালি রাখা যাবে না।",true);
+ const {error}=await sb.from("academic_care_sets").update({set_name:name.trim()}).eq("id",id);if(error)return categoryMessage(error.message,true);
+ await loadManagerSets(id);await loadQuestionSets();await loadBankSets();categoryMessage("সেটের নাম পরিবর্তন হয়েছে; প্রশ্নের সোর্সে নতুন নাম দেখাবে।");
+}
+async function deleteAcademicSet(){
+ const id=document.getElementById("setManager").value;if(!id)return categoryMessage("আগে সেট নির্বাচন করুন।",true);
+ const {count,error:checkError}=await sb.from("academic_care_questions").select("id",{count:"exact",head:true}).eq("set_id",id);if(checkError)return categoryMessage(checkError.message,true);
+ if(count)return categoryMessage("এই সেটে প্রশ্ন আছে। আগে প্রশ্নগুলো অন্য সেটে সরান; কোনো রেকর্ড মুছে ফেলা হয়নি।",true);
+ if(!confirm("নির্বাচিত সেট মুছে ফেলবেন?"))return;const {error}=await sb.from("academic_care_sets").delete().eq("id",id);if(error)return categoryMessage(error.message,true);
+ await loadManagerSets();await loadQuestionSets();await loadBankSets();categoryMessage("সেট মুছে ফেলা হয়েছে।");
+}
+function setupAcademicCategoryUI(){
+ const on=(id,fn)=>document.getElementById(id).addEventListener("click",fn);
+ on("createCategory",createAcademicCategory);on("renameCategory",renameAcademicCategory);on("deleteCategory",deleteAcademicCategory);
+ on("createFolder",createAcademicFolder);on("renameFolder",renameAcademicFolder);on("deleteFolder",deleteAcademicFolder);
+ on("createSet",createAcademicSet);on("renameSet",renameAcademicSet);on("deleteSet",deleteAcademicSet);
+ document.getElementById("categoryManager").addEventListener("change",()=>loadManagerFolders());
+ document.getElementById("folderManager").addEventListener("change",()=>loadManagerSets());
+ document.getElementById("questionCategory").addEventListener("change",()=>loadQuestionFolders());
+ document.getElementById("questionFolder").addEventListener("change",()=>loadQuestionSets());
+ document.getElementById("bankCategoryFilter").addEventListener("change",()=>{document.getElementById("bankFolderFilter").value="";loadBankFolders();renderQuestionBank()});
+ document.getElementById("bankFolderFilter").addEventListener("change",()=>{document.getElementById("bankSetFilter").value="";loadBankSets();renderQuestionBank()});
+ document.getElementById("bankSetFilter").addEventListener("change",renderQuestionBank);
+ document.getElementById("bankSubjectFilter").addEventListener("input",renderQuestionBank);
+}
+
 const titles={home:"ড্যাশবোর্ড",exams:"পরীক্ষা পরিচালনা",questionBank:"প্রশ্ন ব্যাংক",materials:"স্টাডি ম্যাটেরিয়াল",reviews:"উত্তর মূল্যায়ন",settings:"সিস্টেম সেটআপ"};
 const gate=document.getElementById("loginGate"),shell=document.querySelector(".shell"),authMessage=document.getElementById("authMessage");
 function message(t){authMessage.textContent=t}
@@ -196,9 +334,9 @@ function materialModel(x){return {id:x.id,title:x.title,meta:(x.material_type||"
 async function loadData(){document.getElementById("connectionState").textContent="ডেটাবেস লোড হচ্ছে";const [er,mr,sr,vr]=await Promise.all([sb.from("academic_care_exams").select("*").order("created_at",{ascending:false}),sb.from("academic_care_materials").select("*").order("created_at",{ascending:false}),sb.from("academic_care_submissions").select("id",{count:"exact",head:true}),sb.rpc("count_site_visitors")]);if(er.error||mr.error){document.getElementById("connectionState").textContent="ডেটাবেস ত্রুটি";alert("ডেটা লোড হয়নি: "+(er.error||mr.error).message);return}exams.splice(0,exams.length,...er.data.map(examModel));materials.splice(0,materials.length,...mr.data.map(materialModel));renderItems(exams,"examList","examListCount","exam");renderItems(materials,"materialList","materialListCount","material");updateQuestionExamOptions();syncQuestionTypes();updateCounts();document.getElementById("examineeCount").textContent=sr.error?"—":bnDigits(sr.count||0);document.getElementById("visitorCount").textContent=vr.error?"—":bnDigits(vr.data||0);updateBankExamFilter();document.getElementById("connectionState").textContent="ডেটাবেস সংযুক্ত"}
 
 function updateBankExamFilter(){const sel=document.getElementById("bankExamFilter"),cur=sel.value;sel.innerHTML='<option value="">সব পরীক্ষা</option>'+exams.map(x=>'<option value="'+escapeHtml(x.id)+'">'+escapeHtml(x.title)+'</option>').join("");if(exams.some(x=>x.id===cur))sel.value=cur}
-async function loadQuestionBank(){const list=document.getElementById("questionBankList");list.innerHTML='<div class="listempty">প্রশ্ন ব্যাংক লোড হচ্ছে…</div>';const {data,error}=await sb.from("academic_care_questions").select("id,exam_id,question_text,question_type,options,marks,sort_order,created_at").order("created_at",{ascending:false});if(error){list.innerHTML='<div class="notice">প্রশ্ন লোড হয়নি: '+escapeHtml(error.message)+'</div>';return}bankQuestions.splice(0,bankQuestions.length,...data);renderQuestionBank()}
-function renderQuestionBank(){const list=document.getElementById("questionBankList"),q=document.getElementById("bankSearch").value.trim().toLocaleLowerCase(),examId=document.getElementById("bankExamFilter").value,type=document.getElementById("bankTypeFilter").value;const filtered=bankQuestions.filter(x=>(!examId||x.exam_id===examId)&&(!type||x.question_type===type)&&(!q||(String(x.question_text||"")+" "+(exams.find(e=>e.id===x.exam_id)?.title||"")).toLocaleLowerCase().includes(q)));if(!filtered.length){list.innerHTML='<div class="listempty">মিল পাওয়া যায়নি, অথবা এখনো কোনো প্রশ্ন যোগ করা হয়নি।</div>';return}const grouped=new Map();filtered.forEach(x=>{if(!grouped.has(x.exam_id))grouped.set(x.exam_id,[]);grouped.get(x.exam_id).push(x)});list.innerHTML=[...grouped.entries()].map(([id,items])=>{const ex=exams.find(e=>e.id===id),mcq=items.filter(x=>x.question_type==="mcq"),cq=items.filter(x=>x.question_type==="cq");return '<details class="bank-folder" open><summary>'+escapeHtml(ex?.title||"পরীক্ষা পাওয়া যায়নি")+' · '+bnDigits(items.length)+'টি প্রশ্ন</summary>'+(mcq.length?'<div class="notice" style="margin:10px 12px 0"><strong>MCQ সেট</strong> · '+bnDigits(mcq.length)+'টি</div>':'')+mcq.map(questionCard).join("")+(cq.length?'<div class="notice" style="margin:10px 12px 0"><strong>CQ সেট</strong> · '+bnDigits(cq.length)+'টি</div>':'')+cq.map(questionCard).join("")+'</details>'}).join("")}
-function questionCard(x,i){const opts=Array.isArray(x.options)?x.options:[];return '<article class="bank-question"><span class="bank-tag">'+(x.question_type==="mcq"?"MCQ":"CQ")+'</span><span class="bank-tag">'+bnDigits(x.marks??0)+' নম্বর</span><p><strong>'+escapeHtml(x.question_text)+'</strong></p>'+(opts.length?'<div class="muted">'+opts.map((o,j)=>escapeHtml("কখগঘ"[j]||"")+'. '+escapeHtml(o.text||o.value||o)).join("　 ·　")+'</div>':'')+'<div class="bank-actions"><button class="btn light" type="button" data-edit-question="'+escapeHtml(x.id)+'">✏️ সম্পাদনা</button></div></article>'}
+async function loadQuestionBank(){const list=document.getElementById("questionBankList");list.innerHTML='<div class="listempty">প্রশ্ন ব্যাংক লোড হচ্ছে…</div>';const {data,error}=await sb.from("academic_care_questions").select("id,exam_id,question_text,question_type,options,marks,sort_order,created_at,category_id,folder_id,set_id,subject,academic_care_categories(name),academic_care_folders(folder_name),academic_care_sets(set_name)").order("created_at",{ascending:false});if(error){list.innerHTML='<div class="notice">প্রশ্ন লোড হয়নি: '+escapeHtml(error.message)+'</div>';return}bankQuestions.splice(0,bankQuestions.length,...data);renderQuestionBank()}
+function renderQuestionBank(){const list=document.getElementById("questionBankList"),q=document.getElementById("bankSearch").value.trim().toLocaleLowerCase(),examId=document.getElementById("bankExamFilter").value,type=document.getElementById("bankTypeFilter").value,catId=document.getElementById("bankCategoryFilter").value,folderId=document.getElementById("bankFolderFilter").value,setId=document.getElementById("bankSetFilter").value,subject=document.getElementById("bankSubjectFilter").value.trim().toLocaleLowerCase();const filtered=bankQuestions.filter(x=>(!examId||x.exam_id===examId)&&(!type||x.question_type===type)&&(!catId||String(x.category_id)===catId)&&(!folderId||String(x.folder_id)===folderId)&&(!setId||String(x.set_id)===setId)&&(!subject||String(x.subject||"").toLocaleLowerCase().includes(subject))&&(!q||(String(x.question_text||"")+" "+String(x.subject||"")+" "+(exams.find(e=>e.id===x.exam_id)?.title||"")).toLocaleLowerCase().includes(q)));if(!filtered.length){list.innerHTML='<div class="listempty">মিল পাওয়া যায়নি, অথবা এখনো কোনো প্রশ্ন যোগ করা হয়নি।</div>';return}const grouped=new Map();filtered.forEach(x=>{if(!grouped.has(x.exam_id))grouped.set(x.exam_id,[]);grouped.get(x.exam_id).push(x)});list.innerHTML=[...grouped.entries()].map(([id,items])=>{const ex=exams.find(e=>e.id===id),mcq=items.filter(x=>x.question_type==="mcq"),cq=items.filter(x=>x.question_type==="cq");return '<details class="bank-folder" open><summary>'+escapeHtml(ex?.title||"পরীক্ষা পাওয়া যায়নি")+' · '+bnDigits(items.length)+'টি প্রশ্ন</summary>'+(mcq.length?'<div class="notice" style="margin:10px 12px 0"><strong>MCQ সেট</strong> · '+bnDigits(mcq.length)+'টি</div>':'')+mcq.map(questionCard).join("")+(cq.length?'<div class="notice" style="margin:10px 12px 0"><strong>CQ সেট</strong> · '+bnDigits(cq.length)+'টি</div>':'')+cq.map(questionCard).join("")+'</details>'}).join("")}
+function questionCard(x,i){const opts=Array.isArray(x.options)?x.options:[];const source=[x.academic_care_categories?.name,x.academic_care_folders?.folder_name,x.academic_care_sets?.set_name,x.subject].filter(Boolean).join(" / ");return '<article class="bank-question"><span class="bank-tag">'+(x.question_type==="mcq"?"MCQ":"CQ")+'</span><span class="bank-tag">'+bnDigits(x.marks??0)+' নম্বর</span><p><strong>'+escapeHtml(x.question_text)+'</strong></p>'+(opts.length?'<div class="muted">'+opts.map((o,j)=>escapeHtml("কখগঘ"[j]||"")+'. '+escapeHtml(o.text||o.value||o)).join("　 ·　")+'</div>':'')+(source?'<div class="muted">Source: '+escapeHtml(source)+'</div>':'')+'<div class="bank-actions"><button class="btn light" type="button" data-edit-question="'+escapeHtml(x.id)+'">✏️ সম্পাদনা</button></div></article>'}
 document.getElementById("bankSearch").addEventListener("input",renderQuestionBank);document.getElementById("bankExamFilter").addEventListener("change",renderQuestionBank);document.getElementById("bankTypeFilter").addEventListener("change",renderQuestionBank);document.getElementById("refreshQuestionBank").addEventListener("click",loadQuestionBank);
 async function verifySession(session){if(!session){gate.hidden=false;shell.hidden=true;return}const {data,error}=await sb.rpc("academic_care_is_admin");if(error||data!==true){await sb.auth.signOut();gate.hidden=false;shell.hidden=true;message("এই অ্যাকাউন্টে অ্যাডমিন অনুমতি নেই। প্রকল্পের মালিককে অনুমতি দিতে হবে।");return}gate.hidden=true;shell.hidden=false;message("");await loadData();const requestedView=new URLSearchParams(window.location.search).get("view");if(["exams","questionBank","materials","reviews","settings"].includes(requestedView))showView(requestedView)}
 document.getElementById("loginForm").addEventListener("submit",async e=>{e.preventDefault();message("প্রবেশ যাচাই হচ্ছে…");const {data,error}=await sb.auth.signInWithPassword({email:document.getElementById("loginEmail").value.trim(),password:document.getElementById("loginPassword").value});if(error){message("প্রবেশ করা যায়নি। ইমেইল/পাসওয়ার্ড যাচাই করুন।");return}await verifySession(data.session)});
