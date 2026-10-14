@@ -22,6 +22,7 @@
 <script>
 const SUPABASE_URL="https://ydvbnalhcnfqpxkkmywr.supabase.co",SUPABASE_KEY="sb_publishable_xCbSWDkASsbUPl-WmygyMw_eVrJY_9a";
 const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+(function(){try{const keyName="academic_care_visitor_key";let visitorKey=localStorage.getItem(keyName);if(!visitorKey){visitorKey=window.crypto&&crypto.randomUUID?crypto.randomUUID():"ac-"+Date.now().toString(36)+"-"+Math.random().toString(36).slice(2)+Math.random().toString(36).slice(2);localStorage.setItem(keyName,visitorKey)}sb.rpc("register_site_visitor",{p_visitor_key:visitorKey}).then(()=>{})}catch(e){}})();
 const $=id=>document.getElementById(id);let currentExam=null,questions=[],deadline=0,timerHandle=null,uploadedPath=null;
 const bn=n=>String(n).replace(/\d/g,d=>"০১২৩৪৫৬৭৮৯"[+d]);
 function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
