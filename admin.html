@@ -93,6 +93,14 @@
           <div class="field full"><div class="btnrow"><button class="btn" id="questionSubmitButton" type="submit">প্রশ্ন সংরক্ষণ</button><button class="btn ghost" id="cancelQuestionEdit" type="button" hidden>সম্পাদনা বাতিল</button></div></div>
         </form>
       </div>
+       <div class="panel">
+         <div class="sectionhead"><h3>📥 MCQ প্রশ্ন CSV/Excel থেকে যোগ</h3><button class="btn ghost" id="downloadQuestionTemplate" type="button">নমুনা ফাইল</button></div>
+         <p class="muted">উপরের ফর্মে পরীক্ষা, ক্যাটাগরি, ফোল্ডার ও সেট নির্বাচন করুন। CSV/Excel ফাইলের প্রথম সারিতে কলামের নাম থাকতে হবে। সব সারি যাচাই হওয়ার পর প্রশ্ন যোগ শুরু হবে।</p>
+         <div class="formgrid">
+           <div class="field full"><label for="questionImportFile">CSV / Excel ফাইল (.csv, .xlsx, .xls)</label><input id="questionImportFile" type="file" accept=".csv,.xlsx,.xls,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel"></div>
+           <div class="field full"><button class="btn" id="importQuestionsButton" type="button">ফাইল যাচাই করে MCQ যোগ করুন</button><div id="questionImportMessage" class="notice" role="status" aria-live="polite"></div></div>
+         </div>
+       </div>
       </div><div class="workflow-step"><div class="sectionhead"><h2 data-step="৩">ফলাফল ও প্রকাশের সেটিংস</h2></div><p class="workflow-help">ফলাফল দেখানো, পজিশন, ধন্যবাদ বার্তা ও Facebook গ্রুপ লিংক ঠিক করুন। সেটিংস পরে পরিবর্তন করলেও আগের জমা উত্তর অক্ষত থাকবে।</p>
       <div class="panel"><form id="examSettingsForm" class="formgrid">
         <div class="field full"><label for="settingsExam">পরীক্ষা নির্বাচন</label><select id="settingsExam" required><option value="">পরীক্ষা নির্বাচন করুন</option></select></div>
@@ -207,6 +215,7 @@
   </main>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script>
 const SUPABASE_URL="https://ydvbnalhcnfqpxkkmywr.supabase.co";
 const SUPABASE_KEY="sb_publishable_xCbSWDkASsbUPl-WmygyMw_eVrJY_9a";
@@ -387,6 +396,58 @@ document.getElementById("submissionList").addEventListener("click",async e=>{con
 function loadSelectedSettings(){const sel=document.getElementById("settingsExam");const x=exams.find(e=>e.id===sel.value);const st=x?.settings||{};document.getElementById("settingsDuration").value=x?.durationMinutes??30;document.getElementById("settingsTotalQuestions").value=st.total_questions??"";document.getElementById("settingsTotalMarks").value=st.total_marks??"";document.getElementById("settingsPassMark").value=st.pass_mark??0;document.getElementById("settingsMarksPerQuestion").value=st.marks_per_question??1;document.getElementById("settingsNegativeMark").value=st.negative_mark??0;document.getElementById("settingsExaminerName").value=st.examiner_name||"";document.getElementById("settingsExamDate").value=st.exam_date||"";document.getElementById("settingsStartTime").value=st.start_time||"";document.getElementById("settingsEndDate").value=st.end_date||"";document.getElementById("settingsEndTime").value=st.end_time||"";document.getElementById("settingsSyllabus").value=st.syllabus||"";document.getElementById("showResults").checked=st.show_results===true;document.getElementById("showPosition").checked=st.show_position===true;document.getElementById("showAnswerPaper").checked=st.show_answer_paper===true;document.getElementById("settingsShowAnswers").checked=st.show_answers===true;document.getElementById("settingsMultipleAttempts").checked=st.multiple_attempts===true;document.getElementById("settingsDeviceProtection").checked=st.device_attempt_protection!==false;document.getElementById("settingsRandomQuestions").checked=st.random_questions===true;document.getElementById("settingsRandomOptions").checked=st.random_options===true;document.getElementById("settingsShowPageLink").checked=st.show_page_link===true;document.getElementById("settingsDisplayMode").value=st.question_display_mode==="single"?"single":"all";document.getElementById("thankYouMessage").value=st.thank_you_message||"";document.getElementById("facebookPageUrl").value=st.facebook_page_url||"";document.getElementById("facebookGroupUrl").value=st.facebook_group_url||""}
 document.getElementById("settingsExam").addEventListener("change",loadSelectedSettings);
 document.getElementById("examSettingsForm").addEventListener("submit",async e=>{e.preventDefault();const id=document.getElementById("settingsExam").value;if(!id)return;const x=exams.find(e=>e.id===id);const num=id=>{const v=document.getElementById(id).value.trim();return v===""?null:Number(v)};const settings={...(x?.settings||{}),total_questions:num("settingsTotalQuestions"),total_marks:num("settingsTotalMarks"),pass_mark:num("settingsPassMark")??0,marks_per_question:num("settingsMarksPerQuestion")??1,negative_mark:num("settingsNegativeMark")??0,examiner_name:document.getElementById("settingsExaminerName").value.trim(),exam_date:document.getElementById("settingsExamDate").value||null,start_time:document.getElementById("settingsStartTime").value||null,end_date:document.getElementById("settingsEndDate").value||null,end_time:document.getElementById("settingsEndTime").value||null,syllabus:document.getElementById("settingsSyllabus").value.trim(),show_results:document.getElementById("showResults").checked,show_position:document.getElementById("showPosition").checked,show_answer_paper:document.getElementById("showAnswerPaper").checked,show_answers:document.getElementById("settingsShowAnswers").checked,multiple_attempts:document.getElementById("settingsMultipleAttempts").checked,device_attempt_protection:document.getElementById("settingsDeviceProtection").checked,random_questions:document.getElementById("settingsRandomQuestions").checked,random_options:document.getElementById("settingsRandomOptions").checked,show_page_link:document.getElementById("settingsShowPageLink").checked,question_display_mode:document.getElementById("settingsDisplayMode").value,thank_you_message:document.getElementById("thankYouMessage").value.trim(),facebook_page_url:document.getElementById("facebookPageUrl").value.trim(),facebook_group_url:document.getElementById("facebookGroupUrl").value.trim()};for(const [label,value] of [["মোট প্রশ্ন",settings.total_questions],["মোট নম্বর",settings.total_marks],["পাস নম্বর",settings.pass_mark],["প্রতি প্রশ্নের নম্বর",settings.marks_per_question],["নেগেটিভ মার্ক",settings.negative_mark]])if(value!==null&&(!Number.isFinite(value)||value<0||(label==="মোট প্রশ্ন"&&!Number.isInteger(value)))){alert(label+" সঠিকভাবে দিন। ঋণাত্মক মান দেওয়া যাবে না।");return}if(settings.total_marks!==null&&settings.pass_mark>settings.total_marks){alert("পাস নম্বর মোট নম্বরের চেয়ে বেশি হতে পারবে না।");return}for(const [label,value] of [["Facebook Page",settings.facebook_page_url],["Facebook Group",settings.facebook_group_url]])if(value){try{const u=new URL(value);if(!["http:","https:"].includes(u.protocol))throw Error()}catch(_){alert(label+"-এর সঠিক http/https লিংক দিন।");return}}const duration=Number(document.getElementById("settingsDuration").value);if(!Number.isInteger(duration)||duration<1){alert("পরীক্ষার সময় অন্তত ১ মিনিট দিন।");return}const {data:saved,error}=await sb.from("academic_care_exams").update({settings,duration_minutes:duration}).eq("id",id).select("id,settings,duration_minutes").maybeSingle();if(error){alert("সেটিংস সংরক্ষণ হয়নি: "+error.message);return}if(!saved){alert("সেটিংস সংরক্ষণ হয়নি: এই পরীক্ষায় অ্যাডমিন আপডেট অনুমতি পাওয়া যায়নি। আবার লগইন করে চেষ্টা করুন।");return}if(!saved.settings||saved.settings.show_results!==settings.show_results||saved.settings.show_position!==settings.show_position||saved.settings.show_answer_paper!==settings.show_answer_paper||saved.settings.facebook_group_url!==settings.facebook_group_url||saved.settings.question_display_mode!==settings.question_display_mode){alert("সেটিংস সংরক্ষণের যাচাই মেলেনি। পেজ রিফ্রেশ করে আবার চেষ্টা করুন।");return}await loadData();document.getElementById("settingsExam").value=id;loadSelectedSettings();alert("পরীক্ষার সেটিংস সংরক্ষণ ও যাচাই হয়েছে। আগের জমা উত্তর অক্ষত আছে।")})
+
+function setQuestionImportMessage(text,error=false){const el=document.getElementById("questionImportMessage");el.textContent=text;el.className=error?"notice error":"notice"}
+function normalizeImportHeader(value){return String(value??"").trim().toLowerCase().replace(/[\s\-_().]/g,"")}
+function importField(row,names){for(const key of Object.keys(row)){const normalized=normalizeImportHeader(key);if(names.includes(normalized))return row[key]}return ""}
+function importCorrectOption(value){const v=String(value??"").trim().toLowerCase();const map={"ক":"a","খ":"b","গ":"c","ঘ":"d","a":"a","b":"b","c":"c","d":"d","1":"a","2":"b","3":"c","4":"d","optiona":"a","optionb":"b","optionc":"c","optiond":"d"};return map[v]||""}
+document.getElementById("downloadQuestionTemplate").addEventListener("click",()=>{
+ const csv='question,option_a,option_b,option_c,option_d,correct_option,marks,subject\n"বাংলাদেশের রাজধানী কী?",ঢাকা,চট্টগ্রাম,খুলনা,রাজশাহী,a,1,বাংলাদেশ';
+ const blob=new Blob(["\ufeff",csv],{type:"text/csv;charset=utf-8;"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="academic-care-mcq-template.csv";a.click();URL.revokeObjectURL(url)
+});
+document.getElementById("importQuestionsButton").addEventListener("click",async()=>{
+ const file=document.getElementById("questionImportFile").files[0],examId=document.getElementById("questionExam").value;
+ if(!file)return setQuestionImportMessage("আগে একটি CSV/Excel ফাইল নির্বাচন করুন।",true);
+ if(!examId)return setQuestionImportMessage("আগে প্রশ্ন যোগ করার জন্য পরীক্ষা নির্বাচন করুন।",true);
+ const exam=exams.find(x=>x.id===examId);if(exam?.exam_type==="CQ")return setQuestionImportMessage("এই পরীক্ষা CQ-ভিত্তিক; MCQ ইমপোর্টের জন্য MCQ বা MCQ + CQ পরীক্ষা নির্বাচন করুন।",true);
+ const categoryId=document.getElementById("questionCategory").value,folderId=document.getElementById("questionFolder").value,setId=document.getElementById("questionSet").value;
+ if(categoryId&&(!folderId||!setId))return setQuestionImportMessage("ক্যাটাগরি নির্বাচন করলে ফোল্ডার ও সেটও নির্বাচন করুন।",true);
+ if(!window.XLSX)return setQuestionImportMessage("CSV/Excel পাঠক লোড হয়নি। পেজ রিফ্রেশ করে আবার চেষ্টা করুন।",true);
+ const button=document.getElementById("importQuestionsButton");button.disabled=true;setQuestionImportMessage("ফাইল পড়া ও যাচাই করা হচ্ছে…");
+ try{
+  const bytes=await file.arrayBuffer(),workbook=XLSX.read(bytes,{type:"array"}),sheet=workbook.Sheets[workbook.SheetNames[0]];
+  const rows=XLSX.utils.sheet_to_json(sheet,{defval:"",raw:false});
+  if(!rows.length)throw Error("ফাইলে কোনো প্রশ্নের সারি পাওয়া যায়নি।");
+  const parsed=rows.map((row,index)=>{
+   const question=String(importField(row,["question","questiontext","প্রশ্ন","প্রশ্নেরবিবরণ","প্রশ্নটিলিখুন"])).trim();
+   const options=[["optiona","option1","কঅপশন","অপশনক","ক"],["optionb","option2","খঅপশন","অপশনখ","খ"],["optionc","option3","গঅপশন","অপশনগ","গ"],["optiond","option4","ঘঅপশন","অপশনঘ","ঘ"]].map(keys=>String(importField(row,keys)).trim());
+   const correct=importCorrectOption(importField(row,["correctoption","correctanswer","answer","সঠিকউত্তর","উত্তর"]));
+   const marksRaw=String(importField(row,["marks","mark","নম্বর","মান"])).trim(),marks=marksRaw===""?1:Number(marksRaw);
+   const subject=String(importField(row,["subject","বিষয়","বিষয়"])).trim()||document.getElementById("questionSubject").value.trim()||null;
+   const errors=[];if(!question)errors.push("প্রশ্ন খালি");if(options.some(x=>!x))errors.push("চারটি অপশন পূরণ হয়নি");if(!correct)errors.push("সঠিক উত্তর ক/খ/গ/ঘ বা A/B/C/D হতে হবে");if(!Number.isFinite(marks)||marks<0)errors.push("নম্বর সঠিক নয়");
+   return {row:index+2,question,options,correct,marks,subject,errors}
+  });
+  const invalid=parsed.filter(x=>x.errors.length);if(invalid.length){const detail=invalid.slice(0,8).map(x=>"সারি "+bnDigits(x.row)+": "+x.errors.join(", ")).join("। ");throw Error("মোট "+bnDigits(invalid.length)+"টি সারিতে সমস্যা আছে। কোনো প্রশ্ন যোগ করা হয়নি। "+detail+(invalid.length>8?"। আরও সমস্যা আছে।":""))}
+  if(!confirm("যাচাই সম্পন্ন: "+bnDigits(parsed.length)+"টি MCQ যোগ হবে। নির্বাচিত পরীক্ষা ও ক্যাটাগরি/ফোল্ডার/সেট ব্যবহার করা হবে। চালিয়ে যাবেন?"))return;
+  const {data:lastQuestion,error:orderError}=await sb.from("academic_care_questions").select("sort_order").eq("exam_id",examId).order("sort_order",{ascending:false}).limit(1).maybeSingle();
+  if(orderError)throw Error("প্রশ্নের ক্রমিক নম্বর যাচাই হয়নি: "+orderError.message);
+  let sortOrder=Number(lastQuestion?.sort_order??0),saved=0;
+  for(const item of parsed){
+   sortOrder++;
+   const options=item.options.map((text,i)=>({value:"abcd"[i],text}));
+   const payload={exam_id:examId,question_text:item.question,options,question_type:"mcq",marks:item.marks,sort_order:sortOrder,category_id:categoryId?Number(categoryId):null,folder_id:folderId?Number(folderId):null,set_id:setId?Number(setId):null,subject:item.subject};
+   const {data:q,error}=await sb.from("academic_care_questions").insert(payload).select("id").single();
+   if(error)throw Error("সারি "+bnDigits(item.row)+"-এ প্রশ্ন সংরক্ষণ হয়নি: "+error.message+"। সফলভাবে যোগ হয়েছে "+bnDigits(saved)+"টি।");
+   const {error:keyError}=await sb.from("academic_care_answer_keys").insert({question_id:q.id,correct_option:item.correct});
+   if(keyError){await sb.from("academic_care_questions").delete().eq("id",q.id);throw Error("সারি "+bnDigits(item.row)+"-এ সঠিক উত্তর সংরক্ষণ হয়নি; অসম্পূর্ণ প্রশ্নটি সরানোর চেষ্টা করা হয়েছে। সফলভাবে যোগ হয়েছে "+bnDigits(saved)+"টি। "+keyError.message)}
+   saved++;
+  }
+  setQuestionImportMessage("সফলভাবে "+bnDigits(saved)+"টি MCQ প্রশ্ন ও সঠিক উত্তর সংরক্ষিত হয়েছে।");
+  document.getElementById("questionImportFile").value="";await loadQuestionBank();
+ }catch(err){setQuestionImportMessage(err.message||"ফাইল ইমপোর্ট করা যায়নি।",true)}
+ finally{button.disabled=false}
+});
+
 document.getElementById("questionType").addEventListener("change",()=>{const mcq=document.getElementById("questionType").value==="mcq";["optionA","optionB","optionC","optionD","correctOption"].forEach(id=>{document.getElementById(id).closest(".field").style.display=mcq?"flex":"none";document.getElementById(id).required=mcq&&id!=="correctOption"})});
 function syncQuestionTypes(){const ex=exams.find(x=>x.id===document.getElementById("questionExam").value);const sel=document.getElementById("questionType");const current=sel.value;const allowed=ex?.settings?.unused_question_types?["mcq","cq"]:ex?.exam_type==="MCQ"?["mcq"]:ex?.exam_type==="CQ"?["cq"]:["mcq","cq"];sel.innerHTML=allowed.map(t=>'<option value="'+t+'">'+(t==="mcq"?"MCQ — বহুনির্বাচনী":"CQ — লিখিত")+"</option>").join("");if(allowed.includes(current))sel.value=current;sel.dispatchEvent(new Event("change"));}
 document.getElementById("questionExam").addEventListener("change",syncQuestionTypes);
