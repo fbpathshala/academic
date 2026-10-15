@@ -40,6 +40,7 @@
     <div class="navlabel">অ্যাডমিন মেনু</div>
     <nav class="navlinks">
       <button class="navbtn active" data-view="home">▦ ড্যাশবোর্ড</button>
+      <button class="navbtn" data-view="questionCreate">✚ প্রশ্ন তৈরি</button>
       <button class="navbtn" data-view="exams">▣ পরীক্ষা পরিচালনা</button>
       <button class="navbtn" type="button" onclick="location.href='https://fbpathshala.github.io/exam/question-bank-select.html'">▤ প্রশ্ন ব্যাংক</button>
       <button class="navbtn" data-view="materials">▤ স্টাডি ম্যাটেরিয়াল</button>
@@ -60,6 +61,65 @@
       <div class="audience-stats">
         <div class="audience-stat"><span>👩‍🎓 মোট পরীক্ষার্থী</span><strong id="examineeCount">০</strong></div>
         <div class="audience-stat"><span>🌐 মোট ভিজিটর</span><strong id="visitorCount">০</strong></div>
+      </div>
+    </section>
+    <section id="questionCreate" class="view">
+      <div class="panel">
+        <div class="sectionhead"><h2>১. প্রশ্ন তৈরি</h2></div>
+        <p class="muted">প্রশ্ন আগে মাস্টার প্রশ্ন ব্যাংকে সংরক্ষণ হবে। এখানে তৈরি করা প্রশ্ন কোনো নির্দিষ্ট পরীক্ষার সঙ্গে যুক্ত হবে না; পরবর্তী ধাপে পরীক্ষা তৈরির সময় ব্যবহার করা যাবে।</p>
+        <h3>ক্যাটাগরি → ফোল্ডার → সেট ব্যবস্থাপনা</h3>
+        <div class="category-management-grid">
+          <div class="panel category-management-card">
+            <h3>🏷️ ক্যাটাগরি ব্যবস্থাপনা</h3>
+            <p class="muted">ক্যাটাগরি যোগ, নাম পরিবর্তন বা খালি ক্যাটাগরি মুছুন। নাম বদলালে প্রশ্নের সোর্সেও নতুন নাম দেখাবে।</p>
+            <div class="field"><label for="categoryManager">ক্যাটাগরি</label><select id="categoryManager"><option value="">ক্যাটাগরি নির্বাচন</option></select></div>
+            <div class="btnrow" style="margin:10px 0"><button class="btn light" id="renameCategory" type="button">✏️ Rename</button><button class="btn ghost" id="deleteCategory" type="button">🗑️ Delete</button></div>
+            <div class="field"><label for="newCategory">নতুন ক্যাটাগরির নাম</label><input id="newCategory" maxlength="120" placeholder="ক্যাটাগরির নাম"></div>
+            <button class="btn" id="createCategory" type="button" style="margin-top:10px">＋ ক্যাটাগরি যোগ</button>
+          </div>
+          <div class="panel category-management-card">
+            <h3>📁 ফোল্ডার ব্যবস্থাপনা</h3>
+            <p class="muted">ক্যাটাগরি নির্বাচন করে ফোল্ডার যোগ, নাম পরিবর্তন বা মুছুন।</p>
+            <div class="field"><label for="folderManager">ফোল্ডার</label><select id="folderManager"><option value="">ফোল্ডার নির্বাচন</option></select></div>
+            <div class="btnrow" style="margin:10px 0"><button class="btn light" id="renameFolder" type="button">✏️ Rename</button><button class="btn ghost" id="deleteFolder" type="button">🗑️ Delete</button></div>
+            <div class="field"><label for="newFolder">নতুন ফোল্ডারের নাম</label><input id="newFolder" placeholder="ফোল্ডারের নাম"></div>
+            <button class="btn" id="createFolder" type="button" style="margin-top:10px">＋ ফোল্ডার যোগ</button>
+          </div>
+          <div class="panel category-management-card">
+            <h3>📂 সেট ব্যবস্থাপনা</h3>
+            <p class="muted">ফোল্ডার নির্বাচন করে সেট যোগ, নাম পরিবর্তন বা মুছুন।</p>
+            <div class="field"><label for="setManager">সেট</label><select id="setManager"><option value="">সেট নির্বাচন</option></select></div>
+            <div class="btnrow" style="margin:10px 0"><button class="btn light" id="renameSet" type="button">✏️ Rename</button><button class="btn ghost" id="deleteSet" type="button">🗑️ Delete</button></div>
+            <div class="field"><label for="newSet">নতুন সেটের নাম</label><input id="newSet" placeholder="সেটের নাম"></div>
+            <button class="btn" id="createSet" type="button" style="margin-top:10px">＋ সেট যোগ</button>
+          </div>
+          <div class="field full"><div id="categoryManagerMessage" class="notice" role="status" aria-live="polite"></div></div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="sectionhead"><h2>ম্যানুয়ালি প্রশ্ন যোগ</h2></div>
+        <form id="masterQuestionForm" class="formgrid">
+          <div class="field"><label for="masterQuestionType">প্রশ্নের ধরন</label><select id="masterQuestionType"><option value="mcq">MCQ — বহুনির্বাচনী</option><option value="cq">CQ — লিখিত</option></select></div>
+          <div class="field"><label for="masterQuestionMarks">নম্বর</label><input id="masterQuestionMarks" type="number" min="0" step="0.5" value="1" required></div>
+          <div class="field"><label for="masterCategory">ক্যাটাগরি</label><select id="masterCategory"><option value="">ক্যাটাগরি নির্বাচন করুন</option></select></div>
+          <div class="field"><label for="masterFolder">ফোল্ডার</label><select id="masterFolder"><option value="">ফোল্ডার নির্বাচন করুন</option></select></div>
+          <div class="field"><label for="masterSet">সেট</label><select id="masterSet"><option value="">সেট নির্বাচন করুন</option></select></div>
+          <div class="field"><label for="masterSubject">বিষয়</label><input id="masterSubject" placeholder="যেমন: বাংলা ব্যাকরণ"></div>
+          <div class="field full"><label for="masterQuestionText">প্রশ্ন</label><textarea id="masterQuestionText" required></textarea></div>
+          <div class="field" id="masterOptionAField"><label for="masterOptionA">ক অপশন</label><input id="masterOptionA"></div>
+          <div class="field" id="masterOptionBField"><label for="masterOptionB">খ অপশন</label><input id="masterOptionB"></div>
+          <div class="field" id="masterOptionCField"><label for="masterOptionC">গ অপশন</label><input id="masterOptionC"></div>
+          <div class="field" id="masterOptionDField"><label for="masterOptionD">ঘ অপশন</label><input id="masterOptionD"></div>
+          <div class="field" id="masterCorrectField"><label for="masterCorrectOption">সঠিক উত্তর</label><select id="masterCorrectOption"><option value="a">ক</option><option value="b">খ</option><option value="c">গ</option><option value="d">ঘ</option></select></div>
+          <div class="field full"><button class="btn" type="submit">মাস্টার প্রশ্ন ব্যাংকে সংরক্ষণ</button><div id="masterQuestionMessage" class="notice" role="status" aria-live="polite"></div></div>
+        </form>
+      </div>
+      <div class="panel">
+        <div class="sectionhead"><h2>CSV / Excel থেকে MCQ যোগ</h2><button class="btn ghost" id="masterQuestionTemplate" type="button">নমুনা CSV ডাউনলোড</button></div>
+        <p class="muted">প্রথম সারিতে কলামের নাম রাখুন: question, option_a, option_b, option_c, option_d, correct_option, marks, subject। বাংলা কলাম নামও গ্রহণ করা হবে। আগে ক্যাটাগরি, ফোল্ডার ও সেট নির্বাচন করলে সব আমদানি করা প্রশ্নে তা প্রয়োগ হবে।</p>
+        <div class="field"><label for="masterQuestionFile">CSV / Excel ফাইল (.csv, .xlsx, .xls)</label><input id="masterQuestionFile" type="file" accept=".csv,.xlsx,.xls,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel"></div>
+        <button class="btn" id="masterQuestionImport" type="button">যাচাই করে MCQ আমদানি</button>
+        <div id="masterQuestionImportMessage" class="notice" role="status" aria-live="polite"></div>
       </div>
     </section>
     <section id="exams" class="view">
@@ -132,33 +192,6 @@
       <div class="panel">
         <div class="sectionhead"><h2>প্রশ্ন ব্যাংক</h2><button class="btn light" id="refreshQuestionBank" type="button">রিফ্রেশ</button></div>
         <p class="muted">পরীক্ষায় যোগ করা প্রশ্ন এখানে স্বয়ংক্রিয়ভাবে আসবে। আপাতত প্রতিটি পরীক্ষা একটি ফোল্ডার এবং MCQ/CQ প্রশ্নের ধরন অনুযায়ী ভাগ করে দেখানো হবে।</p>
-        <div class="category-management-grid">
-          <div class="panel category-management-card">
-            <h3>🏷️ ক্যাটাগরি ব্যবস্থাপনা</h3>
-            <p class="muted">ক্যাটাগরি যোগ, নাম পরিবর্তন বা খালি ক্যাটাগরি মুছুন। নাম বদলালে প্রশ্নের সোর্সেও নতুন নাম দেখাবে।</p>
-            <div class="field"><label for="categoryManager">ক্যাটাগরি</label><select id="categoryManager"><option value="">ক্যাটাগরি নির্বাচন</option></select></div>
-            <div class="btnrow" style="margin:10px 0"><button class="btn light" id="renameCategory" type="button">✏️ Rename</button><button class="btn ghost" id="deleteCategory" type="button">🗑️ Delete</button></div>
-            <div class="field"><label for="newCategory">নতুন ক্যাটাগরির নাম</label><input id="newCategory" maxlength="120" placeholder="ক্যাটাগরির নাম"></div>
-            <button class="btn" id="createCategory" type="button" style="margin-top:10px">＋ ক্যাটাগরি যোগ</button>
-          </div>
-          <div class="panel category-management-card">
-            <h3>📁 ফোল্ডার ব্যবস্থাপনা</h3>
-            <p class="muted">ক্যাটাগরি নির্বাচন করে ফোল্ডার যোগ, নাম পরিবর্তন বা মুছুন।</p>
-            <div class="field"><label for="folderManager">ফোল্ডার</label><select id="folderManager"><option value="">ফোল্ডার নির্বাচন</option></select></div>
-            <div class="btnrow" style="margin:10px 0"><button class="btn light" id="renameFolder" type="button">✏️ Rename</button><button class="btn ghost" id="deleteFolder" type="button">🗑️ Delete</button></div>
-            <div class="field"><label for="newFolder">নতুন ফোল্ডারের নাম</label><input id="newFolder" placeholder="ফোল্ডারের নাম"></div>
-            <button class="btn" id="createFolder" type="button" style="margin-top:10px">＋ ফোল্ডার যোগ</button>
-          </div>
-          <div class="panel category-management-card">
-            <h3>📂 সেট ব্যবস্থাপনা</h3>
-            <p class="muted">ফোল্ডার নির্বাচন করে সেট যোগ, নাম পরিবর্তন বা মুছুন।</p>
-            <div class="field"><label for="setManager">সেট</label><select id="setManager"><option value="">সেট নির্বাচন</option></select></div>
-            <div class="btnrow" style="margin:10px 0"><button class="btn light" id="renameSet" type="button">✏️ Rename</button><button class="btn ghost" id="deleteSet" type="button">🗑️ Delete</button></div>
-            <div class="field"><label for="newSet">নতুন সেটের নাম</label><input id="newSet" placeholder="সেটের নাম"></div>
-            <button class="btn" id="createSet" type="button" style="margin-top:10px">＋ সেট যোগ</button>
-          </div>
-          <div class="field full"><div id="categoryManagerMessage" class="notice" role="status" aria-live="polite"></div></div>
-        </div>
         <div class="bank-tools">
           <input id="bankSearch" type="search" placeholder="প্রশ্ন, বিষয় বা পরীক্ষার নাম খুঁজুন">
           <select id="bankExamFilter"><option value="">সব পরীক্ষা</option></select>
@@ -207,6 +240,7 @@
   </main>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script>
 const SUPABASE_URL="https://ydvbnalhcnfqpxkkmywr.supabase.co";
 const SUPABASE_KEY="sb_publishable_xCbSWDkASsbUPl-WmygyMw_eVrJY_9a";
@@ -221,7 +255,7 @@ async function loadAcademicCategories(){
  const {data,error}=await sb.from("academic_care_categories").select("id,name").order("name");
  if(error){categoryMessage("ক্যাটাগরি লোড হয়নি: "+error.message,true);return}
  categoryRows.splice(0,categoryRows.length,...(data||[]));
- for(const id of ["categoryManager","questionCategory","bankCategoryFilter"]){
+ for(const id of ["categoryManager","questionCategory","bankCategoryFilter","masterCategory"]){
   const el=document.getElementById(id),current=el.value;
   el.innerHTML=optionHtml(categoryRows,"id","name",id==="bankCategoryFilter"?"সব ক্যাটাগরি":"ক্যাটাগরি নির্বাচন করুন");
   if(categoryRows.some(x=>String(x.id)===current))el.value=current;
@@ -229,6 +263,7 @@ async function loadAcademicCategories(){
  await loadManagerFolders();
  await loadQuestionFolders();
  await loadBankFolders();
+ await loadMasterQuestionFolders();
 }
 async function loadManagerFolders(selected=""){
  const catId=document.getElementById("categoryManager").value,el=document.getElementById("folderManager");
@@ -277,11 +312,100 @@ async function loadBankSets(selected=""){
  el.innerHTML=optionHtml(data||[],"id","set_name","সব সেট");
  if(selected)el.value=String(selected);
 }
+async function loadMasterQuestionFolders(selected=""){
+ const catId=document.getElementById("masterCategory").value,el=document.getElementById("masterFolder");
+ let q=sb.from("academic_care_folders").select("id,folder_name,category_id").order("folder_name");
+ if(catId)q=q.eq("category_id",catId);else q=q.eq("category_id",0);
+ const {data,error}=await q;if(error){setMasterQuestionMessage("ফোল্ডার লোড হয়নি: "+error.message,true);return}
+ el.innerHTML=optionHtml(data||[],"id","folder_name","ফোল্ডার নির্বাচন করুন");if(selected)el.value=String(selected);await loadMasterQuestionSets()
+}
+async function loadMasterQuestionSets(selected=""){
+ const folderId=document.getElementById("masterFolder").value,el=document.getElementById("masterSet");
+ const {data,error}=await sb.from("academic_care_sets").select("id,set_name").eq("folder_id",folderId||0).order("set_name");
+ if(error){setMasterQuestionMessage("সেট লোড হয়নি: "+error.message,true);return}
+ el.innerHTML=optionHtml(data||[],"id","set_name","সেট নির্বাচন করুন");if(selected)el.value=String(selected)
+}
+function setMasterQuestionMessage(text,error=false){const el=document.getElementById("masterQuestionMessage");if(el){el.textContent=text;el.className=error?"notice error":"notice"}}
+function setMasterImportMessage(text,error=false){const el=document.getElementById("masterQuestionImportMessage");if(el){el.textContent=text;el.className=error?"notice error":"notice"}}
+function syncMasterQuestionType(){
+ const mcq=document.getElementById("masterQuestionType").value==="mcq";
+ ["masterOptionAField","masterOptionBField","masterOptionCField","masterOptionDField","masterCorrectField"].forEach(id=>document.getElementById(id).style.display=mcq?"flex":"none");
+ ["masterOptionA","masterOptionB","masterOptionC","masterOptionD"].forEach(id=>document.getElementById(id).required=mcq);
+ document.getElementById("masterCorrectOption").required=mcq
+}
+function masterQuestionLocation(){
+ const category=document.getElementById("masterCategory").value,folder=document.getElementById("masterFolder").value,set=document.getElementById("masterSet").value;
+ if(category&&(!folder||!set))throw Error("ক্যাটাগরি নির্বাচন করলে সংশ্লিষ্ট ফোল্ডার ও সেটও নির্বাচন করুন।");
+ if(folder&&!category)throw Error("ফোল্ডার নির্বাচনের আগে ক্যাটাগরি নির্বাচন করুন।");
+ if(set&&!folder)throw Error("সেট নির্বাচনের আগে ফোল্ডার নির্বাচন করুন।");
+ return {category_id:category?Number(category):null,folder_id:folder?Number(folder):null,set_id:set?Number(set):null}
+}
+function normalizeMasterHeader(value){return String(value??"").trim().toLowerCase().replace(/[\s\-_().]/g,"")}
+function masterImportField(row,names){for(const key of Object.keys(row)){if(names.includes(normalizeMasterHeader(key)))return row[key]}return ""}
+function masterCorrectOption(value){const v=String(value??"").trim().toLowerCase();return ({"ক":"a","খ":"b","গ":"c","ঘ":"d","a":"a","b":"b","c":"c","d":"d","1":"a","2":"b","3":"c","4":"d"})[v]||""}
+document.getElementById("masterCategory").addEventListener("change",()=>loadMasterQuestionFolders());
+document.getElementById("masterFolder").addEventListener("change",()=>loadMasterQuestionSets());
+document.getElementById("masterQuestionType").addEventListener("change",syncMasterQuestionType);
+document.getElementById("masterQuestionForm").addEventListener("submit",async e=>{
+ e.preventDefault();
+ try{
+  const location=masterQuestionLocation(),type=document.getElementById("masterQuestionType").value,question=document.getElementById("masterQuestionText").value.trim(),marks=Number(document.getElementById("masterQuestionMarks").value);
+  if(!question)throw Error("প্রশ্ন লিখুন।");if(!Number.isFinite(marks)||marks<0)throw Error("নম্বর শূন্য বা তার বেশি হতে হবে।");
+  const optionIds=["masterOptionA","masterOptionB","masterOptionC","masterOptionD"],optionTexts=optionIds.map(id=>document.getElementById(id).value.trim());
+  if(type==="mcq"&&optionTexts.some(x=>!x))throw Error("MCQ-এর চারটি অপশন পূরণ করুন।");
+  const payload={question_text:question,question_type:type,options:type==="mcq"?optionTexts.map((text,i)=>({value:"abcd"[i],text})):[],marks,...location,subject:document.getElementById("masterSubject").value.trim()||null};
+  const {data:item,error}=await sb.from("academic_care_question_bank_items").insert(payload).select("id").single();
+  if(error)throw Error("প্রশ্ন সংরক্ষণ হয়নি: "+error.message);
+  if(type==="mcq"){
+   const {error:keyError}=await sb.from("academic_care_question_bank_answer_keys").insert({question_id:item.id,correct_option:document.getElementById("masterCorrectOption").value});
+   if(keyError){await sb.from("academic_care_question_bank_items").delete().eq("id",item.id);throw Error("সঠিক উত্তর সংরক্ষণ হয়নি; অসম্পূর্ণ প্রশ্নটি সরানোর চেষ্টা করা হয়েছে: "+keyError.message)}
+  }
+  e.target.reset();document.getElementById("masterQuestionMarks").value=1;syncMasterQuestionType();setMasterQuestionMessage(type==="mcq"?"MCQ ও সঠিক উত্তর মাস্টার প্রশ্ন ব্যাংকে সংরক্ষিত হয়েছে।":"CQ প্রশ্ন মাস্টার প্রশ্ন ব্যাংকে সংরক্ষিত হয়েছে।");
+ }catch(err){setMasterQuestionMessage(err.message||"প্রশ্ন সংরক্ষণ হয়নি।",true)}
+});
+document.getElementById("masterQuestionTemplate").addEventListener("click",()=>{
+ const csv='question,option_a,option_b,option_c,option_d,correct_option,marks,subject\n"বাংলাদেশের রাজধানী কী?",ঢাকা,চট্টগ্রাম,খুলনা,রাজশাহী,a,1,বাংলাদেশ';
+ const blob=new Blob(["\ufeff",csv],{type:"text/csv;charset=utf-8;"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="academic-care-mcq-template.csv";a.click();URL.revokeObjectURL(url)
+});
+document.getElementById("masterQuestionImport").addEventListener("click",async()=>{
+ const file=document.getElementById("masterQuestionFile").files[0];if(!file)return setMasterImportMessage("আগে CSV/Excel ফাইল নির্বাচন করুন।",true);
+ if(!window.XLSX)return setMasterImportMessage("CSV/Excel পাঠক লোড হয়নি; পেজ রিফ্রেশ করে চেষ্টা করুন।",true);
+ let location;try{location=masterQuestionLocation()}catch(err){return setMasterImportMessage(err.message,true)}
+ const button=document.getElementById("masterQuestionImport");button.disabled=true;setMasterImportMessage("ফাইল পড়া ও যাচাই করা হচ্ছে…");
+ try{
+  const workbook=XLSX.read(await file.arrayBuffer(),{type:"array"}),sheet=workbook.Sheets[workbook.SheetNames[0]],rows=XLSX.utils.sheet_to_json(sheet,{defval:"",raw:false});
+  if(!rows.length)throw Error("ফাইলে কোনো প্রশ্নের সারি পাওয়া যায়নি।");
+  const parsed=rows.map((row,index)=>{
+   const question=String(masterImportField(row,["question","questiontext","প্রশ্ন","প্রশ্নেরবিবরণ"])).trim();
+   const options=[["optiona","option1","কঅপশন","অপশনক","ক"],["optionb","option2","খঅপশন","অপশনখ","খ"],["optionc","option3","গঅপশন","অপশনগ","গ"],["optiond","option4","ঘঅপশন","অপশনঘ","ঘ"]].map(keys=>String(masterImportField(row,keys)).trim());
+   const correct=masterCorrectOption(masterImportField(row,["correctoption","correctanswer","answer","সঠিকউত্তর","উত্তর"]));
+   const rawMarks=String(masterImportField(row,["marks","mark","নম্বর","মান"])).trim(),marks=rawMarks===""?1:Number(rawMarks);
+   const subject=String(masterImportField(row,["subject","বিষয়","বিষয়"])).trim()||null,errors=[];
+   if(!question)errors.push("প্রশ্ন খালি");if(options.some(x=>!x))errors.push("চারটি অপশন পূরণ হয়নি");if(!correct)errors.push("সঠিক উত্তর ক/খ/গ/ঘ বা A/B/C/D হতে হবে");if(!Number.isFinite(marks)||marks<0)errors.push("নম্বর সঠিক নয়");
+   return {row:index+2,question,options,correct,marks,subject,errors}
+  });
+  const invalid=parsed.filter(x=>x.errors.length);if(invalid.length)throw Error("মোট "+bnDigits(invalid.length)+"টি সারিতে সমস্যা আছে; কোনো প্রশ্ন যোগ করা হয়নি। "+invalid.slice(0,8).map(x=>"সারি "+bnDigits(x.row)+": "+x.errors.join(", ")).join("। "));
+  if(!confirm("যাচাই সম্পন্ন: "+bnDigits(parsed.length)+"টি MCQ মাস্টার প্রশ্ন ব্যাংকে যোগ হবে। চালিয়ে যাবেন?"))return;
+  let saved=0;
+  for(const item of parsed){
+   const payload={question_text:item.question,question_type:"mcq",options:item.options.map((text,i)=>({value:"abcd"[i],text})),marks:item.marks,...location,subject:item.subject};
+   const {data:created,error}=await sb.from("academic_care_question_bank_items").insert(payload).select("id").single();
+   if(error)throw Error("সারি "+bnDigits(item.row)+" সংরক্ষণ হয়নি; সফলভাবে "+bnDigits(saved)+"টি যোগ হয়েছে। "+error.message);
+   const {error:keyError}=await sb.from("academic_care_question_bank_answer_keys").insert({question_id:created.id,correct_option:item.correct});
+   if(keyError){await sb.from("academic_care_question_bank_items").delete().eq("id",created.id);throw Error("সারি "+bnDigits(item.row)+"-এ সঠিক উত্তর সংরক্ষণ হয়নি; সফলভাবে "+bnDigits(saved)+"টি যোগ হয়েছে। "+keyError.message)}
+   saved++;
+  }
+  setMasterImportMessage("সফলভাবে "+bnDigits(saved)+"টি MCQ ও সঠিক উত্তর মাস্টার প্রশ্ন ব্যাংকে সংরক্ষিত হয়েছে।");document.getElementById("masterQuestionFile").value="";
+ }catch(err){setMasterImportMessage(err.message||"আমদানি করা যায়নি।",true)}
+ finally{button.disabled=false}
+});
+syncMasterQuestionType();
+
 async function createAcademicCategory(){
  const name=document.getElementById("newCategory").value.trim();if(!name)return categoryMessage("নতুন ক্যাটাগরির নাম লিখুন।",true);
  const {data,error}=await sb.from("academic_care_categories").insert({name}).select("id,name").single();
  if(error)return categoryMessage(error.message,true);
- document.getElementById("newCategory").value="";await loadAcademicCategories();document.getElementById("categoryManager").value=String(data.id);document.getElementById("questionCategory").value=String(data.id);await loadManagerFolders();await loadQuestionFolders();categoryMessage("নতুন ক্যাটাগরি তৈরি হয়েছে।");
+ document.getElementById("newCategory").value="";await loadAcademicCategories();document.getElementById("categoryManager").value=String(data.id);document.getElementById("questionCategory").value=String(data.id);document.getElementById("masterCategory").value=String(data.id);await loadManagerFolders();await loadQuestionFolders();await loadMasterQuestionFolders();categoryMessage("নতুন ক্যাটাগরি তৈরি হয়েছে।");
 }
 async function renameAcademicCategory(){
  const id=document.getElementById("categoryManager").value;if(!id)return categoryMessage("আগে ক্যাটাগরি নির্বাচন করুন।",true);
@@ -303,39 +427,39 @@ async function createAcademicFolder(){
  const category_id=document.getElementById("categoryManager").value,name=document.getElementById("newFolder").value.trim();
  if(!category_id)return categoryMessage("আগে ক্যাটাগরি নির্বাচন করুন।",true);if(!name)return categoryMessage("ফোল্ডারের নাম লিখুন।",true);
  const {data,error}=await sb.from("academic_care_folders").insert({category_id:Number(category_id),folder_name:name}).select("id").single();if(error)return categoryMessage(error.message,true);
- document.getElementById("newFolder").value="";await loadManagerFolders(data.id);await loadQuestionFolders();await loadBankFolders();categoryMessage("ফোল্ডার তৈরি হয়েছে।");
+ document.getElementById("newFolder").value="";await loadManagerFolders(data.id);await loadQuestionFolders();await loadBankFolders();await loadMasterQuestionFolders();if(String(document.getElementById("masterCategory").value)===String(category_id)){document.getElementById("masterFolder").value=String(data.id);await loadMasterQuestionSets()}categoryMessage("ফোল্ডার তৈরি হয়েছে।");
 }
 async function renameAcademicFolder(){
  const id=document.getElementById("folderManager").value;if(!id)return categoryMessage("আগে ফোল্ডার নির্বাচন করুন।",true);
  const old=document.getElementById("folderManager").selectedOptions[0]?.textContent||"",name=prompt("নতুন ফোল্ডারের নাম লিখুন:",old);if(name===null)return;if(!name.trim())return categoryMessage("ফোল্ডারের নাম খালি রাখা যাবে না।",true);
  const {error}=await sb.from("academic_care_folders").update({folder_name:name.trim()}).eq("id",id);if(error)return categoryMessage(error.message,true);
- await loadManagerFolders(id);await loadQuestionFolders();await loadBankFolders();categoryMessage("ফোল্ডারের নাম পরিবর্তন হয়েছে; প্রশ্নের সোর্সে নতুন নাম দেখাবে।");
+ await loadManagerFolders(id);await loadQuestionFolders();await loadBankFolders();await loadMasterQuestionFolders(id);categoryMessage("ফোল্ডারের নাম পরিবর্তন হয়েছে; প্রশ্নের সোর্সে নতুন নাম দেখাবে।");
 }
 async function deleteAcademicFolder(){
  const id=document.getElementById("folderManager").value;if(!id)return categoryMessage("আগে ফোল্ডার নির্বাচন করুন।",true);
  const [sr,qr]=await Promise.all([sb.from("academic_care_sets").select("id",{count:"exact",head:true}).eq("folder_id",id),sb.from("academic_care_questions").select("id",{count:"exact",head:true}).eq("folder_id",id)]);
  if(sr.error||qr.error)return categoryMessage((sr.error||qr.error).message,true);if((sr.count||0)||(qr.count||0))return categoryMessage("এই ফোল্ডারে সেট বা প্রশ্ন আছে। আগে সেগুলো সরান; কোনো রেকর্ড মুছে ফেলা হয়নি।",true);
  if(!confirm("নির্বাচিত ফোল্ডার মুছে ফেলবেন?"))return;const {error}=await sb.from("academic_care_folders").delete().eq("id",id);if(error)return categoryMessage(error.message,true);
- await loadManagerFolders();await loadQuestionFolders();await loadBankFolders();categoryMessage("ফোল্ডার মুছে ফেলা হয়েছে।");
+ await loadManagerFolders();await loadQuestionFolders();await loadBankFolders();await loadMasterQuestionFolders();categoryMessage("ফোল্ডার মুছে ফেলা হয়েছে।");
 }
 async function createAcademicSet(){
  const folder_id=document.getElementById("folderManager").value,name=document.getElementById("newSet").value.trim();
  if(!folder_id)return categoryMessage("আগে ফোল্ডার নির্বাচন করুন।",true);if(!name)return categoryMessage("সেটের নাম লিখুন।",true);
  const {data,error}=await sb.from("academic_care_sets").insert({folder_id:Number(folder_id),set_name:name}).select("id").single();if(error)return categoryMessage(error.message,true);
- document.getElementById("newSet").value="";await loadManagerSets(data.id);await loadQuestionSets();await loadBankSets();categoryMessage("সেট তৈরি হয়েছে।");
+ document.getElementById("newSet").value="";await loadManagerSets(data.id);await loadQuestionSets();await loadBankSets();await loadMasterQuestionSets(data.id);categoryMessage("সেট তৈরি হয়েছে।");
 }
 async function renameAcademicSet(){
  const id=document.getElementById("setManager").value;if(!id)return categoryMessage("আগে সেট নির্বাচন করুন।",true);
  const old=document.getElementById("setManager").selectedOptions[0]?.textContent||"",name=prompt("নতুন সেটের নাম লিখুন:",old);if(name===null)return;if(!name.trim())return categoryMessage("সেটের নাম খালি রাখা যাবে না।",true);
  const {error}=await sb.from("academic_care_sets").update({set_name:name.trim()}).eq("id",id);if(error)return categoryMessage(error.message,true);
- await loadManagerSets(id);await loadQuestionSets();await loadBankSets();categoryMessage("সেটের নাম পরিবর্তন হয়েছে; প্রশ্নের সোর্সে নতুন নাম দেখাবে।");
+ await loadManagerSets(id);await loadQuestionSets();await loadBankSets();await loadMasterQuestionSets(id);categoryMessage("সেটের নাম পরিবর্তন হয়েছে; প্রশ্নের সোর্সে নতুন নাম দেখাবে।");
 }
 async function deleteAcademicSet(){
  const id=document.getElementById("setManager").value;if(!id)return categoryMessage("আগে সেট নির্বাচন করুন।",true);
  const {count,error:checkError}=await sb.from("academic_care_questions").select("id",{count:"exact",head:true}).eq("set_id",id);if(checkError)return categoryMessage(checkError.message,true);
  if(count)return categoryMessage("এই সেটে প্রশ্ন আছে। আগে প্রশ্নগুলো অন্য সেটে সরান; কোনো রেকর্ড মুছে ফেলা হয়নি।",true);
  if(!confirm("নির্বাচিত সেট মুছে ফেলবেন?"))return;const {error}=await sb.from("academic_care_sets").delete().eq("id",id);if(error)return categoryMessage(error.message,true);
- await loadManagerSets();await loadQuestionSets();await loadBankSets();categoryMessage("সেট মুছে ফেলা হয়েছে।");
+ await loadManagerSets();await loadQuestionSets();await loadBankSets();await loadMasterQuestionSets();categoryMessage("সেট মুছে ফেলা হয়েছে।");
 }
 function setupAcademicCategoryUI(){
  const on=(id,fn)=>document.getElementById(id).addEventListener("click",fn);
