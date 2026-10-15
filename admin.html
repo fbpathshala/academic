@@ -401,7 +401,7 @@ document.getElementById("masterQuestionImport").addEventListener("click",async()
 });
 syncMasterQuestionType();
 
-function createAcademicCategory(){
+async function createAcademicCategory(){
  const name=document.getElementById("newCategory").value.trim();if(!name)return categoryMessage("নতুন ক্যাটাগরির নাম লিখুন।",true);
  const {data,error}=await sb.from("academic_care_categories").insert({name}).select("id,name").single();
  if(error)return categoryMessage(error.message,true);
