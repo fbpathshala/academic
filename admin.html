@@ -127,11 +127,6 @@
         <div id="masterQuestionListMessage" class="notice" role="status" aria-live="polite"></div>
         <div id="masterQuestionList" class="itemlist"><div class="listempty">তালিকা লোড হচ্ছে…</div></div>
       </div>
-      <div class="panel">
-        <div class="sectionhead"><h2>সংরক্ষিত প্রশ্নসমূহ</h2><button class="btn ghost" id="refreshMasterQuestionList" type="button">তালিকা রিফ্রেশ</button></div>
-        <div id="masterQuestionListMessage" class="notice" role="status" aria-live="polite">প্রশ্নের তালিকা লোড হচ্ছে…</div>
-        <div id="masterQuestionList" class="table-wrap"></div>
-      </div>
     </section>
     <section id="exams" class="view">
       <div class="panel">
@@ -262,7 +257,7 @@ let editingQuestionId=null;
 const categoryRows=[];
 function categoryMessage(text,error=false){const el=document.getElementById("categoryManagerMessage");if(el){el.textContent=text;el.className=error?"notice error":"notice";}}
 function optionHtml(rows,idKey,labelKey,placeholder){return '<option value="">'+escapeHtml(placeholder)+'</option>'+rows.map(x=>'<option value="'+escapeHtml(x[idKey])+'">'+escapeHtml(x[labelKey])+'</option>').join("");}
-async function loadAcademicCategories(){
+async async function loadAcademicCategories(){
  const {data,error}=await sb.from("academic_care_categories").select("id,name").order("name");
  if(error){categoryMessage("ক্যাটাগরি লোড হয়নি: "+error.message,true);return}
  categoryRows.splice(0,categoryRows.length,...(data||[]));
