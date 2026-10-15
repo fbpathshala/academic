@@ -392,7 +392,7 @@ document.getElementById("masterQuestionImport").addEventListener("click",async()
    const {data:created,error}=await sb.from("academic_care_question_bank_items").insert(payload).select("id").single();
    if(error)throw Error("সারি "+bnDigits(item.row)+" সংরক্ষণ হয়নি; সফলভাবে "+bnDigits(saved)+"টি যোগ হয়েছে। "+error.message);
    const {error:keyError}=await sb.from("academic_care_question_bank_answer_keys").insert({question_id:created.id,correct_option:item.correct});
-   if(keyError){await sb.from("academic_care_question_bank_items").delete().eq("id",created.id);throw Error("সারি "+bnDigits(item.row)-+"-এ সঠিক উত্তর সংরক্ষণ হয়নি; সফলভাবে "+bnDigits(saved)+"টি যোগ হয়েছে। "+keyError.message)}
+   if(keyError){await sb.from("academic_care_question_bank_items").delete().eq("id",created.id);throw Error("সারি "+bnDigits(item.row)+"-এ সঠিক উত্তর সংরক্ষণ হয়নি; সফলভাবে "+bnDigits(saved)+"টি যোগ হয়েছে। "+keyError.message)}
    saved++;
   }
   setMasterImportMessage("সফলভাবে "+bnDigits(saved)+"টি MCQ ও সঠিক উত্তর মাস্টার প্রশ্ন ব্যাংকে সংরক্ষিত হয়েছে।");document.getElementById("masterQuestionFile").value="";
