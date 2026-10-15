@@ -255,7 +255,7 @@ async function loadAcademicCategories(){
  const {data,error}=await sb.from("academic_care_categories").select("id,name").order("name");
  if(error){categoryMessage("ক্যাটাগরি লোড হয়নি: "+error.message,true);return}
  categoryRows.splice(0,categoryRows.length,...(data||[]));
- for(const id of ["categoryManager","questionCategory","bankCategoryFilter"]){
+ for(const id of ["categoryManager","questionCategory","bankCategoryFilter","masterCategory"]){
   const el=document.getElementById(id),current=el.value;
   el.innerHTML=optionHtml(categoryRows,"id","name",id==="bankCategoryFilter"?"সব ক্যাটাগরি":"ক্যাটাগরি নির্বাচন করুন");
   if(categoryRows.some(x=>String(x.id)===current))el.value=current;
@@ -311,7 +311,97 @@ async function loadBankSets(selected=""){
  el.innerHTML=optionHtml(data||[],"id","set_name","সব সেট");
  if(selected)el.value=String(selected);
 }
-async function createAcademicCategory(){
+async 
+async function loadMasterQuestionFolders(selected=""){
+ const catId=document.getElementById("masterCategory").value,el=document.getElementById("masterFolder");
+ let q=sb.from("academic_care_folders").select("id,folder_name,category_id").order("folder_name");
+ if(catId)q=q.eq("category_id",catId);else q=q.eq("category_id",0);
+ const {data,error}=await q;if(error){setMasterQuestionMessage("ফোল্ডার লোড হয়নি: "+error.message,true);return}
+ el.innerHTML=optionHtml(data||[],"id","folder_name","ফোল্ডার নির্বাচন করুন");if(selected)el.value=String(selected);await loadMasterQuestionSets()
+}
+async function loadMasterQuestionSets(selected=""){
+ const folderId=document.getElementById("masterFolder").value,el=document.getElementById("masterSet");
+ const {data,error}=await sb.from("academic_care_sets").select("id,set_name").eq("folder_id",folderId||0).order("set_name");
+ if(error){setMasterQuestionMessage("সেট লোড হয়নি: "+error.message,true);return}
+ el.innerHTML=optionHtml(data||[],"id","set_name","সেট নির্বাচন করুন");if(selected)el.value=String(selected)
+}
+function setMasterQuestionMessage(text,error=false){const el=document.getElementById("masterQuestionMessage");if(el){el.textContent=text;el.className=error?"notice error":"notice"}}
+function setMasterImportMessage(text,error=false){const el=document.getElementById("masterQuestionImportMessage");if(el){el.textContent=text;el.className=error?"notice error":"notice"}}
+function syncMasterQuestionType(){
+ const mcq=document.getElementById("masterQuestionType").value==="mcq";
+ ["masterOptionAField","masterOptionBField","masterOptionCField","masterOptionDField","masterCorrectField"].forEach(id=>document.getElementById(id).style.display=mcq?"flex":"none");
+ ["masterOptionA","masterOptionB","masterOptionC","masterOptionD"].forEach(id=>document.getElementById(id).required=mcq);
+ document.getElementById("masterCorrectOption").required=mcq
+}
+function masterQuestionLocation(){
+ const category=document.getElementById("masterCategory").value,folder=document.getElementById("masterFolder").value,set=document.getElementById("masterSet").value;
+ if(category&&(!folder||!set))throw Error("ক্যাটাগরি নির্বাচন করলে সংশ্লিষ্ট ফোল্ডার ও সেটও নির্বাচন করুন।");
+ if(folder&&!category)throw Error("ফোল্ডার নির্বাচনের আগে ক্যাটাগরি নির্বাচন করুন।");
+ if(set&&!folder)throw Error("সেট নির্বাচনের আগে ফোল্ডার নির্বাচন করুন।");
+ return {category_id:category?Number(category):null,folder_id:folder?Number(folder):null,set_id:set?Number(set):null}
+}
+function normalizeMasterHeader(value){return String(value??"").trim().toLowerCase().replace(/[\s\-_().]/g,"")}
+function masterImportField(row,names){for(const key of Object.keys(row)){if(names.includes(normalizeMasterHeader(key)))return row[key]}return ""}
+function masterCorrectOption(value){const v=String(value??"").trim().toLowerCase();return ({"ক":"a","খ":"b","গ":"c","ঘ":"d","a":"a","b":"b","c":"c","d":"d","1":"a","2":"b","3":"c","4":"d"})[v]||""}
+document.getElementById("masterCategory").addEventListener("change",()=>loadMasterQuestionFolders());
+document.getElementById("masterFolder").addEventListener("change",()=>loadMasterQuestionSets());
+document.getElementById("masterQuestionType").addEventListener("change",syncMasterQuestionType);
+document.getElementById("masterQuestionForm").addEventListener("submit",async e=>{
+ e.preventDefault();
+ try{
+  const location=masterQuestionLocation(),type=document.getElementById("masterQuestionType").value,question=document.getElementById("masterQuestionText").value.trim(),marks=Number(document.getElementById("masterQuestionMarks").value);
+  if(!question)throw Error("প্রশ্ন লিখুন।");if(!Number.isFinite(marks)||marks<0)throw Error("নম্বর শূন্য বা তার বেশি হতে হবে।");
+  const optionIds=["masterOptionA","masterOptionB","masterOptionC","masterOptionD"],optionTexts=optionIds.map(id=>document.getElementById(id).value.trim());
+  if(type==="mcq"&&optionTexts.some(x=>!x))throw Error("MCQ-এর চারটি অপশন পূরণ করুন।");
+  const payload={question_text:question,question_type:type,options:type==="mcq"?optionTexts.map((text,i)=>({value:"abcd"[i],text})):[],marks,...location,subject:document.getElementById("masterSubject").value.trim()||null};
+  const {data:item,error}=await sb.from("academic_care_question_bank_items").insert(payload).select("id").single();
+  if(error)throw Error("প্রশ্ন সংরক্ষণ হয়নি: "+error.message);
+  if(type==="mcq"){
+   const {error:keyError}=await sb.from("academic_care_question_bank_answer_keys").insert({question_id:item.id,correct_option:document.getElementById("masterCorrectOption").value});
+   if(keyError){await sb.from("academic_care_question_bank_items").delete().eq("id",item.id);throw Error("সঠিক উত্তর সংরক্ষণ হয়নি; অসম্পূর্ণ প্রশ্নটি সরানোর চেষ্টা করা হয়েছে: "+keyError.message)}
+  }
+  e.target.reset();document.getElementById("masterQuestionMarks").value=1;syncMasterQuestionType();setMasterQuestionMessage(type==="mcq"?"MCQ ও সঠিক উত্তর মাস্টার প্রশ্ন ব্যাংকে সংরক্ষিত হয়েছে।":"CQ প্রশ্ন মাস্টার প্রশ্ন ব্যাংকে সংরক্ষিত হয়েছে।");
+ }catch(err){setMasterQuestionMessage(err.message||"প্রশ্ন সংরক্ষণ হয়নি।",true)}
+});
+document.getElementById("masterQuestionTemplate").addEventListener("click",()=>{
+ const csv='question,option_a,option_b,option_c,option_d,correct_option,marks,subject\n"বাংলাদেশের রাজধানী কী?",ঢাকা,চট্টগ্রাম,খুলনা,রাজশাহী,a,1,বাংলাদেশ';
+ const blob=new Blob(["\ufeff",csv],{type:"text/csv;charset=utf-8;"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="academic-care-mcq-template.csv";a.click();URL.revokeObjectURL(url)
+});
+document.getElementById("masterQuestionImport").addEventListener("click",async()=>{
+ const file=document.getElementById("masterQuestionFile").files[0];if(!file)return setMasterImportMessage("আগে CSV/Excel ফাইল নির্বাচন করুন।",true);
+ if(!window.XLSX)return setMasterImportMessage("CSV/Excel পাঠক লোড হয়নি; পেজ রিফ্রেশ করে চেষ্টা করুন।",true);
+ let location;try{location=masterQuestionLocation()}catch(err){return setMasterImportMessage(err.message,true)}
+ const button=document.getElementById("masterQuestionImport");button.disabled=true;setMasterImportMessage("ফাইল পড়া ও যাচাই করা হচ্ছে…");
+ try{
+  const workbook=XLSX.read(await file.arrayBuffer(),{type:"array"}),sheet=workbook.Sheets[workbook.SheetNames[0]],rows=XLSX.utils.sheet_to_json(sheet,{defval:"",raw:false});
+  if(!rows.length)throw Error("ফাইলে কোনো প্রশ্নের সারি পাওয়া যায়নি।");
+  const parsed=rows.map((row,index)=>{
+   const question=String(masterImportField(row,["question","questiontext","প্রশ্ন","প্রশ্নেরবিবরণ"])).trim();
+   const options=[["optiona","option1","কঅপশন","অপশনক","ক"],["optionb","option2","খঅপশন","অপশনখ","খ"],["optionc","option3","গঅপশন","অপশনগ","গ"],["optiond","option4","ঘঅপশন","অপশনঘ","ঘ"]].map(keys=>String(masterImportField(row,keys)).trim());
+   const correct=masterCorrectOption(masterImportField(row,["correctoption","correctanswer","answer","সঠিকউত্তর","উত্তর"]));
+   const rawMarks=String(masterImportField(row,["marks","mark","নম্বর","মান"])).trim(),marks=rawMarks===""?1:Number(rawMarks);
+   const subject=String(masterImportField(row,["subject","বিষয়","বিষয়"])).trim()||null,errors=[];
+   if(!question)errors.push("প্রশ্ন খালি");if(options.some(x=>!x))errors.push("চারটি অপশন পূরণ হয়নি");if(!correct)errors.push("সঠিক উত্তর ক/খ/গ/ঘ বা A/B/C/D হতে হবে");if(!Number.isFinite(marks)||marks<0)errors.push("নম্বর সঠিক নয়");
+   return {row:index+2,question,options,correct,marks,subject,errors}
+  });
+  const invalid=parsed.filter(x=>x.errors.length);if(invalid.length)throw Error("মোট "+bnDigits(invalid.length)+"টি সারিতে সমস্যা আছে; কোনো প্রশ্ন যোগ করা হয়নি। "+invalid.slice(0,8).map(x=>"সারি "+bnDigits(x.row)+": "+x.errors.join(", ")).join("। "));
+  if(!confirm("যাচাই সম্পন্ন: "+bnDigits(parsed.length)+"টি MCQ মাস্টার প্রশ্ন ব্যাংকে যোগ হবে। চালিয়ে যাবেন?"))return;
+  let saved=0;
+  for(const item of parsed){
+   const payload={question_text:item.question,question_type:"mcq",options:item.options.map((text,i)=>({value:"abcd"[i],text})),marks:item.marks,...location,subject:item.subject};
+   const {data:created,error}=await sb.from("academic_care_question_bank_items").insert(payload).select("id").single();
+   if(error)throw Error("সারি "+bnDigits(item.row)+" সংরক্ষণ হয়নি; সফলভাবে "+bnDigits(saved)+"টি যোগ হয়েছে। "+error.message);
+   const {error:keyError}=await sb.from("academic_care_question_bank_answer_keys").insert({question_id:created.id,correct_option:item.correct});
+   if(keyError){await sb.from("academic_care_question_bank_items").delete().eq("id",created.id);throw Error("সারি "+bnDigits(item.row)-+"-এ সঠিক উত্তর সংরক্ষণ হয়নি; সফলভাবে "+bnDigits(saved)+"টি যোগ হয়েছে। "+keyError.message)}
+   saved++;
+  }
+  setMasterImportMessage("সফলভাবে "+bnDigits(saved)+"টি MCQ ও সঠিক উত্তর মাস্টার প্রশ্ন ব্যাংকে সংরক্ষিত হয়েছে।");document.getElementById("masterQuestionFile").value="";
+ }catch(err){setMasterImportMessage(err.message||"আমদানি করা যায়নি।",true)}
+ finally{button.disabled=false}
+});
+syncMasterQuestionType();
+
+function createAcademicCategory(){
  const name=document.getElementById("newCategory").value.trim();if(!name)return categoryMessage("নতুন ক্যাটাগরির নাম লিখুন।",true);
  const {data,error}=await sb.from("academic_care_categories").insert({name}).select("id,name").single();
  if(error)return categoryMessage(error.message,true);
