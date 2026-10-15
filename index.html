@@ -13,7 +13,14 @@ header{height:76px;background:#fff;border-bottom:1px solid var(--line);display:f
 .menu-wrap{position:relative}.menu-toggle{display:flex;align-items:center;gap:9px;border:0;border-radius:12px;background:var(--teal);color:#fff;font:inherit;font-weight:750;padding:11px 15px;cursor:pointer}
 .hamburger{font-size:1.35rem;line-height:1}.menu{position:absolute;z-index:5;right:0;top:calc(100% + 10px);width:min(310px,calc(100vw - 32px));padding:8px;background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 18px 48px #123b4a20;display:none}.menu.open{display:block}.menu a,.menu button{display:flex;align-items:center;gap:12px;width:100%;text-align:left;text-decoration:none;color:#244655;background:transparent;border:0;border-radius:10px;padding:13px 12px;font:inherit;font-weight:650;cursor:pointer}.menu a:hover,.menu button:hover{background:#eaf5f6;color:var(--teal)}.menu .logout{border-top:1px solid var(--line);margin-top:5px;padding-top:15px}
 main{max-width:900px;margin:0 auto;padding:clamp(55px,12vh,120px) 22px 80px;text-align:center}.mark{width:76px;height:76px;border-radius:24px;background:#d9f1ed;display:grid;place-items:center;margin:0 auto 24px;font-size:2.4rem}h1{font-size:clamp(2rem,6vw,3.5rem);line-height:1.25;color:#143e4d;margin:0 0 18px}main p{max-width:650px;margin:0 auto;color:#58717d;line-height:1.9;font-size:clamp(1rem,2vw,1.12rem)}.hint{display:inline-flex;align-items:center;gap:8px;margin-top:34px;padding:10px 15px;border:1px solid #cde4e3;border-radius:999px;background:#fff;color:#34616a;font-size:.9rem}
+.quick-links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;max-width:760px;margin:36px auto 0;text-align:left}
+.quick-card{display:flex;align-items:center;gap:14px;min-height:92px;padding:18px;background:#fff;border:1px solid var(--line);border-radius:18px;color:#244655;text-decoration:none;box-shadow:0 8px 24px #123b4a08;transition:transform .15s,border-color .15s}
+.quick-card:hover{transform:translateY(-2px);border-color:#9bcacb}
+.quick-icon{width:48px;height:48px;flex:0 0 48px;display:grid;place-items:center;border-radius:14px;background:#e4f4f1;font-size:1.55rem}
+.quick-card strong{display:block;color:#16485a;font-size:1rem;margin-bottom:4px}
+.quick-card small{display:block;color:#718590;line-height:1.5}
 footer{text-align:center;color:#718590;font-size:.88rem;padding:22px}
+@media(max-width:560px){.quick-links{grid-template-columns:1fr;gap:10px;margin-top:28px}.quick-card{min-height:78px;padding:14px}main{padding-top:55px}}
 @media(max-width:480px){header{height:68px}.brand{font-size:1rem}.menu-toggle{padding:10px 12px}main{padding-top:75px}}
 </style>
 </head>
@@ -35,8 +42,14 @@ footer{text-align:center;color:#718590;font-size:.88rem;padding:22px}
 <main>
   <div class="mark" aria-hidden="true">📘</div>
   <h1>পড়াশোনা ও পরীক্ষার সহজ ঠিকানা</h1>
-  <p>Academic Care ও Job Care-এর পরীক্ষা, পড়ার উপকরণ এবং প্রয়োজনীয় তথ্য পেতে উপরের মেনু থেকে আপনার বিভাগটি বেছে নিন।</p>
-  <div class="hint"><span aria-hidden="true">☰</span> শুরু করতে মেনু খুলুন</div>
+  <p>আপনার প্রয়োজনীয় বিভাগটি বেছে নিন—অনলাইন পরীক্ষা দিন, পড়ার উপকরণ দেখুন এবং প্রয়োজনীয় তথ্য খুঁজে নিন।</p>
+  <div class="quick-links" aria-label="দ্রুত প্রবেশ">
+    <a class="quick-card" href="https://fbpathshala.github.io/exam/"><span class="quick-icon" aria-hidden="true">📝</span><span><strong>Job Care</strong><small>চাকরির প্রস্তুতি ও মডেল টেস্ট</small></span></a>
+    <a class="quick-card" href="student.html"><span class="quick-icon" aria-hidden="true">🎓</span><span><strong>Academic Care</strong><small>একাডেমিক পরীক্ষা ও অনুশীলন</small></span></a>
+    <a class="quick-card" href="student.html#materials"><span class="quick-icon" aria-hidden="true">📚</span><span><strong>স্টাডি ম্যাটেরিয়াল</strong><small>পড়ার উপকরণ ও প্রস্তুতি সামগ্রী</small></span></a>
+    <a class="quick-card" href="https://fbpathshala.github.io/exam/"><span class="quick-icon" aria-hidden="true">🔗</span><span><strong>গুরুত্বপূর্ণ তথ্য</strong><small>প্রয়োজনীয় লিংক ও নির্দেশনা</small></span></a>
+  </div>
+  <div class="hint"><span aria-hidden="true">☰</span> আরও অপশন পেতে উপরের মেনু ব্যবহার করুন</div>
 </main>
 <footer>Academic Care · শিক্ষা সবার জন্য</footer>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
