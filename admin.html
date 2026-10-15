@@ -121,6 +121,12 @@
         <button class="btn" id="masterQuestionImport" type="button">যাচাই করে MCQ আমদানি</button>
         <div id="masterQuestionImportMessage" class="notice" role="status" aria-live="polite"></div>
       </div>
+      <div class="panel" style="margin-top:16px">
+        <div class="sectionhead"><h2>সংরক্ষিত প্রশ্ন</h2><button type="button" class="btn ghost" id="refreshMasterQuestionList">তালিকা রিফ্রেশ</button></div>
+        <p class="muted">সর্বশেষ ৫০টি মাস্টার প্রশ্ন এখানে দেখা যাবে। ভুল প্রশ্ন হলে এখান থেকেই মুছতে পারবেন।</p>
+        <div id="masterQuestionListMessage" class="notice" role="status" aria-live="polite"></div>
+        <div id="masterQuestionList" class="itemlist"><div class="listempty">তালিকা লোড হচ্ছে…</div></div>
+      </div>
     </section>
     <section id="exams" class="view">
       <div class="panel">
@@ -360,7 +366,7 @@ document.getElementById("masterQuestionForm").addEventListener("submit",async e=
    const {error:keyError}=await sb.from("academic_care_question_bank_answer_keys").insert({question_id:item.id,correct_option:document.getElementById("masterCorrectOption").value});
    if(keyError){await sb.from("academic_care_question_bank_items").delete().eq("id",item.id);throw Error("সঠিক উত্তর সংরক্ষণ হয়নি; অসম্পূর্ণ প্রশ্নটি সরানোর চেষ্টা করা হয়েছে: "+keyError.message)}
   }
-  e.target.reset();document.getElementById("masterQuestionMarks").value=1;syncMasterQuestionType();setMasterQuestionMessage(type==="mcq"?"MCQ ও সঠিক উত্তর মাস্টার প্রশ্ন ব্যাংকে সংরক্ষিত হয়েছে।":"CQ প্রশ্ন মাস্টার প্রশ্ন ব্যাংকে সংরক্ষিত হয়েছে।");
+  e.target.reset();document.getElementById("masterQuestionMarks").value=1;syncMasterQuestionType();setMasterQuestionMessage(type==="mcq"?"MCQ ও সঠিক উত্তর মাস্টার প্রশ্ন ব্যাংকে সংরক্ষিত হয়েছে।":"CQ প্রশ্ন মাস্টার প্রশ্ন ব্যাংকে সংরক্ষিত হয়েছে।");await loadMasterQuestionList();
  }catch(err){setMasterQuestionMessage(err.message||"প্রশ্ন সংরক্ষণ হয়নি।",true)}
 });
 document.getElementById("masterQuestionTemplate").addEventListener("click",()=>{
@@ -395,10 +401,34 @@ document.getElementById("masterQuestionImport").addEventListener("click",async()
    if(keyError){await sb.from("academic_care_question_bank_items").delete().eq("id",created.id);throw Error("সারি "+bnDigits(item.row)+"-এ সঠিক উত্তর সংরক্ষণ হয়নি; সফলভাবে "+bnDigits(saved)+"টি যোগ হয়েছে। "+keyError.message)}
    saved++;
   }
-  setMasterImportMessage("সফলভাবে "+bnDigits(saved)+"টি MCQ ও সঠিক উত্তর মাস্টার প্রশ্ন ব্যাংকে সংরক্ষিত হয়েছে।");document.getElementById("masterQuestionFile").value="";
+  setMasterImportMessage("সফলভাবে "+bnDigits(saved)+"টি MCQ ও সঠিক উত্তর মাস্টার প্রশ্ন ব্যাংকে সংরক্ষিত হয়েছে।");document.getElementById("masterQuestionFile").value="";await loadMasterQuestionList();
  }catch(err){setMasterImportMessage(err.message||"আমদানি করা যায়নি।",true)}
  finally{button.disabled=false}
 });
+async function loadMasterQuestionList(){
+ const list=document.getElementById("masterQuestionList"),msg=document.getElementById("masterQuestionListMessage");
+ if(!list)return;list.innerHTML='<div class="listempty">প্রশ্ন লোড হচ্ছে…</div>';msg.textContent="";
+ try{
+  const {data:items,error}=await sb.from("academic_care_question_bank_items").select("id,question_text,question_type,options,marks,subject,created_at,category_id,folder_id,set_id").order("created_at",{ascending:false}).limit(50);
+  if(error)throw error;
+  if(!items||!items.length){list.innerHTML='<div class="listempty">এখনো কোনো প্রশ্ন যোগ করা হয়নি।</div>';return}
+  const ids=items.filter(x=>x.question_type==="mcq").map(x=>x.id);
+  let keys={};
+  if(ids.length){const {data:answers,error:answerError}=await sb.from("academic_care_question_bank_answer_keys").select("question_id,correct_option").in("question_id",ids);if(answerError)throw answerError;(answers||[]).forEach(x=>keys[x.question_id]=x.correct_option)}
+  list.innerHTML=items.map((x,i)=>{
+   const opts=Array.isArray(x.options)?x.options.map(o=>'<div>'+escapeHtml(({a:"ক",b:"খ",c:"গ",d:"ঘ"})[o.value]||o.value)+'. '+escapeHtml(o.text)+'</div>').join(""):"";
+   const answer=keys[x.id]?'<div><strong>সঠিক উত্তর: '+escapeHtml(({a:"ক",b:"খ",c:"গ",d:"ঘ"})[keys[x.id]]||keys[x.id])+'</strong></div>':"";
+   return '<div class="item"><strong>'+bnDigits(i+1)+'. ['+(x.question_type==="mcq"?"MCQ":"CQ")+'] '+escapeHtml(x.question_text)+'</strong><div class="muted">নম্বর: '+bnDigits(x.marks??1)+(x.subject?' · বিষয়: '+escapeHtml(x.subject):'')+'</div>'+opts+answer+'<div style="margin-top:8px"><button type="button" class="btn danger" data-delete-master-question="'+escapeHtml(x.id)+'">প্রশ্ন মুছুন</button></div></div>'
+  }).join("");
+  list.querySelectorAll("[data-delete-master-question]").forEach(b=>b.addEventListener("click",async()=>{
+   if(!confirm("এই প্রশ্নটি স্থায়ীভাবে মুছে ফেলবেন?"))return;
+   b.disabled=true;
+   try{const id=b.dataset.deleteMasterQuestion;const {error:keyErr}=await sb.from("academic_care_question_bank_answer_keys").delete().eq("question_id",id);if(keyErr)throw keyErr;const {error}=await sb.from("academic_care_question_bank_items").delete().eq("id",id);if(error)throw error;await loadMasterQuestionList()}
+   catch(err){b.disabled=false;msg.textContent="মুছতে সমস্যা হয়েছে: "+(err.message||"অজানা ত্রুটি");msg.className="notice error"}
+  }));
+ }catch(err){list.innerHTML='<div class="listempty">প্রশ্নের তালিকা লোড হয়নি।</div>';msg.textContent=err.message||"তালিকা লোড হয়নি।";msg.className="notice error"}
+}
+document.getElementById("refreshMasterQuestionList").addEventListener("click",loadMasterQuestionList);
 syncMasterQuestionType();
 
 async function createAcademicCategory(){
@@ -479,7 +509,7 @@ function setupAcademicCategoryUI(){
 const titles={home:"ড্যাশবোর্ড",questionCreate:"প্রশ্ন তৈরি",exams:"পরীক্ষা পরিচালনা",questionBank:"প্রশ্ন ব্যাংক",materials:"স্টাডি ম্যাটেরিয়াল",reviews:"উত্তর মূল্যায়ন",settings:"সিস্টেম সেটআপ"};
 const gate=document.getElementById("loginGate"),shell=document.querySelector(".shell"),authMessage=document.getElementById("authMessage");
 function message(t){authMessage.textContent=t}
-function showView(id){document.querySelectorAll(".view").forEach(v=>v.classList.toggle("active",v.id===id));document.querySelectorAll("[data-view]").forEach(b=>b.classList.toggle("active",b.dataset.view===id));document.getElementById("pageTitle").textContent=titles[id]||"ড্যাশবোর্ড";document.querySelector(".side").classList.remove("menu-open");document.getElementById("menuToggle").setAttribute("aria-expanded","false");if(id==="questionBank")loadQuestionBank();window.scrollTo({top:0,behavior:"smooth"})}
+function showView(id){document.querySelectorAll(".view").forEach(v=>v.classList.toggle("active",v.id===id));document.querySelectorAll("[data-view]").forEach(b=>b.classList.toggle("active",b.dataset.view===id));document.getElementById("pageTitle").textContent=titles[id]||"ড্যাশবোর্ড";document.querySelector(".side").classList.remove("menu-open");document.getElementById("menuToggle").setAttribute("aria-expanded","false");if(id==="questionBank")loadQuestionBank();if(id==="questionCreate")loadMasterQuestionList();window.scrollTo({top:0,behavior:"smooth"})}
 document.getElementById("menuToggle").addEventListener("click",()=>{const side=document.querySelector(".side"),open=side.classList.toggle("menu-open");document.getElementById("menuToggle").setAttribute("aria-expanded",String(open));document.getElementById("menuToggle").setAttribute("aria-label",open?"মেনু বন্ধ করুন":"মেনু খুলুন")});
 document.querySelectorAll("[data-view]").forEach(b=>b.addEventListener("click",()=>showView(b.dataset.view)));
 document.querySelectorAll("[data-go]").forEach(b=>b.addEventListener("click",()=>showView(b.dataset.go)));
