@@ -405,7 +405,7 @@ function createAcademicCategory(){
  const name=document.getElementById("newCategory").value.trim();if(!name)return categoryMessage("নতুন ক্যাটাগরির নাম লিখুন।",true);
  const {data,error}=await sb.from("academic_care_categories").insert({name}).select("id,name").single();
  if(error)return categoryMessage(error.message,true);
- document.getElementById("newCategory").value="";await loadAcademicCategories();document.getElementById("categoryManager").value=String(data.id);document.getElementById("questionCategory").value=String(data.id);await loadManagerFolders();await loadQuestionFolders();categoryMessage("নতুন ক্যাটাগরি তৈরি হয়েছে।");
+ document.getElementById("newCategory").value="";await loadAcademicCategories();document.getElementById("categoryManager").value=String(data.id);document.getElementById("questionCategory").value=String(data.id);document.getElementById("masterCategory").value=String(data.id);await loadManagerFolders();await loadQuestionFolders();await loadMasterQuestionFolders();categoryMessage("নতুন ক্যাটাগরি তৈরি হয়েছে।");
 }
 async function renameAcademicCategory(){
  const id=document.getElementById("categoryManager").value;if(!id)return categoryMessage("আগে ক্যাটাগরি নির্বাচন করুন।",true);
