@@ -427,39 +427,39 @@ async function createAcademicFolder(){
  const category_id=document.getElementById("categoryManager").value,name=document.getElementById("newFolder").value.trim();
  if(!category_id)return categoryMessage("আগে ক্যাটাগরি নির্বাচন করুন।",true);if(!name)return categoryMessage("ফোল্ডারের নাম লিখুন।",true);
  const {data,error}=await sb.from("academic_care_folders").insert({category_id:Number(category_id),folder_name:name}).select("id").single();if(error)return categoryMessage(error.message,true);
- document.getElementById("newFolder").value="";await loadManagerFolders(data.id);await loadQuestionFolders();await loadBankFolders();categoryMessage("ফোল্ডার তৈরি হয়েছে।");
+ document.getElementById("newFolder").value="";await loadManagerFolders(data.id);await loadQuestionFolders();await loadBankFolders();await loadMasterQuestionFolders();if(String(document.getElementById("masterCategory").value)===String(category_id)){document.getElementById("masterFolder").value=String(data.id);await loadMasterQuestionSets()}categoryMessage("ফোল্ডার তৈরি হয়েছে।");
 }
 async function renameAcademicFolder(){
  const id=document.getElementById("folderManager").value;if(!id)return categoryMessage("আগে ফোল্ডার নির্বাচন করুন।",true);
  const old=document.getElementById("folderManager").selectedOptions[0]?.textContent||"",name=prompt("নতুন ফোল্ডারের নাম লিখুন:",old);if(name===null)return;if(!name.trim())return categoryMessage("ফোল্ডারের নাম খালি রাখা যাবে না।",true);
  const {error}=await sb.from("academic_care_folders").update({folder_name:name.trim()}).eq("id",id);if(error)return categoryMessage(error.message,true);
- await loadManagerFolders(id);await loadQuestionFolders();await loadBankFolders();categoryMessage("ফোল্ডারের নাম পরিবর্তন হয়েছে; প্রশ্নের সোর্সে নতুন নাম দেখাবে।");
+ await loadManagerFolders(id);await loadQuestionFolders();await loadBankFolders();await loadMasterQuestionFolders(id);categoryMessage("ফোল্ডারের নাম পরিবর্তন হয়েছে; প্রশ্নের সোর্সে নতুন নাম দেখাবে।");
 }
 async function deleteAcademicFolder(){
  const id=document.getElementById("folderManager").value;if(!id)return categoryMessage("আগে ফোল্ডার নির্বাচন করুন।",true);
  const [sr,qr]=await Promise.all([sb.from("academic_care_sets").select("id",{count:"exact",head:true}).eq("folder_id",id),sb.from("academic_care_questions").select("id",{count:"exact",head:true}).eq("folder_id",id)]);
  if(sr.error||qr.error)return categoryMessage((sr.error||qr.error).message,true);if((sr.count||0)||(qr.count||0))return categoryMessage("এই ফোল্ডারে সেট বা প্রশ্ন আছে। আগে সেগুলো সরান; কোনো রেকর্ড মুছে ফেলা হয়নি।",true);
  if(!confirm("নির্বাচিত ফোল্ডার মুছে ফেলবেন?"))return;const {error}=await sb.from("academic_care_folders").delete().eq("id",id);if(error)return categoryMessage(error.message,true);
- await loadManagerFolders();await loadQuestionFolders();await loadBankFolders();categoryMessage("ফোল্ডার মুছে ফেলা হয়েছে।");
+ await loadManagerFolders();await loadQuestionFolders();await loadBankFolders();await loadMasterQuestionFolders();categoryMessage("ফোল্ডার মুছে ফেলা হয়েছে।");
 }
 async function createAcademicSet(){
  const folder_id=document.getElementById("folderManager").value,name=document.getElementById("newSet").value.trim();
  if(!folder_id)return categoryMessage("আগে ফোল্ডার নির্বাচন করুন।",true);if(!name)return categoryMessage("সেটের নাম লিখুন।",true);
  const {data,error}=await sb.from("academic_care_sets").insert({folder_id:Number(folder_id),set_name:name}).select("id").single();if(error)return categoryMessage(error.message,true);
- document.getElementById("newSet").value="";await loadManagerSets(data.id);await loadQuestionSets();await loadBankSets();categoryMessage("সেট তৈরি হয়েছে।");
+ document.getElementById("newSet").value="";await loadManagerSets(data.id);await loadQuestionSets();await loadBankSets();await loadMasterQuestionSets(data.id);categoryMessage("সেট তৈরি হয়েছে।");
 }
 async function renameAcademicSet(){
  const id=document.getElementById("setManager").value;if(!id)return categoryMessage("আগে সেট নির্বাচন করুন।",true);
  const old=document.getElementById("setManager").selectedOptions[0]?.textContent||"",name=prompt("নতুন সেটের নাম লিখুন:",old);if(name===null)return;if(!name.trim())return categoryMessage("সেটের নাম খালি রাখা যাবে না।",true);
  const {error}=await sb.from("academic_care_sets").update({set_name:name.trim()}).eq("id",id);if(error)return categoryMessage(error.message,true);
- await loadManagerSets(id);await loadQuestionSets();await loadBankSets();categoryMessage("সেটের নাম পরিবর্তন হয়েছে; প্রশ্নের সোর্সে নতুন নাম দেখাবে।");
+ await loadManagerSets(id);await loadQuestionSets();await loadBankSets();await loadMasterQuestionSets(id);categoryMessage("সেটের নাম পরিবর্তন হয়েছে; প্রশ্নের সোর্সে নতুন নাম দেখাবে।");
 }
 async function deleteAcademicSet(){
  const id=document.getElementById("setManager").value;if(!id)return categoryMessage("আগে সেট নির্বাচন করুন।",true);
  const {count,error:checkError}=await sb.from("academic_care_questions").select("id",{count:"exact",head:true}).eq("set_id",id);if(checkError)return categoryMessage(checkError.message,true);
  if(count)return categoryMessage("এই সেটে প্রশ্ন আছে। আগে প্রশ্নগুলো অন্য সেটে সরান; কোনো রেকর্ড মুছে ফেলা হয়নি।",true);
  if(!confirm("নির্বাচিত সেট মুছে ফেলবেন?"))return;const {error}=await sb.from("academic_care_sets").delete().eq("id",id);if(error)return categoryMessage(error.message,true);
- await loadManagerSets();await loadQuestionSets();await loadBankSets();categoryMessage("সেট মুছে ফেলা হয়েছে।");
+ await loadManagerSets();await loadQuestionSets();await loadBankSets();await loadMasterQuestionSets();categoryMessage("সেট মুছে ফেলা হয়েছে।");
 }
 function setupAcademicCategoryUI(){
  const on=(id,fn)=>document.getElementById(id).addEventListener("click",fn);
