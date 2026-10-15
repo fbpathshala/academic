@@ -333,18 +333,6 @@ async function loadMasterQuestionSets(selected=""){
 }
 function setMasterQuestionMessage(text,error=false){const el=document.getElementById("masterQuestionMessage");if(el){el.textContent=text;el.className=error?"notice error":"notice"}}
 function setMasterImportMessage(text,error=false){const el=document.getElementById("masterQuestionImportMessage");if(el){el.textContent=text;el.className=error?"notice error":"notice"}}
-async function loadMasterQuestionList(){
- const message=document.getElementById("masterQuestionListMessage"),container=document.getElementById("masterQuestionList");
- if(!message||!container)return;
- message.textContent="প্রশ্নের তালিকা লোড হচ্ছে…";
- const {data,error}=await sb.from("academic_care_question_bank_items").select("id,question_text,question_type,marks,subject,created_at").order("created_at",{ascending:false}).limit(100);
- if(error){message.textContent="তালিকা লোড হয়নি: "+error.message;message.className="notice error";return}
- if(!data||!data.length){message.textContent="এখনো কোনো প্রশ্ন সংরক্ষিত নেই।";message.className="notice";container.innerHTML="";return}
- const esc=v=>String(v??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
- message.textContent="সর্বশেষ "+data.length+"টি প্রশ্ন দেখানো হচ্ছে।";message.className="notice";
- container.innerHTML='<table style="width:100%;border-collapse:collapse"><thead><tr><th style="text-align:left;padding:8px">প্রশ্ন</th><th style="padding:8px">ধরন</th><th style="padding:8px">নম্বর</th><th style="text-align:left;padding:8px">বিষয়</th></tr></thead><tbody>'+data.map(q=>'<tr><td style="padding:8px;border-top:1px solid var(--line)">'+esc(q.question_text)+'</td><td style="padding:8px;border-top:1px solid var(--line)">'+(q.question_type==="mcq"?"MCQ":"CQ")+'</td><td style="padding:8px;border-top:1px solid var(--line);text-align:center">'+esc(q.marks)+'</td><td style="padding:8px;border-top:1px solid var(--line)">'+esc(q.subject||"—")+'</td></tr>').join("")+'</tbody></table>';
-}
-document.getElementById("refreshMasterQuestionList")?.addEventListener("click",loadMasterQuestionList);
 function syncMasterQuestionType(){
  const mcq=document.getElementById("masterQuestionType").value==="mcq";
  ["masterOptionAField","masterOptionBField","masterOptionCField","masterOptionDField","masterCorrectField"].forEach(id=>document.getElementById(id).style.display=mcq?"flex":"none");
@@ -378,7 +366,7 @@ document.getElementById("masterQuestionForm").addEventListener("submit",async e=
    const {error:keyError}=await sb.from("academic_care_question_bank_answer_keys").insert({question_id:item.id,correct_option:document.getElementById("masterCorrectOption").value});
    if(keyError){await sb.from("academic_care_question_bank_items").delete().eq("id",item.id);throw Error("সঠিক উত্তর সংরক্ষণ হয়নি; অসম্পূর্ণ প্রশ্নটি সরানোর চেষ্টা করা হয়েছে: "+keyError.message)}
   }
-  e.target.reset();document.getElementById("masterQuestionMarks").value=1;syncMasterQuestionType();setMasterQuestionMessage(type==="mcq"?"MCQ ও সঠিক উত্তর মাস্টার প্রশ্ন ব্যাংকে সংরক্ষিত হয়েছে।":"CQ প্রশ্ন মাস্টার প্রশ্ন ব্যাংকে সংরক্ষিত হয়েছে।");await loadMasterQuestionList();await loadMasterQuestionList();
+  e.target.reset();document.getElementById("masterQuestionMarks").value=1;syncMasterQuestionType();setMasterQuestionMessage(type==="mcq"?"MCQ ও সঠিক উত্তর মাস্টার প্রশ্ন ব্যাংকে সংরক্ষিত হয়েছে।":"CQ প্রশ্ন মাস্টার প্রশ্ন ব্যাংকে সংরক্ষিত হয়েছে।");await loadMasterQuestionList();
  }catch(err){setMasterQuestionMessage(err.message||"প্রশ্ন সংরক্ষণ হয়নি।",true)}
 });
 document.getElementById("masterQuestionTemplate").addEventListener("click",()=>{
