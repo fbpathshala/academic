@@ -263,6 +263,7 @@ async function loadAcademicCategories(){
  await loadManagerFolders();
  await loadQuestionFolders();
  await loadBankFolders();
+ await loadMasterQuestionFolders();
 }
 async function loadManagerFolders(selected=""){
  const catId=document.getElementById("categoryManager").value,el=document.getElementById("folderManager");
@@ -311,7 +312,6 @@ async function loadBankSets(selected=""){
  el.innerHTML=optionHtml(data||[],"id","set_name","সব সেট");
  if(selected)el.value=String(selected);
 }
-async 
 async function loadMasterQuestionFolders(selected=""){
  const catId=document.getElementById("masterCategory").value,el=document.getElementById("masterFolder");
  let q=sb.from("academic_care_folders").select("id,folder_name,category_id").order("folder_name");
