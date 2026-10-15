@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#155e75"><title>Academic Care — প্রশ্ন ব্যাংক</title>
+<style>
+:root{font-family:system-ui,-apple-system,"Noto Sans Bengali",sans-serif;color:#193449;background:#f3f7fa;--teal:#155e75;--line:#dce6ec;--muted:#526b78}
+*{box-sizing:border-box}body{margin:0}button,input,select,textarea{font:inherit}button{cursor:pointer}
+header{background:linear-gradient(120deg,#123b4a,#155e75,#0f766e);color:#fff;padding:22px max(16px,calc((100vw - 1100px)/2));display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+header h1{font-size:1.35rem;margin:0 0 5px}header p{margin:0;color:#e3fffa;font-size:.92rem}
+main{max-width:1100px;margin:auto;padding:24px 16px 80px}.panel{background:#fff;border:1px solid var(--line);border-radius:15px;padding:18px;margin-bottom:16px;box-shadow:0 5px 18px #123b4a08}
+h2{font-size:1.1rem;margin:0 0 14px}.filters{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.filters input,.filters select,.editgrid input,.editgrid select,.editgrid textarea{width:100%;min-width:0;padding:11px;border:1px solid #cbd9e1;border-radius:9px;background:#fff;color:#193449}
+.btn{border:0;background:var(--teal);color:white;border-radius:9px;padding:9px 12px;font-weight:700}.btn.light{background:#e7f3f5;color:var(--teal)}.btn.warn{background:#fff0d9;color:#8a4b08}
+.msg{margin:10px 0 0;color:#526b78;line-height:1.6}.question{border:1px solid var(--line);border-radius:12px;padding:15px;margin:12px 0;background:#fff}.tags{display:flex;gap:6px;flex-wrap:wrap}.tag{font-size:.78rem;padding:4px 8px;border-radius:999px;background:#e7f3f5;color:#155e75}.question p{white-space:pre-wrap;line-height:1.7;margin:10px 0}.options{line-height:1.8;white-space:pre-wrap}.meta{color:var(--muted);font-size:.88rem;line-height:1.6;margin-top:8px}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.empty{text-align:center;padding:28px;color:var(--muted)}.hidden{display:none!important}
+#loginPanel{max-width:460px;margin:8vh auto}.editgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.editgrid textarea{min-height:90px;grid-column:1/-1}.full{grid-column:1/-1}
+.navlink{display:inline-block;text-decoration:none;color:#fff;border:1px solid #ffffff80;padding:9px 12px;border-radius:9px;font-weight:700}
+@media(max-width:700px){.filters{grid-template-columns:1fr 1fr}.editgrid{grid-template-columns:1fr}.editgrid textarea{grid-column:auto}header{align-items:flex-start}}
+@media(max-width:440px){.filters{grid-template-columns:1fr}.panel{padding:14px}}
+</style>
+</head>
+<body>
+<header><div><h1>🎓 Academic Care — প্রশ্ন ব্যাংক</h1><p>ক্যাটাগরি, ফোল্ডার, সেট, পরীক্ষা ও প্রশ্নের ধরন অনুযায়ী প্রশ্ন খুঁজুন</p></div><a class="navlink" href="https://fbpathshala.github.io/exam/question-bank-select.html">↩ প্রশ্ন ব্যাংক নির্বাচন</a></header>
+<main>
+<section id="loginPanel" class="panel"><h2>অ্যাডমিন প্রবেশ</h2><form id="loginForm"><div class="editgrid"><input id="email" class="full" type="email" placeholder="অ্যাডমিন ইমেইল" required><input id="password" class="full" type="password" placeholder="পাসওয়ার্ড" required><button class="btn full" type="submit">লগইন</button></div></form><p id="loginMsg" class="msg"></p></section>
+<div id="app" class="hidden">
+<section class="panel"><h2>প্রশ্ন ফিল্টারিং</h2><div class="filters">
+<select id="examFilter"><option value="">সব পরীক্ষা</option></select>
+<select id="typeFilter"><option value="">সব ধরনের প্রশ্ন</option><option value="mcq">MCQ</option><option value="cq">CQ</option></select>
+<select id="categoryFilter"><option value="">সব ক্যাটাগরি</option></select>
+<select id="folderFilter"><option value="">সব ফোল্ডার</option></select>
+<select id="setFilter"><option value="">সব সেট</option></select>
+<input id="subjectFilter" placeholder="বিষয় দিয়ে ফিল্টার">
+<input id="search" class="full" placeholder="প্রশ্ন বা পরীক্ষার নাম খুঁজুন">
+</div><p id="filterMsg" class="msg"></p></section>
+<section id="editPanel" class="panel hidden"><h2>✏️ প্রশ্ন সম্পাদনা</h2><form id="editForm"><input id="editId" type="hidden"><div class="editgrid">
+<input id="editQuestion" class="full" placeholder="প্রশ্ন" required>
+<input id="editA" placeholder="ক. অপশন"><input id="editB" placeholder="খ. অপশন"><input id="editC" placeholder="গ. অপশন"><input id="editD" placeholder="ঘ. অপশন">
+<select id="editCorrect"><option value="">সঠিক উত্তর</option><option value="a">ক</option><option value="b">খ</option><option value="c">গ</option><option value="d">ঘ</option></select>
+<input id="editMarks" type="number" min="0" step="any" placeholder="নম্বর">
+<select id="editCategory"><option value="">ক্যাটাগরি</option></select><select id="editFolder"><option value="">ফোল্ডার</option></select><select id="editSet"><option value="">সেট</option></select><input id="editSubject" placeholder="বিষয় (ঐচ্ছিক)">
+
+<div class="full"><button class="btn" type="submit">পরিবর্তন সংরক্ষণ</button> <button class="btn light" id="cancelEdit" type="button">বাতিল</button></div>
+</div></form><p id="editMsg" class="msg"></p></section>
+<section class="panel"><h2>প্রশ্ন তালিকা</h2><div id="questionList"><div class="empty">প্রশ্ন লোড হচ্ছে…</div></div></section>
+</div>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const sb=window.supabase.createClient("https://ydvbnalhcnfqpxkkmywr.supabase.co","sb_publishable_xCbSWDkASsbUPl-WmygyMw_eVrJY_9a");
+const $=id=>document.getElementById(id),bn=n=>String(n??"").replace(/\d/g,d=>"০১২৩৪৫৬৭৮৯"[Number(d)]),esc=v=>String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
+let questions=[],exams=[],categories=[],folders=[],sets=[];
+function message(id,text,error=false){$(id).textContent=text;$(id).style.color=error?"#b91c1c":"#526b78"}
+function opts(rows,key,label,placeholder,selected=""){return '<option value="">'+esc(placeholder)+'</option>'+(rows||[]).map(x=>'<option value="'+esc(x[key])+'" '+(String(x[key])===String(selected)?"selected":"")+'>'+esc(x[label])+'</option>').join("")}
+async function checkSession(session){if(!session){$("loginPanel").classList.remove("hidden");$("app").classList.add("hidden");return}const {data,error}=await sb.rpc("academic_care_is_admin");if(error||data!==true){await sb.auth.signOut();$("loginPanel").classList.remove("hidden");$("app").classList.add("hidden");message("loginMsg","এই অ্যাকাউন্টে অ্যাডমিন অনুমতি নেই।",true);return}$("loginPanel").classList.add("hidden");$("app").classList.remove("hidden");await loadAll()}
+$("loginForm").addEventListener("submit",async e=>{e.preventDefault();message("loginMsg","প্রবেশ যাচাই হচ্ছে…");const {data,error}=await sb.auth.signInWithPassword({email:$("email").value.trim(),password:$("password").value});if(error){message("loginMsg","প্রবেশ করা যায়নি। ইমেইল/পাসওয়ার্ড যাচাই করুন।",true);return}await checkSession(data.session)});
+sb.auth.onAuthStateChange((_event,session)=>{if(session)setTimeout(()=>checkSession(session),0)});
+async function loadAll(){const [er,cr,fr,sr,qr]=await Promise.all([
+sb.from("academic_care_exams").select("id,title").order("created_at",{ascending:false}),
+sb.from("academic_care_categories").select("id,name").order("name"),
+sb.from("academic_care_folders").select("id,category_id,folder_name").order("folder_name"),
+sb.from("academic_care_sets").select("id,folder_id,set_name").order("set_name"),
+sb.from("academic_care_questions").select("id,exam_id,question_text,question_type,options,marks,sort_order,created_at,category_id,folder_id,set_id,subject,academic_care_categories(name),academic_care_folders(folder_name),academic_care_sets(set_name)").order("created_at",{ascending:false}).limit(2000)
+]);
+const failed=[er,cr,fr,sr,qr].find(x=>x.error);if(failed){message("filterMsg","ডেটা লোড হয়নি: "+failed.error.message,true);$("questionList").innerHTML='<div class="empty">প্রশ্ন ব্যাংক লোড করা যায়নি।</div>';return}
+exams=er.data||[];categories=cr.data||[];folders=fr.data||[];sets=sr.data||[];questions=qr.data||[];
+$("examFilter").innerHTML=opts(exams,"id","title","সব পরীক্ষা");$("categoryFilter").innerHTML=opts(categories,"id","name","সব ক্যাটাগরি");$("editCategory").innerHTML=opts(categories,"id","name","ক্যাটাগরি নির্বাচন করুন");
+renderFolders();renderQuestions()
+}
+function renderFolders(){const cat=$("categoryFilter").value,folder=$("folderFilter").value;$("folderFilter").innerHTML=opts(folders.filter(x=>!cat||String(x.category_id)===cat),"id","folder_name","সব ফোল্ডার",folder);renderSets()}
+function renderSets(){const folder=$("folderFilter").value,set=$("setFilter").value;$("setFilter").innerHTML=opts(sets.filter(x=>!folder||String(x.folder_id)===folder),"id","set_name","সব সেট",set)}
+function renderQuestions(){const term=$("search").value.trim().toLocaleLowerCase(),exam=$("examFilter").value,type=$("typeFilter").value,cat=$("categoryFilter").value,folder=$("folderFilter").value,set=$("setFilter").value,subject=$("subjectFilter").value.trim().toLocaleLowerCase();
+const filtered=questions.filter(x=>(!exam||String(x.exam_id)===exam)&&(!type||x.question_type===type)&&(!cat||String(x.category_id)===cat)&&(!folder||String(x.folder_id)===folder)&&(!set||String(x.set_id)===set)&&(!subject||String(x.subject||"").toLocaleLowerCase().includes(subject))&&(!term||(String(x.question_text||"")+" "+String(x.subject||"")+" "+(exams.find(e=>String(e.id)===String(x.exam_id))?.title||"")).toLocaleLowerCase().includes(term)));
+if(!filtered.length){$("questionList").innerHTML='<div class="empty">মিল পাওয়া যায়নি, অথবা এখনো কোনো প্রশ্ন যোগ করা হয়নি।</div>';return}
+const grouped=new Map();filtered.forEach(x=>{const k=String(x.exam_id||"unassigned");if(!grouped.has(k))grouped.set(k,[]);grouped.get(k).push(x)});
+$("questionList").innerHTML=[...grouped.entries()].map(([id,items])=>{const ex=exams.find(e=>String(e.id)===id);return '<details open class="question"><summary><strong>'+esc(ex?.title||"পরীক্ষা নির্ধারিত নয়")+' · '+bn(items.length)+'টি প্রশ্ন</strong></summary>'+items.map(questionCard).join("")+'</details>'}).join("")
+}
+function questionCard(x){const op=Array.isArray(x.options)?x.options:[],source=[x.academic_care_categories?.name,x.academic_care_folders?.folder_name,x.academic_care_sets?.set_name,x.subject].filter(Boolean).join(" / ");return '<article class="question"><div class="tags"><span class="tag">'+(x.question_type==="mcq"?"MCQ":"CQ")+'</span><span class="tag">'+bn(x.marks??0)+' নম্বর</span></div><p><strong>'+esc(x.question_text)+'</strong></p>'+(op.length?'<div class="options">'+op.map((o,i)=>esc("কখগঘ"[i]||"")+". "+esc(o.text||o.value||o)).join("\n")+'</div>':'')+(source?'<div class="meta">Source: '+esc(source)+'</div>':'')+'<div class="actions"><button class="btn light" type="button" data-edit="'+esc(x.id)+'">✏️ সম্পাদনা</button><button class="btn light" type="button" data-copy="'+esc(x.id)+'">📋 কপি</button></div></article>'}
+async function editQuestion(id){const x=questions.find(q=>String(q.id)===String(id));if(!x)return;const op=Array.isArray(x.options)?x.options:[];$("editId").value=x.id;$("editQuestion").value=x.question_text||"";for(const [i,k] of ["editA","editB","editC","editD"].entries())$(k).value=op[i]?.text||op[i]?.value||op[i]||"";$("editMarks").value=x.marks??1;$("editSubject").value=x.subject||"";$("editCategory").value=x.category_id?String(x.category_id):"";updateEditFolders(x.folder_id,x.set_id);$("editCorrect").value="";if(x.question_type==="mcq"){const {data,error}=await sb.from("academic_care_answer_keys").select("correct_option").eq("question_id",id).maybeSingle();if(error){message("editMsg","সঠিক উত্তর লোড হয়নি: "+error.message,true);return}if(data?.correct_option)$("editCorrect").value=String(data.correct_option).toLowerCase()}$("editPanel").classList.remove("hidden");$("editPanel").scrollIntoView({behavior:"smooth"})}
+function updateEditFolders(folderId="",setId=""){const cat=$("editCategory").value;const fs=folders.filter(x=>!cat||String(x.category_id)===cat);$("editFolder").innerHTML=opts(fs,"id","folder_name","ফোল্ডার নির্বাচন করুন",folderId);const fid=$("editFolder").value;$("editSet").innerHTML=opts(sets.filter(x=>!fid||String(x.folder_id)===fid),"id","set_name","সেট নির্বাচন করুন",setId)}
+$("editCategory").addEventListener("change",()=>updateEditFolders());$("editFolder").addEventListener("change",()=>{$("editSet").innerHTML=opts(sets.filter(x=>String(x.folder_id)===$("editFolder").value),"id","set_name","সেট নির্বাচন করুন")});
+$("editForm").addEventListener("submit",async e=>{e.preventDefault();const id=$("editId").value,x=questions.find(q=>String(q.id)===String(id));if(!x)return;const text=$("editQuestion").value.trim(),marks=Number($("editMarks").value);if(!text||!Number.isFinite(marks)||marks<0){message("editMsg","প্রশ্ন ও সঠিক নম্বর দিন।",true);return}const p={question_text:text,marks,category_id:$("editCategory").value?Number($("editCategory").value):null,folder_id:$("editFolder").value?Number($("editFolder").value):null,set_id:$("editSet").value?Number($("editSet").value):null,subject:$("editSubject").value.trim()||null};if(x.question_type==="mcq"){const vals=["editA","editB","editC","editD"].map(k=>$(k).value.trim());if(vals.some(v=>!v)||!$("editCorrect").value){message("editMsg","MCQ-এর চারটি অপশন ও সঠিক উত্তর পূরণ করুন।",true);return}p.options=vals.map((text,i)=>({value:"abcd"[i],text}));}else p.options=[];const {error}=await sb.from("academic_care_questions").update(p).eq("id",id);if(error){message("editMsg","পরিবর্তন সংরক্ষণ হয়নি: "+error.message,true);return}if(x.question_type==="mcq"){const {data:key,error:readError}=await sb.from("academic_care_answer_keys").select("question_id").eq("question_id",id).maybeSingle();if(readError){message("editMsg","প্রশ্ন আপডেট হয়েছে; তবে সঠিক উত্তর যাচাই হয়নি: "+readError.message,true);return}const correct_option=$("editCorrect").value.toUpperCase();const result=key?await sb.from("academic_care_answer_keys").update({correct_option}).eq("question_id",id):await sb.from("academic_care_answer_keys").insert({question_id:id,correct_option});if(result.error){message("editMsg","প্রশ্ন আপডেট হয়েছে; সঠিক উত্তর সংরক্ষণ হয়নি: "+result.error.message,true);return}}$("editPanel").classList.add("hidden");await loadAll();message("filterMsg","প্রশ্ন আপডেট হয়েছে।")}
+);
+$("questionList").addEventListener("click",async e=>{const edit=e.target.closest("[data-edit]");if(edit){await editQuestion(edit.dataset.edit);return}const copy=e.target.closest("[data-copy]");if(copy){const x=questions.find(q=>String(q.id)===String(copy.dataset.copy));if(!x)return;const op=Array.isArray(x.options)?x.options:[];const text=x.question_text+"\n"+op.map((o,i)=>"কখগঘ"[i]+". "+(o.text||o.value||o)).join("\n");try{await navigator.clipboard.writeText(text);message("filterMsg","প্রশ্ন কপি হয়েছে।")}catch(_){message("filterMsg","কপি করা যায়নি।",true)}}});
+$("cancelEdit").addEventListener("click",()=>$("editPanel").classList.add("hidden"));
+$("categoryFilter").addEventListener("change",()=>{renderFolders();renderQuestions()});$("folderFilter").addEventListener("change",()=>{renderSets();renderQuestions()});["examFilter","typeFilter","setFilter","subjectFilter"].forEach(id=>$(id).addEventListener(id==="subjectFilter"?"input":"change",renderQuestions));let timer;$("search").addEventListener("input",()=>{clearTimeout(timer);timer=setTimeout(renderQuestions,180)});
+(async()=>{const {data:{session}}=await sb.auth.getSession();await checkSession(session)})();
+</script>
+</body></html>
