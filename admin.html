@@ -476,7 +476,7 @@ function setupAcademicCategoryUI(){
  document.getElementById("bankSubjectFilter").addEventListener("input",renderQuestionBank);
 }
 
-const titles={home:"ড্যাশবোর্ড",exams:"পরীক্ষা পরিচালনা",questionBank:"প্রশ্ন ব্যাংক",materials:"স্টাডি ম্যাটেরিয়াল",reviews:"উত্তর মূল্যায়ন",settings:"সিস্টেম সেটআপ"};
+const titles={home:"ড্যাশবোর্ড",questionCreate:"প্রশ্ন তৈরি",exams:"পরীক্ষা পরিচালনা",questionBank:"প্রশ্ন ব্যাংক",materials:"স্টাডি ম্যাটেরিয়াল",reviews:"উত্তর মূল্যায়ন",settings:"সিস্টেম সেটআপ"};
 const gate=document.getElementById("loginGate"),shell=document.querySelector(".shell"),authMessage=document.getElementById("authMessage");
 function message(t){authMessage.textContent=t}
 function showView(id){document.querySelectorAll(".view").forEach(v=>v.classList.toggle("active",v.id===id));document.querySelectorAll("[data-view]").forEach(b=>b.classList.toggle("active",b.dataset.view===id));document.getElementById("pageTitle").textContent=titles[id]||"ড্যাশবোর্ড";document.querySelector(".side").classList.remove("menu-open");document.getElementById("menuToggle").setAttribute("aria-expanded","false");if(id==="questionBank")loadQuestionBank();window.scrollTo({top:0,behavior:"smooth"})}
