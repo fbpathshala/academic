@@ -257,7 +257,7 @@ let editingQuestionId=null;
 const categoryRows=[];
 function categoryMessage(text,error=false){const el=document.getElementById("categoryManagerMessage");if(el){el.textContent=text;el.className=error?"notice error":"notice";}}
 function optionHtml(rows,idKey,labelKey,placeholder){return '<option value="">'+escapeHtml(placeholder)+'</option>'+rows.map(x=>'<option value="'+escapeHtml(x[idKey])+'">'+escapeHtml(x[labelKey])+'</option>').join("");}
-async async function loadAcademicCategories(){
+async function loadAcademicCategories(){
  const {data,error}=await sb.from("academic_care_categories").select("id,name").order("name");
  if(error){categoryMessage("ক্যাটাগরি লোড হয়নি: "+error.message,true);return}
  categoryRows.splice(0,categoryRows.length,...(data||[]));
