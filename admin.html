@@ -484,10 +484,8 @@ async function deleteAcademicFolder(){
  await loadManagerFolders();await loadQuestionFolders();await loadBankFolders();await loadMasterQuestionFolders();categoryMessage("ফোল্ডার মুছে ফেলা হয়েছে।");
 }
 async function createAcademicSet(){
- const folder_id=document.getElementById("folderManager").value,name=document.getElementById("newSet").value.trim();
- if(!folder_id)return categoryMessage("আগে ফোল্ডার নির্বাচন করুন।",true);if(!name)return categoryMessage("সেটের নাম লিখুন।",true);
- const {data,error}=await sb.from("academic_care_sets").insert({folder_id:Number(folder_id),set_name:name}).select("id").single();if(error)return categoryMessage(error.message,true);
- document.getElementById("newSet").value="";await loadManagerSets(data.id);await loadQuestionSets();await loadBankSets();await loadMasterQuestionSets(data.id);categoryMessage("সেট তৈরি হয়েছে।");
+ categoryMessage("সেট তৈরির আগে শ্রেণি → বিষয় → অধ্যায় নির্বাচন করতে হবে। কাঠামো ব্যবস্থাপনা খুলুন।",true);
+ window.open("https://fbpathshala.github.io/exam/taxonomy.html?section=academic","_blank","noopener");
 }
 async function renameAcademicSet(){
  const id=document.getElementById("setManager").value;if(!id)return categoryMessage("আগে সেট নির্বাচন করুন।",true);
