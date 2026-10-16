@@ -20,6 +20,17 @@
   
     #loginGate{max-width:440px;margin:8vh auto;padding:24px;background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 12px 35px #123b4a12}#loginGate h1{margin-top:0}#loginGate .field{margin:14px 0}#loginGate[hidden],.shell[hidden]{display:none!important}#authMessage{line-height:1.6;margin-top:12px;color:#9a3412}
   .category-management-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin:16px 0}.category-management-card{margin:0!important;min-width:0}.category-management-card h3{margin-top:0}.category-management-card .field{min-width:0}.category-management-card input,.category-management-card select{width:100%;min-width:0}.category-management-card .btnrow{display:flex;gap:8px;flex-wrap:wrap}.category-management-card .btnrow button{flex:1 1 90px}@media(max-width:1000px){.category-management-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:650px){.category-management-grid{grid-template-columns:1fr}}
+
+/* কেন্দ্রীয় প্যানেলে কেবল নির্বাচিত Academic Care সেকশন দেখাবে */
+body.central-mode .side,
+body.central-mode .central-return-nav,
+body.central-mode .taxonomy-manager-link,
+body.central-mode .top,
+body.central-mode #home { display:none!important }
+body.central-mode .shell { display:block!important; min-height:0!important }
+body.central-mode main { width:100%!important; min-width:0!important; padding:12px!important; margin:0!important }
+body.central-mode .view.active { display:block!important }
+@media(max-width:650px){body.central-mode main{padding:8px!important}}
 </style>
 </head>
 <body>
