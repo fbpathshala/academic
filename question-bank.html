@@ -16,6 +16,7 @@ h2{font-size:1.1rem;margin:0 0 14px}.filters{display:grid;grid-template-columns:
 .navlink{display:inline-block;text-decoration:none;color:#fff;border:1px solid #ffffff80;padding:9px 12px;border-radius:9px;font-weight:700}
 @media(max-width:700px){.filters{grid-template-columns:1fr 1fr}.editgrid{grid-template-columns:1fr}.editgrid textarea{grid-column:auto}header{align-items:flex-start}}
 @media(max-width:440px){.filters{grid-template-columns:1fr}.panel{padding:14px}}
+body.embedded header,body.embedded .navlink{display:none!important}body.embedded main{padding-top:16px!important}
 </style>
 </head>
 <body>
@@ -47,6 +48,7 @@ h2{font-size:1.1rem;margin:0 0 14px}.filters{display:grid;grid-template-columns:
 </main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+if(new URLSearchParams(location.search).get("embedded")==="1")document.body.classList.add("embedded");
 const sb=window.supabase.createClient("https://ydvbnalhcnfqpxkkmywr.supabase.co","sb_publishable_xCbSWDkASsbUPl-WmygyMw_eVrJY_9a");
 const $=id=>document.getElementById(id),bn=n=>String(n??"").replace(/\d/g,d=>"০১২৩৪৫৬৭৮৯"[Number(d)]),esc=v=>String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
 let questions=[],categories=[],folders=[],chapters=[],sets=[],answerKeys=[];
