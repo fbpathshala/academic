@@ -106,6 +106,7 @@
           <div class="field"><label for="masterSet">সেট</label><select id="masterSet"><option value="">সেট নির্বাচন করুন</option></select></div>
           <div class="field"><label for="masterSubject">বিষয়</label><input id="masterSubject" placeholder="যেমন: বাংলা ব্যাকরণ"></div>
           <div class="field full"><label for="masterQuestionText">প্রশ্ন</label><textarea id="masterQuestionText" required></textarea></div>
+          <div class="field full"><label for="masterQuestionExplanation">ব্যাখ্যা</label><textarea id="masterQuestionExplanation" placeholder="সঠিক উত্তরের ব্যাখ্যা (ঐচ্ছিক)"></textarea></div>
           <div class="field" id="masterOptionAField"><label for="masterOptionA">ক অপশন</label><input id="masterOptionA"></div>
           <div class="field" id="masterOptionBField"><label for="masterOptionB">খ অপশন</label><input id="masterOptionB"></div>
           <div class="field" id="masterOptionCField"><label for="masterOptionC">গ অপশন</label><input id="masterOptionC"></div>
@@ -359,7 +360,7 @@ document.getElementById("masterQuestionForm").addEventListener("submit",async e=
   if(!question)throw Error("প্রশ্ন লিখুন।");if(!Number.isFinite(marks)||marks<0)throw Error("নম্বর শূন্য বা তার বেশি হতে হবে।");
   const optionIds=["masterOptionA","masterOptionB","masterOptionC","masterOptionD"],optionTexts=optionIds.map(id=>document.getElementById(id).value.trim());
   if(type==="mcq"&&optionTexts.some(x=>!x))throw Error("MCQ-এর চারটি অপশন পূরণ করুন।");
-  const payload={question_text:question,question_type:type,options:type==="mcq"?optionTexts.map((text,i)=>({value:"abcd"[i],text})):[],marks,...location,subject:document.getElementById("masterSubject").value.trim()||null};
+  const payload={question_text:question,explanation:document.getElementById("masterQuestionExplanation").value.trim()||null,question_type:type,options:type==="mcq"?optionTexts.map((text,i)=>({value:"abcd"[i],text})):[],marks,...location,subject:document.getElementById("masterSubject").value.trim()||null};
   const {data:item,error}=await sb.from("academic_care_question_bank_items").insert(payload).select("id").single();
   if(error)throw Error("প্রশ্ন সংরক্ষণ হয়নি: "+error.message);
   if(type==="mcq"){
@@ -409,7 +410,7 @@ async function loadMasterQuestionList(){
  const list=document.getElementById("masterQuestionList"),msg=document.getElementById("masterQuestionListMessage");
  if(!list)return;list.innerHTML='<div class="listempty">প্রশ্ন লোড হচ্ছে…</div>';msg.textContent="";
  try{
-  const {data:items,error}=await sb.from("academic_care_question_bank_items").select("id,question_text,question_type,options,marks,subject,created_at,category_id,folder_id,set_id").order("created_at",{ascending:false}).limit(50);
+  const {data:items,error}=await sb.from("academic_care_question_bank_items").select("id,question_text,question_type,options,marks,subject,explanation,created_at,category_id,folder_id,set_id").order("created_at",{ascending:false}).limit(50);
   if(error)throw error;
   if(!items||!items.length){list.innerHTML='<div class="listempty">এখনো কোনো প্রশ্ন যোগ করা হয়নি।</div>';return}
   const ids=items.filter(x=>x.question_type==="mcq").map(x=>x.id);
@@ -418,7 +419,7 @@ async function loadMasterQuestionList(){
   list.innerHTML=items.map((x,i)=>{
    const opts=Array.isArray(x.options)?x.options.map(o=>'<div>'+escapeHtml(({a:"ক",b:"খ",c:"গ",d:"ঘ"})[o.value]||o.value)+'. '+escapeHtml(o.text)+'</div>').join(""):"";
    const answer=keys[x.id]?'<div><strong>সঠিক উত্তর: '+escapeHtml(({a:"ক",b:"খ",c:"গ",d:"ঘ"})[keys[x.id]]||keys[x.id])+'</strong></div>':"";
-   return '<div class="item"><strong>'+bnDigits(i+1)+'. ['+(x.question_type==="mcq"?"MCQ":"CQ")+'] '+escapeHtml(x.question_text)+'</strong><div class="muted">নম্বর: '+bnDigits(x.marks??1)+(x.subject?' · বিষয়: '+escapeHtml(x.subject):'')+'</div>'+opts+answer+'<div style="margin-top:8px"><button type="button" class="btn danger" data-delete-master-question="'+escapeHtml(x.id)+'">প্রশ্ন মুছুন</button></div></div>'
+   return '<div class="item"><strong>'+bnDigits(i+1)+'. ['+(x.question_type==="mcq"?"MCQ":"CQ")+'] '+escapeHtml(x.question_text)+'</strong><div class="muted">নম্বর: '+bnDigits(x.marks??1)+(x.subject?' · বিষয়: '+escapeHtml(x.subject):'')+'</div>'+opts+answer+'<div class="muted"><strong>ব্যাখ্যা:</strong> '+escapeHtml(x.explanation||"ব্যাখ্যা দেওয়া হয়নি")+'</div>'+'<div style="margin-top:8px"><button type="button" class="btn danger" data-delete-master-question="'+escapeHtml(x.id)+'">প্রশ্ন মুছুন</button></div></div>'
   }).join("");
   list.querySelectorAll("[data-delete-master-question]").forEach(b=>b.addEventListener("click",async()=>{
    if(!confirm("এই প্রশ্নটি স্থায়ীভাবে মুছে ফেলবেন?"))return;
