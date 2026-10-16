@@ -27,17 +27,7 @@ footer{text-align:center;color:#718590;font-size:.88rem;padding:22px}
 <body>
 <header>
   <div class="brand">🎓 Academic Care</div>
-  <div class="menu-wrap">
-    <button class="menu-toggle" id="menuToggle" type="button" aria-expanded="false" aria-controls="mainMenu"><span class="hamburger" aria-hidden="true">☰</span> মেনু</button>
-    <nav class="menu" id="mainMenu" aria-label="প্রধান মেনু">
-      <a href="https://fbpathshala.github.io/exam/"><span aria-hidden="true">📝</span> Job Care · Exam System</a>
-      <a href="student.html"><span aria-hidden="true">🎓</span> Academic Care</a>
-      <a href="student.html#materials"><span aria-hidden="true">📚</span> Study Material</a>
-      <a href="https://fbpathshala.github.io/exam/"><span aria-hidden="true">🔗</span> গুরুত্বপূর্ণ তথ্য ও লিংক</a>
-      <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer"><span aria-hidden="true">ⓕ</span> Facebook Pathshala</a>
-      <button class="logout" id="logoutButton" type="button"><span aria-hidden="true">↪</span> Log Out</button>
-    </nav>
-  </div>
+
 </header>
 <main>
   <div class="mark" aria-hidden="true">📘</div>
@@ -53,18 +43,6 @@ footer{text-align:center;color:#718590;font-size:.88rem;padding:22px}
 </main>
 <footer>Academic Care · শিক্ষা সবার জন্য</footer>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-(function(){
- const toggle=document.getElementById("menuToggle"),menu=document.getElementById("mainMenu");
- function closeMenu(){menu.classList.remove("open");toggle.setAttribute("aria-expanded","false")}
- toggle.addEventListener("click",function(){const open=!menu.classList.contains("open");menu.classList.toggle("open",open);toggle.setAttribute("aria-expanded",String(open))});
- document.addEventListener("click",function(e){if(!e.target.closest(".menu-wrap"))closeMenu()});
- document.addEventListener("keydown",function(e){if(e.key==="Escape")closeMenu()});
- document.getElementById("logoutButton").addEventListener("click",async function(){
-  try{if(window.supabase){const client=window.supabase.createClient("https://ydvbnalhcnfqpxkkmywr.supabase.co","sb_publishable_xCbSWDkASsbUPl-WmygyMw_eVrJY_9a");await client.auth.signOut()}}catch(e){}
-  closeMenu();window.location.href="index.html";
- });
-})();
-</script>
+
 </body>
 </html>
