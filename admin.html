@@ -296,9 +296,15 @@ async function loadBankFolders(selected=""){
  await loadBankChapters();
 }
 async function loadBankChapters(selected=""){
- const folderId=document.getElementById("bankFolderFilter").value,el=document.getElementById("bankChapterFilter");
+ const folderId=document.getElementById("bankFolderFilter").value,catId=document.getElementById("bankCategoryFilter").value,el=document.getElementById("bankChapterFilter");
  let q=sb.from("academic_care_chapters").select("id,chapter_name,folder_id").order("chapter_name");
  if(folderId)q=q.eq("folder_id",folderId);
+ else if(catId){
+  const {data:folders,error:folderError}=await sb.from("academic_care_folders").select("id").eq("category_id",catId);
+  if(folderError){categoryMessage("অধ্যায়ের বিষয় যাচাই হয়নি: "+folderError.message,true);return}
+  const folderIds=(folders||[]).map(x=>x.id);
+  if(folderIds.length)q=q.in("folder_id",folderIds);else q=q.eq("folder_id",0);
+ }
  const {data,error}=await q;
  if(error){categoryMessage("ফিল্টার অধ্যায় লোড হয়নি: "+error.message,true);return}
  el.innerHTML=optionHtml(data||[],"id","chapter_name","সব অধ্যায়");
