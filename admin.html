@@ -230,11 +230,12 @@ async function loadAcademicCategories(){
  if(error){categoryMessage("ক্যাটাগরি লোড হয়নি: "+error.message,true);return}
  categoryRows.splice(0,categoryRows.length,...(data||[]));
  for(const id of ["categoryManager","questionCategory","bankCategoryFilter","masterCategory"]){
-  const el=document.getElementById(id),current=el.value;
+  const el=document.getElementById(id);if(!el)continue;
+  const current=el.value;
   el.innerHTML=optionHtml(categoryRows,"id","name",id==="bankCategoryFilter"?"সব শ্রেণি":"শ্রেণি নির্বাচন করুন");
   if(categoryRows.some(x=>String(x.id)===current))el.value=current;
  }
- await loadManagerFolders();
+ if(document.getElementById("categoryManager"))await loadManagerFolders();
  await loadQuestionFolders();
  await loadBankFolders();
  await loadMasterQuestionFolders();
@@ -473,19 +474,21 @@ async function deleteAcademicSet(){
  await loadManagerSets();await loadQuestionSets();await loadBankSets();await loadMasterQuestionSets();categoryMessage("সেট মুছে ফেলা হয়েছে।");
 }
 function setupAcademicCategoryUI(){
- const on=(id,fn)=>document.getElementById(id).addEventListener("click",fn);
+ const on=(id,fn)=>{const el=document.getElementById(id);if(el)el.addEventListener("click",fn)};
  on("createCategory",createAcademicCategory);on("renameCategory",renameAcademicCategory);on("deleteCategory",deleteAcademicCategory);
  on("createFolder",createAcademicFolder);on("renameFolder",renameAcademicFolder);on("deleteFolder",deleteAcademicFolder);
  on("createSet",createAcademicSet);on("renameSet",renameAcademicSet);on("deleteSet",deleteAcademicSet);
- document.getElementById("categoryManager").addEventListener("change",()=>loadManagerFolders());
- document.getElementById("folderManager").addEventListener("change",()=>loadManagerSets());
- document.getElementById("questionCategory").addEventListener("change",()=>loadQuestionFolders());
- document.getElementById("questionFolder").addEventListener("change",()=>loadQuestionChapters());
- document.getElementById("questionChapter").addEventListener("change",()=>loadQuestionSets());
- document.getElementById("bankCategoryFilter").addEventListener("change",()=>{document.getElementById("bankFolderFilter").value="";loadBankFolders();renderQuestionBank()});
- document.getElementById("bankFolderFilter").addEventListener("change",()=>{document.getElementById("bankSetFilter").value="";loadBankSets();renderQuestionBank()});
- document.getElementById("bankSetFilter").addEventListener("change",renderQuestionBank);
- document.getElementById("bankSubjectFilter").addEventListener("input",renderQuestionBank);
+ const change=(id,fn)=>{const el=document.getElementById(id);if(el)el.addEventListener("change",fn)};
+ const input=(id,fn)=>{const el=document.getElementById(id);if(el)el.addEventListener("input",fn)};
+ change("categoryManager",()=>loadManagerFolders());
+ change("folderManager",()=>loadManagerSets());
+ change("questionCategory",()=>loadQuestionFolders());
+ change("questionFolder",()=>loadQuestionChapters());
+ change("questionChapter",()=>loadQuestionSets());
+ change("bankCategoryFilter",()=>{document.getElementById("bankFolderFilter").value="";document.getElementById("bankSetFilter").value="";loadBankFolders();renderQuestionBank()});
+ change("bankFolderFilter",()=>{document.getElementById("bankSetFilter").value="";loadBankSets();renderQuestionBank()});
+ change("bankSetFilter",renderQuestionBank);
+ input("bankSubjectFilter",renderQuestionBank);
 }
 
 const titles={home:"ড্যাশবোর্ড",questionCreate:"প্রশ্ন তৈরি",exams:"পরীক্ষা পরিচালনা",questionBank:"প্রশ্ন ব্যাংক",materials:"স্টাডি ম্যাটেরিয়াল",reviews:"উত্তর মূল্যায়ন",settings:"সিস্টেম সেটআপ"};
