@@ -244,6 +244,7 @@ async function loadManagerFolders(selected=""){
  const {data,error}=await sb.from("academic_care_folders").select("id,folder_name").eq("category_id",catId||0).order("folder_name");
  if(error){categoryMessage("বিষয় লোড হয়নি: "+error.message,true);return}
  el.innerHTML=optionHtml(data||[],"id","folder_name","বিষয় নির্বাচন করুন");
+ el.disabled=!catId || !(data||[]).length;
  if(selected)el.value=String(selected);
  await loadManagerSets();
 }
@@ -252,6 +253,7 @@ async function loadManagerSets(selected=""){
  const {data,error}=await sb.from("academic_care_sets").select("id,set_name").eq("folder_id",folderId||0).order("set_name");
  if(error){categoryMessage("সেট লোড হয়নি: "+error.message,true);return}
  el.innerHTML=optionHtml(data||[],"id","set_name","সেট নির্বাচন করুন");
+ el.disabled=!folderId || !(data||[]).length;
  if(selected)el.value=String(selected);
 }
 async function loadQuestionFolders(selected="",selectedChapter=""){
@@ -259,6 +261,7 @@ async function loadQuestionFolders(selected="",selectedChapter=""){
  const {data,error}=await sb.from("academic_care_folders").select("id,folder_name").eq("category_id",catId||0).order("folder_name");
  if(error){categoryMessage("প্রশ্নের বিষয় লোড হয়নি: "+error.message,true);return}
  el.innerHTML=optionHtml(data||[],"id","folder_name","বিষয় নির্বাচন করুন");
+ el.disabled=!catId || !(data||[]).length;
  if(selected)el.value=String(selected);
  await loadQuestionChapters(selectedChapter);
 }
@@ -267,6 +270,7 @@ async function loadQuestionChapters(selected=""){
  const {data,error}=await sb.from("academic_care_chapters").select("id,chapter_name").eq("folder_id",folderId||0).order("chapter_name");
  if(error){categoryMessage("অধ্যায় লোড হয়নি: "+error.message,true);return}
  el.innerHTML=optionHtml(data||[],"id","chapter_name","অধ্যায় নির্বাচন করুন");
+ el.disabled=!folderId || !(data||[]).length;
  if(selected)el.value=String(selected);
  await loadQuestionSets();
 }
@@ -275,6 +279,7 @@ async function loadQuestionSets(selected=""){
  const {data,error}=await sb.from("academic_care_sets").select("id,set_name").eq("chapter_id",chapterId||0).order("set_name");
  if(error){categoryMessage("প্রশ্নের সেট লোড হয়নি: "+error.message,true);return}
  el.innerHTML=optionHtml(data||[],"id","set_name","সেট নির্বাচন করুন");
+ el.disabled=!chapterId || !(data||[]).length;
  if(selected)el.value=String(selected);
 }
 async function loadBankFolders(selected=""){
@@ -292,6 +297,7 @@ async function loadBankSets(selected=""){
  const {data,error}=await sb.from("academic_care_sets").select("id,set_name").eq("folder_id",folderId||0).order("set_name");
  if(error){categoryMessage("ফিল্টার সেট লোড হয়নি: "+error.message,true);return}
  el.innerHTML=optionHtml(data||[],"id","set_name","সব সেট");
+ el.disabled=!folderId || !(data||[]).length;
  if(selected)el.value=String(selected);
 }
 async function loadMasterQuestionFolders(selected=""){
@@ -299,13 +305,13 @@ async function loadMasterQuestionFolders(selected=""){
  let q=sb.from("academic_care_folders").select("id,folder_name,category_id").order("folder_name");
  if(catId)q=q.eq("category_id",catId);else q=q.eq("category_id",0);
  const {data,error}=await q;if(error){setMasterQuestionMessage("বিষয় লোড হয়নি: "+error.message,true);return}
- el.innerHTML=optionHtml(data||[],"id","folder_name","বিষয় নির্বাচন করুন");if(selected)el.value=String(selected);await loadMasterQuestionSets()
+ el.innerHTML=optionHtml(data||[],"id","folder_name","বিষয় নির্বাচন করুন");el.disabled=!catId || !(data||[]).length;if(selected)el.value=String(selected);await loadMasterQuestionSets()
 }
 async function loadMasterQuestionSets(selected=""){
  const folderId=document.getElementById("masterFolder").value,el=document.getElementById("masterSet");
  const {data,error}=await sb.from("academic_care_sets").select("id,set_name").eq("folder_id",folderId||0).order("set_name");
  if(error){setMasterQuestionMessage("সেট লোড হয়নি: "+error.message,true);return}
- el.innerHTML=optionHtml(data||[],"id","set_name","সেট নির্বাচন করুন");if(selected)el.value=String(selected)
+ el.innerHTML=optionHtml(data||[],"id","set_name","সেট নির্বাচন করুন");el.disabled=!folderId || !(data||[]).length;if(selected)el.value=String(selected)
 }
 function setMasterQuestionMessage(text,error=false){const el=document.getElementById("masterQuestionMessage");if(el){el.textContent=text;el.className=error?"notice error":"notice"}}
 function setMasterImportMessage(text,error=false){const el=document.getElementById("masterQuestionImportMessage");if(el){el.textContent=text;el.className=error?"notice error":"notice"}}
