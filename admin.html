@@ -67,8 +67,8 @@
         <form id="masterQuestionForm" class="formgrid">
           <div class="field"><label for="masterQuestionType">প্রশ্নের ধরন</label><select id="masterQuestionType"><option value="mcq">MCQ — বহুনির্বাচনী</option><option value="cq">CQ — লিখিত</option></select></div>
           <div class="field"><label for="masterQuestionMarks">নম্বর</label><input id="masterQuestionMarks" type="number" min="0" step="0.5" value="1" required></div>
-          <div class="field"><label for="masterCategory">ক্যাটাগরি</label><select id="masterCategory"><option value="">ক্যাটাগরি নির্বাচন করুন</option></select></div>
-          <div class="field"><label for="masterFolder">ফোল্ডার</label><select id="masterFolder"><option value="">ফোল্ডার নির্বাচন করুন</option></select></div>
+          <div class="field"><label for="masterCategory">শ্রেণি</label><select id="masterCategory"><option value="">শ্রেণি নির্বাচন করুন</option></select></div>
+          <div class="field"><label for="masterFolder">বিষয়</label><select id="masterFolder"><option value="">বিষয় নির্বাচন করুন</option></select></div>
           <div class="field"><label for="masterSet">সেট</label><select id="masterSet"><option value="">সেট নির্বাচন করুন</option></select></div>
           <div class="field"><label for="masterSubject">বিষয়</label><input id="masterSubject" placeholder="যেমন: বাংলা ব্যাকরণ"></div>
           <div class="field full"><label for="masterQuestionText">প্রশ্ন</label><textarea id="masterQuestionText" required></textarea></div>
@@ -115,7 +115,7 @@
           <div class="field full"><label for="questionExam">পরীক্ষা নির্বাচন</label><select id="questionExam" required><option value="">প্রথমে পরীক্ষা তৈরি করুন</option></select></div>
           <div class="field"><label for="questionType">প্রশ্নের ধরন</label><select id="questionType"><option value="mcq">MCQ</option><option value="cq">CQ</option></select></div>
           <div class="field"><label for="questionMarks">নম্বর</label><input id="questionMarks" type="number" min="0" step="0.5" value="1" required></div>
-          <div class="field"><label for="questionCategory">ক্যাটাগরি</label><select id="questionCategory"><option value="">ক্যাটাগরি নির্বাচন করুন</option></select></div>
+          <div class="field"><label for="questionCategory">শ্রেণি</label><select id="questionCategory"><option value="">শ্রেণি নির্বাচন করুন</option></select></div>
           <div class="field"><label for="questionFolder">বিষয়</label><select id="questionFolder"><option value="">বিষয় নির্বাচন করুন</option></select></div>
           <div class="field"><label for="questionChapter">অধ্যায়</label><select id="questionChapter"><option value="">অধ্যায় নির্বাচন করুন</option></select></div>
           <div class="field"><label for="questionSet">সেট</label><select id="questionSet"><option value="">সেট নির্বাচন করুন</option></select></div>
@@ -231,7 +231,7 @@ async function loadAcademicCategories(){
  categoryRows.splice(0,categoryRows.length,...(data||[]));
  for(const id of ["categoryManager","questionCategory","bankCategoryFilter","masterCategory"]){
   const el=document.getElementById(id),current=el.value;
-  el.innerHTML=optionHtml(categoryRows,"id","name",id==="bankCategoryFilter"?"সব ক্যাটাগরি":"ক্যাটাগরি নির্বাচন করুন");
+  el.innerHTML=optionHtml(categoryRows,"id","name",id==="bankCategoryFilter"?"সব শ্রেণি":"শ্রেণি নির্বাচন করুন");
   if(categoryRows.some(x=>String(x.id)===current))el.value=current;
  }
  await loadManagerFolders();
@@ -242,8 +242,8 @@ async function loadAcademicCategories(){
 async function loadManagerFolders(selected=""){
  const catId=document.getElementById("categoryManager").value,el=document.getElementById("folderManager");
  const {data,error}=await sb.from("academic_care_folders").select("id,folder_name").eq("category_id",catId||0).order("folder_name");
- if(error){categoryMessage("ফোল্ডার লোড হয়নি: "+error.message,true);return}
- el.innerHTML=optionHtml(data||[],"id","folder_name","ফোল্ডার নির্বাচন করুন");
+ if(error){categoryMessage("বিষয় লোড হয়নি: "+error.message,true);return}
+ el.innerHTML=optionHtml(data||[],"id","folder_name","বিষয় নির্বাচন করুন");
  if(selected)el.value=String(selected);
  await loadManagerSets();
 }
@@ -257,8 +257,8 @@ async function loadManagerSets(selected=""){
 async function loadQuestionFolders(selected="",selectedChapter=""){
  const catId=document.getElementById("questionCategory").value,el=document.getElementById("questionFolder");
  const {data,error}=await sb.from("academic_care_folders").select("id,folder_name").eq("category_id",catId||0).order("folder_name");
- if(error){categoryMessage("প্রশ্নের ফোল্ডার লোড হয়নি: "+error.message,true);return}
- el.innerHTML=optionHtml(data||[],"id","folder_name","ফোল্ডার নির্বাচন করুন");
+ if(error){categoryMessage("প্রশ্নের বিষয় লোড হয়নি: "+error.message,true);return}
+ el.innerHTML=optionHtml(data||[],"id","folder_name","বিষয় নির্বাচন করুন");
  if(selected)el.value=String(selected);
  await loadQuestionChapters(selectedChapter);
 }
@@ -282,7 +282,7 @@ async function loadBankFolders(selected=""){
  let q=sb.from("academic_care_folders").select("id,folder_name,category_id").order("folder_name");
  if(catId)q=q.eq("category_id",catId);
  const {data,error}=await q;
- if(error){categoryMessage("ফিল্টার ফোল্ডার লোড হয়নি: "+error.message,true);return}
+ if(error){categoryMessage("ফিল্টার বিষয় লোড হয়নি: "+error.message,true);return}
  el.innerHTML=optionHtml(data||[],"id","folder_name","সব ফোল্ডার");
  if(selected)el.value=String(selected);
  await loadBankSets();
@@ -298,8 +298,8 @@ async function loadMasterQuestionFolders(selected=""){
  const catId=document.getElementById("masterCategory").value,el=document.getElementById("masterFolder");
  let q=sb.from("academic_care_folders").select("id,folder_name,category_id").order("folder_name");
  if(catId)q=q.eq("category_id",catId);else q=q.eq("category_id",0);
- const {data,error}=await q;if(error){setMasterQuestionMessage("ফোল্ডার লোড হয়নি: "+error.message,true);return}
- el.innerHTML=optionHtml(data||[],"id","folder_name","ফোল্ডার নির্বাচন করুন");if(selected)el.value=String(selected);await loadMasterQuestionSets()
+ const {data,error}=await q;if(error){setMasterQuestionMessage("বিষয় লোড হয়নি: "+error.message,true);return}
+ el.innerHTML=optionHtml(data||[],"id","folder_name","বিষয় নির্বাচন করুন");if(selected)el.value=String(selected);await loadMasterQuestionSets()
 }
 async function loadMasterQuestionSets(selected=""){
  const folderId=document.getElementById("masterFolder").value,el=document.getElementById("masterSet");
