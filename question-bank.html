@@ -18,7 +18,14 @@ h2{font-size:1.1rem;margin:0 0 14px}.filters{display:grid;grid-template-columns:
 @media(max-width:440px){.filters{grid-template-columns:1fr}.panel{padding:14px}}
 body.embedded header,body.embedded .navlink{display:none!important}body.embedded main{padding-top:16px!important}
 </style>
-</head>
+<style id="central-embedded-question-bank-cleanup">
+body.central-embedded header .navlink{display:none!important}
+body.central-embedded .central-return{display:flex;justify-content:center;align-items:center;min-height:46px;margin:18px 0 12px;padding:11px 16px;border:1px solid #c2d5e6;border-radius:10px;background:#e8f1f8;color:#173f5f;text-decoration:none;font-weight:750}
+@media(max-width:650px){body.central-embedded .central-return{width:100%;min-height:48px}}
+</style>
+<script>
+if(new URLSearchParams(location.search).get("embedded")==="1")document.documentElement.classList.add("central-embedded");
+</script></head>
 <body>
 <header><div><h1>🎓 Academic Care — প্রশ্ন ব্যাংক</h1><p>ক্যাটাগরি, ফোল্ডার, সেট, পরীক্ষা ও প্রশ্নের ধরন অনুযায়ী প্রশ্ন খুঁজুন</p></div><a class="navlink" href="https://fbpathshala.github.io/exam/question-bank-select.html">↩ প্রশ্ন ব্যাংক নির্বাচন</a></header>
 <main>
@@ -80,4 +87,4 @@ $("cancelEdit").addEventListener("click",()=>$("editPanel").classList.add("hidde
 $("categoryFilter").addEventListener("change",()=>{renderFolders();renderQuestions()});$("folderFilter").addEventListener("change",()=>{renderSets();renderQuestions()});["typeFilter","setFilter","subjectFilter"].forEach(id=>$(id).addEventListener(id==="subjectFilter"?"input":"change",renderQuestions));let timer;$("search").addEventListener("input",()=>{clearTimeout(timer);timer=setTimeout(renderQuestions,180)});
 (async()=>{const {data:{session}}=await sb.auth.getSession();await checkSession(session)})();
 </script>
-</body></html>
+<div class="central-return-wrap"><a class="central-return" href="https://fbpathshala.github.io/home.html">⌂ মূল মেনু / হোম পেইজে ফিরুন</a></div></body></html>
