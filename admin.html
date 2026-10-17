@@ -69,7 +69,8 @@
           <div class="field"><label for="masterQuestionMarks">নম্বর</label><input id="masterQuestionMarks" type="number" min="0" step="0.5" value="1" required></div>
           <div class="field"><label for="masterCategory">শ্রেণি</label><select id="masterCategory"><option value="">শ্রেণি নির্বাচন করুন</option></select></div>
           <div class="field"><label for="masterFolder">বিষয়</label><select id="masterFolder"><option value="">বিষয় নির্বাচন করুন</option></select></div>
-          <div class="field"><label for="masterSet">সেট</label><select id="masterSet"><option value="">সেট নির্বাচন করুন</option></select></div>
+          <div class="field"><label for="masterChapter">অধ্যায়</label><select id="masterChapter" disabled><option value="">আগে বিষয় নির্বাচন করুন</option></select></div>
+          <div class="field"><label for="masterSet">সেট</label><select id="masterSet" disabled><option value="">আগে অধ্যায় নির্বাচন করুন</option></select></div>
           <div class="field"><label for="masterSubject">বিষয়</label><input id="masterSubject" placeholder="যেমন: বাংলা ব্যাকরণ"></div>
           <div class="field full"><label for="masterQuestionText">প্রশ্ন</label><textarea id="masterQuestionText" required></textarea></div>
           <div class="field full"><label for="masterQuestionExplanation">ব্যাখ্যা</label><textarea id="masterQuestionExplanation" placeholder="সঠিক উত্তরের ব্যাখ্যা (ঐচ্ছিক)"></textarea></div>
@@ -171,7 +172,8 @@
           <select id="bankExamFilter"><option value="">সব পরীক্ষা</option></select>
           <select id="bankTypeFilter"><option value="">সব ধরনের প্রশ্ন</option><option value="mcq">MCQ</option><option value="cq">CQ</option></select>
           <select id="bankCategoryFilter"><option value="">সব ক্যাটাগরি</option></select>
-          <select id="bankFolderFilter"><option value="">সব ফোল্ডার</option></select>
+          <select id="bankFolderFilter"><option value="">সব বিষয়</option></select>
+          <select id="bankChapterFilter"><option value="">সব অধ্যায়</option></select>
           <select id="bankSetFilter"><option value="">সব সেট</option></select>
           <input id="bankSubjectFilter" type="search" placeholder="বিষয় দিয়ে ফিল্টার">
         </div>
@@ -289,16 +291,27 @@ async function loadBankFolders(selected=""){
  if(catId)q=q.eq("category_id",catId);
  const {data,error}=await q;
  if(error){categoryMessage("ফিল্টার বিষয় লোড হয়নি: "+error.message,true);return}
- el.innerHTML=optionHtml(data||[],"id","folder_name","সব ফোল্ডার");
+ el.innerHTML=optionHtml(data||[],"id","folder_name","সব বিষয়");
+ if(selected)el.value=String(selected);
+ await loadBankChapters();
+}
+async function loadBankChapters(selected=""){
+ const folderId=document.getElementById("bankFolderFilter").value,el=document.getElementById("bankChapterFilter");
+ let q=sb.from("academic_care_chapters").select("id,chapter_name,folder_id").order("chapter_name");
+ if(folderId)q=q.eq("folder_id",folderId);
+ const {data,error}=await q;
+ if(error){categoryMessage("ফিল্টার অধ্যায় লোড হয়নি: "+error.message,true);return}
+ el.innerHTML=optionHtml(data||[],"id","chapter_name","সব অধ্যায়");
  if(selected)el.value=String(selected);
  await loadBankSets();
 }
 async function loadBankSets(selected=""){
- const folderId=document.getElementById("bankFolderFilter").value,el=document.getElementById("bankSetFilter");
- const {data,error}=await sb.from("academic_care_sets").select("id,set_name").eq("folder_id",folderId||0).order("set_name");
+ const chapterId=document.getElementById("bankChapterFilter").value,el=document.getElementById("bankSetFilter");
+ let q=sb.from("academic_care_sets").select("id,set_name,chapter_id").order("set_name");
+ if(chapterId)q=q.eq("chapter_id",chapterId);
+ const {data,error}=await q;
  if(error){categoryMessage("ফিল্টার সেট লোড হয়নি: "+error.message,true);return}
  el.innerHTML=optionHtml(data||[],"id","set_name","সব সেট");
- el.disabled=!folderId || !(data||[]).length;
  if(selected)el.value=String(selected);
 }
 async function loadMasterQuestionFolders(selected=""){
@@ -306,13 +319,19 @@ async function loadMasterQuestionFolders(selected=""){
  let q=sb.from("academic_care_folders").select("id,folder_name,category_id").order("folder_name");
  if(catId)q=q.eq("category_id",catId);else q=q.eq("category_id",0);
  const {data,error}=await q;if(error){setMasterQuestionMessage("বিষয় লোড হয়নি: "+error.message,true);return}
- el.innerHTML=optionHtml(data||[],"id","folder_name","বিষয় নির্বাচন করুন");el.disabled=!catId || !(data||[]).length;if(selected)el.value=String(selected);await loadMasterQuestionSets()
+ el.innerHTML=optionHtml(data||[],"id","folder_name","বিষয় নির্বাচন করুন");el.disabled=!catId || !(data||[]).length;if(selected)el.value=String(selected);await loadMasterQuestionChapters()
+}
+async function loadMasterQuestionChapters(selected=""){
+ const folderId=document.getElementById("masterFolder").value,el=document.getElementById("masterChapter");
+ const {data,error}=await sb.from("academic_care_chapters").select("id,chapter_name").eq("folder_id",folderId||0).order("chapter_name");
+ if(error){setMasterQuestionMessage("অধ্যায় লোড হয়নি: "+error.message,true);return}
+ el.innerHTML=optionHtml(data||[],"id","chapter_name","অধ্যায় নির্বাচন করুন");el.disabled=!folderId || !(data||[]).length;if(selected)el.value=String(selected);await loadMasterQuestionSets()
 }
 async function loadMasterQuestionSets(selected=""){
- const folderId=document.getElementById("masterFolder").value,el=document.getElementById("masterSet");
- const {data,error}=await sb.from("academic_care_sets").select("id,set_name").eq("folder_id",folderId||0).order("set_name");
+ const chapterId=document.getElementById("masterChapter").value,el=document.getElementById("masterSet");
+ const {data,error}=await sb.from("academic_care_sets").select("id,set_name").eq("chapter_id",chapterId||0).order("set_name");
  if(error){setMasterQuestionMessage("সেট লোড হয়নি: "+error.message,true);return}
- el.innerHTML=optionHtml(data||[],"id","set_name","সেট নির্বাচন করুন");el.disabled=!folderId || !(data||[]).length;if(selected)el.value=String(selected)
+ el.innerHTML=optionHtml(data||[],"id","set_name","সেট নির্বাচন করুন");el.disabled=!chapterId || !(data||[]).length;if(selected)el.value=String(selected)
 }
 function setMasterQuestionMessage(text,error=false){const el=document.getElementById("masterQuestionMessage");if(el){el.textContent=text;el.className=error?"notice error":"notice"}}
 function setMasterImportMessage(text,error=false){const el=document.getElementById("masterQuestionImportMessage");if(el){el.textContent=text;el.className=error?"notice error":"notice"}}
@@ -323,17 +342,19 @@ function syncMasterQuestionType(){
  document.getElementById("masterCorrectOption").required=mcq
 }
 function masterQuestionLocation(){
- const category=document.getElementById("masterCategory").value,folder=document.getElementById("masterFolder").value,set=document.getElementById("masterSet").value;
- if(category&&(!folder||!set))throw Error("ক্যাটাগরি নির্বাচন করলে সংশ্লিষ্ট ফোল্ডার ও সেটও নির্বাচন করুন।");
- if(folder&&!category)throw Error("ফোল্ডার নির্বাচনের আগে ক্যাটাগরি নির্বাচন করুন।");
- if(set&&!folder)throw Error("সেট নির্বাচনের আগে ফোল্ডার নির্বাচন করুন।");
+ const category=document.getElementById("masterCategory").value,folder=document.getElementById("masterFolder").value,chapter=document.getElementById("masterChapter").value,set=document.getElementById("masterSet").value;
+ if(category&&(!folder||!chapter||!set))throw Error("শ্রেণি নির্বাচন করলে বিষয়, অধ্যায় ও সেটও নির্বাচন করুন।");
+ if(folder&&!category)throw Error("বিষয় নির্বাচনের আগে শ্রেণি নির্বাচন করুন।");
+ if(chapter&&!folder)throw Error("অধ্যায় নির্বাচনের আগে বিষয় নির্বাচন করুন.");
+ if(set&&!chapter)throw Error("সেট নির্বাচনের আগে অধ্যায় নির্বাচন করুন.");
  return {category_id:category?Number(category):null,folder_id:folder?Number(folder):null,set_id:set?Number(set):null}
 }
 function normalizeMasterHeader(value){return String(value??"").trim().toLowerCase().replace(/[\s\-_().]/g,"")}
 function masterImportField(row,names){for(const key of Object.keys(row)){if(names.includes(normalizeMasterHeader(key)))return row[key]}return ""}
 function masterCorrectOption(value){const v=String(value??"").trim().toLowerCase();return ({"ক":"a","খ":"b","গ":"c","ঘ":"d","a":"a","b":"b","c":"c","d":"d","1":"a","2":"b","3":"c","4":"d"})[v]||""}
 document.getElementById("masterCategory").addEventListener("change",()=>loadMasterQuestionFolders());
-document.getElementById("masterFolder").addEventListener("change",()=>loadMasterQuestionSets());
+document.getElementById("masterFolder").addEventListener("change",()=>loadMasterQuestionChapters());
+document.getElementById("masterChapter").addEventListener("change",()=>loadMasterQuestionSets());
 document.getElementById("masterQuestionType").addEventListener("change",syncMasterQuestionType);
 document.getElementById("masterQuestionForm").addEventListener("submit",async e=>{
  e.preventDefault();
@@ -485,8 +506,9 @@ function setupAcademicCategoryUI(){
  change("questionCategory",()=>loadQuestionFolders());
  change("questionFolder",()=>loadQuestionChapters());
  change("questionChapter",()=>loadQuestionSets());
- change("bankCategoryFilter",()=>{document.getElementById("bankFolderFilter").value="";document.getElementById("bankSetFilter").value="";loadBankFolders();renderQuestionBank()});
- change("bankFolderFilter",()=>{document.getElementById("bankSetFilter").value="";loadBankSets();renderQuestionBank()});
+ change("bankCategoryFilter",()=>{document.getElementById("bankFolderFilter").value="";document.getElementById("bankChapterFilter").value="";document.getElementById("bankSetFilter").value="";loadBankFolders();renderQuestionBank()});
+ change("bankFolderFilter",()=>{document.getElementById("bankChapterFilter").value="";document.getElementById("bankSetFilter").value="";loadBankChapters();renderQuestionBank()});
+ change("bankChapterFilter",()=>{document.getElementById("bankSetFilter").value="";loadBankSets();renderQuestionBank()});
  change("bankSetFilter",renderQuestionBank);
  input("bankSubjectFilter",renderQuestionBank);
 }
@@ -507,8 +529,8 @@ function materialModel(x){return {id:x.id,title:x.title,meta:(x.material_type||"
 async function loadData(){document.getElementById("connectionState").textContent="ডেটাবেস লোড হচ্ছে";const [er,mr,sr,vr]=await Promise.all([sb.from("academic_care_exams").select("*").order("created_at",{ascending:false}),sb.from("academic_care_materials").select("*").order("created_at",{ascending:false}),sb.from("academic_care_submissions").select("id",{count:"exact",head:true}),sb.rpc("count_site_visitors")]);if(er.error||mr.error){document.getElementById("connectionState").textContent="ডেটাবেস ত্রুটি";alert("ডেটা লোড হয়নি: "+(er.error||mr.error).message);return}exams.splice(0,exams.length,...er.data.map(examModel));materials.splice(0,materials.length,...mr.data.map(materialModel));renderItems(exams,"examList","examListCount","exam");renderItems(materials,"materialList","materialListCount","material");updateQuestionExamOptions();syncQuestionTypes();updateCounts();document.getElementById("examineeCount").textContent=sr.error?"—":bnDigits(sr.count||0);document.getElementById("visitorCount").textContent=vr.error?"—":bnDigits(vr.data||0);updateBankExamFilter();await loadAcademicCategories();document.getElementById("connectionState").textContent="ডেটাবেস সংযুক্ত"}
 
 function updateBankExamFilter(){const sel=document.getElementById("bankExamFilter"),cur=sel.value;sel.innerHTML='<option value="">সব পরীক্ষা</option>'+exams.map(x=>'<option value="'+escapeHtml(x.id)+'">'+escapeHtml(x.title)+'</option>').join("");if(exams.some(x=>x.id===cur))sel.value=cur}
-async function loadQuestionBank(){const list=document.getElementById("questionBankList");list.innerHTML='<div class="listempty">প্রশ্ন ব্যাংক লোড হচ্ছে…</div>';const {data,error}=await sb.from("academic_care_questions").select("id,exam_id,question_text,question_type,options,marks,sort_order,created_at,category_id,folder_id,set_id,subject,academic_care_categories(name),academic_care_folders(folder_name),academic_care_sets(set_name)").order("created_at",{ascending:false});if(error){list.innerHTML='<div class="notice">প্রশ্ন লোড হয়নি: '+escapeHtml(error.message)+'</div>';return}bankQuestions.splice(0,bankQuestions.length,...data);renderQuestionBank()}
-function renderQuestionBank(){const list=document.getElementById("questionBankList"),q=document.getElementById("bankSearch").value.trim().toLocaleLowerCase(),examId=document.getElementById("bankExamFilter").value,type=document.getElementById("bankTypeFilter").value,catId=document.getElementById("bankCategoryFilter").value,folderId=document.getElementById("bankFolderFilter").value,setId=document.getElementById("bankSetFilter").value,subject=document.getElementById("bankSubjectFilter").value.trim().toLocaleLowerCase();const filtered=bankQuestions.filter(x=>(!examId||x.exam_id===examId)&&(!type||x.question_type===type)&&(!catId||String(x.category_id)===catId)&&(!folderId||String(x.folder_id)===folderId)&&(!setId||String(x.set_id)===setId)&&(!subject||String(x.subject||"").toLocaleLowerCase().includes(subject))&&(!q||(String(x.question_text||"")+" "+String(x.subject||"")+" "+(exams.find(e=>e.id===x.exam_id)?.title||"")).toLocaleLowerCase().includes(q)));if(!filtered.length){list.innerHTML='<div class="listempty">মিল পাওয়া যায়নি, অথবা এখনো কোনো প্রশ্ন যোগ করা হয়নি।</div>';return}const grouped=new Map();filtered.forEach(x=>{if(!grouped.has(x.exam_id))grouped.set(x.exam_id,[]);grouped.get(x.exam_id).push(x)});list.innerHTML=[...grouped.entries()].map(([id,items])=>{const ex=exams.find(e=>e.id===id),mcq=items.filter(x=>x.question_type==="mcq"),cq=items.filter(x=>x.question_type==="cq");return '<details class="bank-folder" open><summary>'+escapeHtml(ex?.title||"পরীক্ষা পাওয়া যায়নি")+' · '+bnDigits(items.length)+'টি প্রশ্ন</summary>'+(mcq.length?'<div class="notice" style="margin:10px 12px 0"><strong>MCQ সেট</strong> · '+bnDigits(mcq.length)+'টি</div>':'')+mcq.map(questionCard).join("")+(cq.length?'<div class="notice" style="margin:10px 12px 0"><strong>CQ সেট</strong> · '+bnDigits(cq.length)+'টি</div>':'')+cq.map(questionCard).join("")+'</details>'}).join("")}
+async function loadQuestionBank(){const list=document.getElementById("questionBankList");list.innerHTML='<div class="listempty">প্রশ্ন ব্যাংক লোড হচ্ছে…</div>';const {data,error}=await sb.from("academic_care_questions").select("id,exam_id,question_text,question_type,options,marks,sort_order,created_at,category_id,folder_id,chapter_id,set_id,subject,academic_care_categories(name),academic_care_folders(folder_name),academic_care_chapters(chapter_name),academic_care_sets(set_name)").order("created_at",{ascending:false});if(error){list.innerHTML='<div class="notice">প্রশ্ন লোড হয়নি: '+escapeHtml(error.message)+'</div>';return}bankQuestions.splice(0,bankQuestions.length,...data);renderQuestionBank()}
+function renderQuestionBank(){const list=document.getElementById("questionBankList"),q=document.getElementById("bankSearch").value.trim().toLocaleLowerCase(),examId=document.getElementById("bankExamFilter").value,type=document.getElementById("bankTypeFilter").value,catId=document.getElementById("bankCategoryFilter").value,folderId=document.getElementById("bankFolderFilter").value,chapterId=document.getElementById("bankChapterFilter").value,setId=document.getElementById("bankSetFilter").value,subject=document.getElementById("bankSubjectFilter").value.trim().toLocaleLowerCase();const filtered=bankQuestions.filter(x=>(!examId||x.exam_id===examId)&&(!type||x.question_type===type)&&(!catId||String(x.category_id)===catId)&&(!folderId||String(x.folder_id)===folderId)&&(!chapterId||String(x.chapter_id)===chapterId)&&(!setId||String(x.set_id)===setId)&&(!subject||String(x.subject||"").toLocaleLowerCase().includes(subject))&&(!q||(String(x.question_text||"")+" "+String(x.subject||"")+" "+(exams.find(e=>e.id===x.exam_id)?.title||"")).toLocaleLowerCase().includes(q)));if(!filtered.length){list.innerHTML='<div class="listempty">মিল পাওয়া যায়নি, অথবা এখনো কোনো প্রশ্ন যোগ করা হয়নি।</div>';return}const grouped=new Map();filtered.forEach(x=>{if(!grouped.has(x.exam_id))grouped.set(x.exam_id,[]);grouped.get(x.exam_id).push(x)});list.innerHTML=[...grouped.entries()].map(([id,items])=>{const ex=exams.find(e=>e.id===id),mcq=items.filter(x=>x.question_type==="mcq"),cq=items.filter(x=>x.question_type==="cq");return '<details class="bank-folder" open><summary>'+escapeHtml(ex?.title||"পরীক্ষা পাওয়া যায়নি")+' · '+bnDigits(items.length)+'টি প্রশ্ন</summary>'+(mcq.length?'<div class="notice" style="margin:10px 12px 0"><strong>MCQ সেট</strong> · '+bnDigits(mcq.length)+'টি</div>':'')+mcq.map(questionCard).join("")+(cq.length?'<div class="notice" style="margin:10px 12px 0"><strong>CQ সেট</strong> · '+bnDigits(cq.length)+'টি</div>':'')+cq.map(questionCard).join("")+'</details>'}).join("")}
 function questionCard(x,i){const opts=Array.isArray(x.options)?x.options:[];const source=[x.academic_care_categories?.name,x.academic_care_folders?.folder_name,x.academic_care_sets?.set_name,x.subject].filter(Boolean).join(" / ");return '<article class="bank-question"><span class="bank-tag">'+(x.question_type==="mcq"?"MCQ":"CQ")+'</span><span class="bank-tag">'+bnDigits(x.marks??0)+' নম্বর</span><p><strong>'+escapeHtml(x.question_text)+'</strong></p>'+(opts.length?'<div class="muted">'+opts.map((o,j)=>escapeHtml("কখগঘ"[j]||"")+'. '+escapeHtml(o.text||o.value||o)).join("　 ·　")+'</div>':'')+(source?'<div class="muted">Source: '+escapeHtml(source)+'</div>':'')+'<div class="bank-actions"><button class="btn light" type="button" data-edit-question="'+escapeHtml(x.id)+'">✏️ সম্পাদনা</button></div></article>'}
 document.getElementById("bankSearch").addEventListener("input",renderQuestionBank);document.getElementById("bankExamFilter").addEventListener("change",renderQuestionBank);document.getElementById("bankTypeFilter").addEventListener("change",renderQuestionBank);document.getElementById("refreshQuestionBank").addEventListener("click",loadQuestionBank);
 setupAcademicCategoryUI();
