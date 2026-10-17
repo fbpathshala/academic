@@ -26,8 +26,19 @@ footer{text-align:center;color:#718590;font-size:.88rem;padding:22px}
 </head>
 <body>
 <header>
-  <div class="brand">🎓 Academic Care</div>
-
+  <a class="brand" href="./" style="text-decoration:none" aria-label="Academic Care হোম">🎓 Academic Care</a>
+  <div class="menu-wrap">
+    <button class="menu-toggle" id="menuToggle" type="button" aria-expanded="false" aria-controls="mainMenu">
+      <span class="hamburger" aria-hidden="true">☰</span><span>মেনু</span>
+    </button>
+    <nav class="menu" id="mainMenu" aria-label="প্রধান মেনু">
+      <a href="./"><span aria-hidden="true">🏠</span> হোম পেইজ</a>
+      <a href="student.html"><span aria-hidden="true">🎓</span> Academic Care — পরীক্ষা</a>
+      <a href="student.html#materials"><span aria-hidden="true">📚</span> স্টাডি ম্যাটেরিয়াল</a>
+      <a href="https://fbpathshala.github.io/exam/"><span aria-hidden="true">📝</span> Job Care — মডেল টেস্ট</a>
+      <a href="admin.html"><span aria-hidden="true">⚙️</span> অ্যাডমিন লগইন</a>
+    </nav>
+  </div>
 </header>
 <main>
   <div class="mark" aria-hidden="true">📘</div>
@@ -41,7 +52,35 @@ footer{text-align:center;color:#718590;font-size:.88rem;padding:22px}
   </div>
 </main>
 <footer>Academic Care · শিক্ষা সবার জন্য</footer>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(() => {
+  const toggle = document.getElementById("menuToggle");
+  const menu = document.getElementById("mainMenu");
+  if (!toggle || !menu) return;
+  const closeMenu = () => {
+    menu.classList.remove("open");
+    toggle.setAttribute("aria-expanded", "false");
+  };
+  toggle.addEventListener("click", (event) => {
+    event.stopPropagation();
+    const opening = !menu.classList.contains("open");
+    menu.classList.toggle("open", opening);
+    toggle.setAttribute("aria-expanded", String(opening));
+  });
+  menu.addEventListener("click", (event) => {
+    if (event.target.closest("a")) closeMenu();
+  });
+  document.addEventListener("click", (event) => {
+    if (!event.target.closest(".menu-wrap")) closeMenu();
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      closeMenu();
+      toggle.focus();
+    }
+  });
+})();
+</script>
 
 </body>
 </html>
