@@ -46,6 +46,10 @@
     html.central-exam-management #exams{display:block!important}html.central-exam-management.central-review-open #exams{display:none!important}html.central-exam-management.central-review-open #reviews{display:block!important}html.central-exam-management.central-review-open #reviews.view.active{display:block!important}
     html.central-exam-management #exams>.panel:first-child .sectionhead h2{font-size:1.3rem}
     html.central-exam-management #exams:before{content:"🎓 Academic Care — পরীক্ষা পরিচালনা";display:block;font-size:1.45rem;font-weight:800;margin:0 0 18px;color:#193449}
+    /* Central exam-management must open the exam list (step 4), not the exam-creation wizard (step 1). */
+    html.central-exam-management #exams [data-exam-pane]{display:none!important}
+    html.central-exam-management #exams [data-exam-pane="4"]{display:block!important}
+    html.central-exam-management #exams [data-exam-step]{display:none!important}
     @media(max-width:650px){html.central-exam-management main{padding:12px 10px 28px}}
 </style>
 <script>(function(){const p=new URLSearchParams(location.search);if(p.get("central")==="1"&&p.get("view")==="exams"){document.documentElement.classList.add("central-exam-management");document.title="Academic Care | পরীক্ষা পরিচালনা";}})();</script>
