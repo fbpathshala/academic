@@ -36,17 +36,16 @@
     .central-review-back{margin-bottom:14px}
     @media(max-width:650px){.central-exam-actions{grid-template-columns:1fr}}
 
-    /* Central exam-management entry: show only Academic Care exam workflow, not the full dashboard */
+    /* Focused exam manager: never show the dashboard/home view inside exam management or result review. */
     html.central-exam-management .shell{display:block;min-height:100vh}
-    html.central-exam-management .side,html.central-exam-management .top,
-    html.central-exam-management #home,html.central-exam-management #questionCreate,
-    html.central-exam-management #questionBank,html.central-exam-management #materials,
-    html.central-exam-management #reviews,html.central-exam-management #settings{display:none!important}
+    html.central-exam-management .side,html.central-exam-management .top{display:none!important}
     html.central-exam-management main{padding:18px clamp(12px,3vw,28px) 40px;max-width:1100px;margin:0 auto}
-    html.central-exam-management #exams{display:block!important}html.central-exam-management.central-review-open #exams{display:none!important}html.central-exam-management.central-review-open #reviews{display:block!important}html.central-exam-management.central-review-open #reviews.view.active{display:block!important}
+    html.central-exam-management main>.view{display:none!important}
+    html.central-exam-management main>#exams{display:block!important}
+    html.central-exam-management.central-review-open main>#exams{display:none!important}
+    html.central-exam-management.central-review-open main>#reviews{display:block!important}
     html.central-exam-management #exams>.panel:first-child .sectionhead h2{font-size:1.3rem}
-    html.central-exam-management #exams:before{content:"🎓 Academic Care — পরীক্ষা পরিচালনা";display:block;font-size:1.45rem;font-weight:800;margin:0 0 18px;color:#193449}
-    /* Central exam-management must open the exam list (step 4), not the exam-creation wizard (step 1). */
+    /* Keep the same exam list/menu flow as Job Care; do not inject a dashboard/home-page header. */
     html.central-exam-management #exams [data-exam-pane]{display:none!important}
     html.central-exam-management #exams [data-exam-pane].active{display:block!important}
     html.central-exam-management #exams [data-exam-step]{display:none!important}
