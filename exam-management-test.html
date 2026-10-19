@@ -621,7 +621,9 @@ async function verifySession(session){
     verifiedUserId=session.user.id;
     gate.hidden=true;shell.hidden=false;message("");
     const requestedView=new URLSearchParams(window.location.search).get("view");
-    if(["questionCreate","exams","questionBank","materials","reviews","settings"].includes(requestedView))showView(requestedView);
+    const centralExamMode=document.documentElement.classList.contains("central-exam-management");
+    if(centralExamMode)showView("exams");
+    else if(["questionCreate","exams","questionBank","materials","reviews","settings"].includes(requestedView))showView(requestedView);
     try{await loadData()}catch(e){document.getElementById("connectionState").textContent="ডেটাবেস সংযোগে সমস্যা";console.error("Academic Care data load failed",e)}
   })();
   try{await verificationPromise}finally{verificationPromise=null}
