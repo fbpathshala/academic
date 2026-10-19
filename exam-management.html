@@ -1,0 +1,691 @@
+<!doctype html>
+<html lang="bn">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#155e75">
+  <title>Academic Care — পরীক্ষা পরিচালনা</title>
+  <style>
+    :root{font-family:system-ui,-apple-system,"Noto Sans Bengali",sans-serif;color:#193449;background:#f3f7fa;--teal:#155e75;--line:#dce6ec;--muted:#667987}
+    *{box-sizing:border-box}body{margin:0}button,input,select,textarea{font:inherit}button{cursor:pointer}
+    .shell{display:grid;grid-template-columns:245px 1fr;min-height:100vh}.side{background:#123b4a;color:#e8f5f7;padding:24px 16px}.brand{font-weight:800;font-size:1.2rem;padding:0 10px 26px}.navlabel{font-size:.78rem;color:#a9c7cf;margin:14px 10px 8px}.navbtn{display:block;width:100%;text-align:left;color:#e8f5f7;background:transparent;border:0;padding:12px 13px;border-radius:10px;margin:3px 0}.navbtn.active,.navbtn:hover{background:#23576a}.side small{display:block;color:#b7d0d7;line-height:1.6;margin:28px 10px}.menu-toggle{display:none}.bank-tools{display:grid;grid-template-columns:2fr 1fr 1fr;gap:10px;margin-bottom:16px}.bank-tools input,.bank-tools select{min-width:0;padding:10px;border:1px solid #ccd9e1;border-radius:9px;background:white}.bank-folder{border:1px solid var(--line);border-radius:12px;margin:12px 0;background:#fff;overflow:hidden}.bank-folder summary{cursor:pointer;padding:14px 16px;font-weight:750;background:#f5fafb}.bank-question{padding:13px 16px;border-top:1px solid var(--line)}.bank-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.bank-question p{white-space:pre-wrap;margin:7px 0}.bank-tag{display:inline-block;font-size:.78rem;padding:4px 8px;border-radius:999px;background:#e7f3f5;color:#155e75;margin-right:5px}
+    main{min-width:0;padding:26px clamp(16px,3vw,36px) 50px}.top{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:24px}.top h1{font-size:1.65rem;margin:0 0 5px}.muted{color:var(--muted);font-size:.92rem}.pill{background:#e1f3ef;color:#146b5b;border-radius:999px;padding:7px 11px;font-size:.8rem;font-weight:700}
+    .hero{background:linear-gradient(120deg,#155e75,#0f766e);border-radius:18px;padding:24px;color:white;margin-bottom:22px}.hero h2{margin:0 0 8px;font-size:1.4rem}.hero p{margin:0;line-height:1.7;color:#e3fffa}
+    .stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-bottom:14px}.stat,.panel,.quick{background:white;border:1px solid var(--line);border-radius:15px;padding:18px}.stat span{font-size:.88rem;color:var(--muted)}.stat strong{display:block;font-size:1.8rem;margin-top:8px}.audience-stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-bottom:24px}.audience-stat{aspect-ratio:1/1;max-width:220px;width:100%;justify-self:center;background:linear-gradient(145deg,#ffffff,#eef8fa);border:1px solid #cfe3e9;border-radius:18px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:18px;box-shadow:0 5px 16px #123b4a0a}.audience-stat span{font-size:.95rem;font-weight:700;color:#41606d}.audience-stat strong{display:block;font-size:2.2rem;margin-top:14px;color:var(--teal);overflow-wrap:anywhere}.sectionhead{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:22px 0 12px}.sectionhead h2{font-size:1.15rem;margin:0}.quickgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.quick .emoji{font-size:1.7rem}.quick h3{margin:10px 0 6px;font-size:1.02rem}.quick p{font-size:.88rem;color:var(--muted);line-height:1.6;min-height:44px;margin:0 0 15px}
+    .btn{border:0;background:var(--teal);color:white;border-radius:9px;padding:10px 13px;font-weight:700}.btn.light{background:#e7f3f5;color:var(--teal)}.btn.ghost{background:#f0f4f6;color:#35505f}.btnrow{display:flex;flex-wrap:wrap;gap:9px}.status{padding:13px 15px;background:#fff8e7;border:1px solid #f1dfa8;color:#715b26;border-radius:12px;line-height:1.65;margin-top:18px}
+    .view{display:none}.view.active{display:block}.formgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.field{display:flex;flex-direction:column;gap:6px}.field.full{grid-column:1/-1}.field label{font-weight:650;font-size:.9rem}.field input,.field select,.field textarea{width:100%;padding:11px 12px;border:1px solid #ccd9e1;border-radius:9px;background:white;color:#193449}.field textarea{min-height:90px;resize:vertical}.notice{padding:12px 14px;border-radius:10px;background:#eef6f8;color:#285565;line-height:1.6;margin-bottom:14px}.workflow-intro{display:flex;gap:12px;align-items:flex-start;background:#f0f8fa;border:1px solid #cfe5eb;border-radius:12px;padding:14px;margin-bottom:18px}.workflow-number{flex:0 0 34px;height:34px;border-radius:50%;display:grid;place-items:center;background:#155e75;color:white;font-weight:800}.workflow-step{margin-top:22px}.workflow-step .sectionhead{margin-top:0}.workflow-step .sectionhead h2{display:flex;align-items:center;gap:9px}.workflow-step .sectionhead h2:before{content:attr(data-step);display:inline-grid;place-items:center;width:30px;height:30px;border-radius:50%;background:#e1f3ef;color:#146b5b;font-size:.9rem}.workflow-help{font-size:.88rem;color:var(--muted);line-height:1.6;margin:-3px 0 15px}.listempty{text-align:center;padding:28px;color:var(--muted)}.item{padding:13px 0;border-bottom:1px solid var(--line)}.item:last-child{border-bottom:0}.item strong{display:block;margin-bottom:4px}
+
+  
+    #loginGate{max-width:440px;margin:8vh auto;padding:24px;background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 12px 35px #123b4a12}#loginGate h1{margin-top:0}#loginGate .field{margin:14px 0}#loginGate[hidden],.shell[hidden]{display:none!important}#authMessage{line-height:1.6;margin-top:12px;color:#9a3412}
+  .category-management-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin:16px 0}.category-management-card{margin:0!important;min-width:0}.category-management-card h3{margin-top:0}.category-management-card .field{min-width:0}.category-management-card input,.category-management-card select{width:100%;min-width:0}.category-management-card .btnrow{display:flex;gap:8px;flex-wrap:wrap}.category-management-card .btnrow button{flex:1 1 90px}@media(max-width:1000px){.category-management-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:650px){.category-management-grid{grid-template-columns:1fr}}
+
+
+
+    .exam-step-nav{display:none!important}
+    .exam-step-pane{display:none}
+    .exam-step-pane.active{display:block}
+    .exam-step-pane.workflow-step{margin-top:0}
+    .central-exam-filters{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:0 0 14px;padding:14px;border:1px solid var(--line);border-radius:12px;background:#f8fbfd}.central-exam-filters[hidden]{display:none!important}.central-exam-filters select{width:100%;padding:10px;border:1px solid #ccd9e1;border-radius:9px;background:white}@media(max-width:600px){.central-exam-filters{grid-template-columns:1fr}}
+    .central-exam-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:12px}
+    .central-exam-actions button{width:100%;text-align:left}
+    .central-exam-menu{width:auto;min-width:46px}
+    .central-exam-name{flex:1;min-width:140px;text-align:left;color:#1756a9!important;background:#fff!important;border:1px solid #dbe3ee!important}
+    .central-exam-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+    .central-exam-item{padding:14px 0;border-bottom:1px solid var(--line)}
+    .central-exam-item:last-child{border-bottom:0}
+    .central-review-back{margin-bottom:14px}
+    @media(max-width:650px){.central-exam-actions{grid-template-columns:1fr}}
+
+    /* Central exam-management entry: show only Academic Care exam workflow, not the full dashboard */
+    html.central-exam-management .shell{display:block;min-height:100vh}
+    html.central-exam-management .side,html.central-exam-management .top,
+    html.central-exam-management #home,html.central-exam-management #questionCreate,
+    html.central-exam-management #questionBank,html.central-exam-management #materials,
+    html.central-exam-management #reviews,html.central-exam-management #settings{display:none!important}
+    html.central-exam-management main{padding:18px clamp(12px,3vw,28px) 40px;max-width:1100px;margin:0 auto}
+    html.central-exam-management #exams{display:block!important}html.central-exam-management.central-review-open #exams{display:none!important}html.central-exam-management.central-review-open #reviews{display:block!important}html.central-exam-management.central-review-open #reviews.view.active{display:block!important}
+    html.central-exam-management #exams>.panel:first-child .sectionhead h2{font-size:1.3rem}
+    html.central-exam-management #exams:before{content:"🎓 Academic Care — পরীক্ষা পরিচালনা";display:block;font-size:1.45rem;font-weight:800;margin:0 0 18px;color:#193449}
+    /* Central exam-management must open the exam list (step 4), not the exam-creation wizard (step 1). */
+    html.central-exam-management #exams [data-exam-pane]{display:none!important}
+    html.central-exam-management #exams [data-exam-pane].active{display:block!important}
+    html.central-exam-management #exams [data-exam-step]{display:none!important}
+    @media(max-width:650px){html.central-exam-management main{padding:12px 10px 28px}}
+</style>
+<script>(function(){const p=new URLSearchParams(location.search);if(p.get("dashboard")!=="1"){document.documentElement.classList.add("central-exam-management");document.title="Academic Care | পরীক্ষা পরিচালনা";}})();</script>
+</head>
+<body>
+<div id="loginGate">
+  <h1>Academic Care অ্যাডমিন লগইন</h1>
+  <p class="muted">শুধু অনুমোদিত অ্যাডমিন অ্যাকাউন্ট প্রবেশ করতে পারবে।</p>
+  <form id="loginForm">
+    <div class="field"><label for="loginEmail">ইমেইল</label><input id="loginEmail" type="email" autocomplete="username" required></div>
+    <div class="field"><label for="loginPassword">পাসওয়ার্ড</label><input id="loginPassword" type="password" autocomplete="current-password" required></div>
+    <button class="btn" type="submit">নিরাপদে লগইন</button>
+    <div id="authMessage" role="status" aria-live="polite"></div>
+  </form>
+</div>
+<div class="shell" hidden>
+  <aside class="side">
+    <div class="side-head"><div class="brand">🎓 Academic Care</div><button class="menu-toggle" id="menuToggle" type="button" aria-label="মেনু খুলুন" aria-expanded="false">☰</button></div>
+    <div class="navlabel">অ্যাডমিন মেনু</div>
+    <nav class="navlinks">
+      <button class="navbtn active" data-view="home">▦ ড্যাশবোর্ড</button>
+      <button class="navbtn" data-view="questionCreate">✚ প্রশ্ন তৈরি</button>
+      <button class="navbtn" data-view="exams">▣ পরীক্ষা পরিচালনা</button>
+      <button class="navbtn" data-view="questionBank">▤ Academic Care প্রশ্ন ব্যাংক</button>
+      <button class="navbtn" data-view="materials">▤ স্টাডি ম্যাটেরিয়াল</button>
+      <button class="navbtn" data-view="reviews">✎ উত্তর মূল্যায়ন</button>
+      <button class="navbtn" data-view="settings">⚙ সেটআপ নোট</button>
+    </nav>
+    <small>Academic Care<br>MCQ · CQ · Study Materials</small>
+  </aside>
+  <main>
+    <header class="top"><div><h1 id="pageTitle">ড্যাশবোর্ড</h1><div class="muted">পরীক্ষা ও শিক্ষাসামগ্রী পরিচালনার কেন্দ্র</div></div><div class="btnrow"><span class="pill" id="connectionState">ডেটাবেস যাচাই হচ্ছে</span><button class="btn ghost" id="logoutButton" type="button">লগআউট</button></div></header>
+    <section id="home" class="view active">
+      <div class="hero"><h2>স্বাগতম Academic Care-এ</h2><p>এখান থেকে MCQ ও CQ পরীক্ষার পরিকল্পনা এবং স্টাডি ম্যাটেরিয়াল প্রকাশের কাজ সাজানো যাবে। এই সংস্করণটি ইন্টারফেসের ডেটাবেস সংযুক্ত; ডেটা নিরাপদ ডেটাবেসে সংরক্ষিত হয়।</p></div>
+      <div class="stats">
+        <div class="stat"><span>তৈরি করা পরীক্ষা</span><strong id="examCount">০</strong></div>
+        <div class="stat"><span>স্টাডি ম্যাটেরিয়াল</span><strong id="materialCount">০</strong></div>
+        <div class="stat"><span>প্রকাশিত আইটেম</span><strong id="publishedCount">০</strong></div>
+      </div>
+      <div class="audience-stats">
+        <div class="audience-stat"><span>👩‍🎓 মোট পরীক্ষার্থী</span><strong id="examineeCount">০</strong></div>
+        <div class="audience-stat"><span>🌐 মোট ভিজিটর</span><strong id="visitorCount">০</strong></div>
+      </div>
+    </section>
+    <section id="questionCreate" class="view">
+      <div class="panel">
+        <div class="sectionhead"><h2>ম্যানুয়ালি প্রশ্ন যোগ</h2></div>
+        <form id="masterQuestionForm" class="formgrid">
+          <div class="field"><label for="masterQuestionType">প্রশ্নের ধরন</label><select id="masterQuestionType"><option value="mcq">MCQ — বহুনির্বাচনী</option><option value="cq">CQ — লিখিত</option></select></div>
+          <div class="field"><label for="masterQuestionMarks">নম্বর</label><input id="masterQuestionMarks" type="number" min="0" step="0.5" value="1" required></div>
+          <div class="field"><label for="masterCategory">শ্রেণি</label><select id="masterCategory"><option value="">শ্রেণি নির্বাচন করুন</option></select></div>
+          <div class="field"><label for="masterFolder">বিষয়</label><select id="masterFolder"><option value="">বিষয় নির্বাচন করুন</option></select></div>
+          <div class="field"><label for="masterChapter">অধ্যায়</label><select id="masterChapter" disabled><option value="">আগে বিষয় নির্বাচন করুন</option></select></div>
+          <div class="field"><label for="masterSet">সেট</label><select id="masterSet" disabled><option value="">আগে অধ্যায় নির্বাচন করুন</option></select></div>
+          <div class="field"><label for="masterSubject">বিষয়</label><input id="masterSubject" placeholder="যেমন: বাংলা ব্যাকরণ"></div>
+          <div class="field full"><label for="masterQuestionText">প্রশ্ন</label><textarea id="masterQuestionText" required></textarea></div>
+          <div class="field full"><label for="masterQuestionExplanation">ব্যাখ্যা</label><textarea id="masterQuestionExplanation" placeholder="সঠিক উত্তরের ব্যাখ্যা (ঐচ্ছিক)"></textarea></div>
+          <div class="field" id="masterOptionAField"><label for="masterOptionA">ক অপশন</label><input id="masterOptionA"></div>
+          <div class="field" id="masterOptionBField"><label for="masterOptionB">খ অপশন</label><input id="masterOptionB"></div>
+          <div class="field" id="masterOptionCField"><label for="masterOptionC">গ অপশন</label><input id="masterOptionC"></div>
+          <div class="field" id="masterOptionDField"><label for="masterOptionD">ঘ অপশন</label><input id="masterOptionD"></div>
+          <div class="field" id="masterCorrectField"><label for="masterCorrectOption">সঠিক উত্তর</label><select id="masterCorrectOption"><option value="a">ক</option><option value="b">খ</option><option value="c">গ</option><option value="d">ঘ</option></select></div>
+          <div class="field full"><button class="btn" type="submit">মাস্টার প্রশ্ন ব্যাংকে সংরক্ষণ</button><div id="masterQuestionMessage" class="notice" role="status" aria-live="polite"></div></div>
+        </form>
+      </div>
+      <div class="panel">
+        <div class="sectionhead"><h2>CSV / Excel থেকে MCQ যোগ</h2><button class="btn ghost" id="masterQuestionTemplate" type="button">নমুনা CSV ডাউনলোড</button></div>
+        <p class="muted">প্রথম সারিতে কলামের নাম রাখুন: question, option_a, option_b, option_c, option_d, correct_option, marks, subject। বাংলা কলাম নামও গ্রহণ করা হবে। আগে ক্যাটাগরি, ফোল্ডার ও সেট নির্বাচন করলে সব আমদানি করা প্রশ্নে তা প্রয়োগ হবে।</p>
+        <div class="field"><label for="masterQuestionFile">CSV / Excel ফাইল (.csv, .xlsx, .xls)</label><input id="masterQuestionFile" type="file" accept=".csv,.xlsx,.xls,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel"></div>
+        <button class="btn" id="masterQuestionImport" type="button">যাচাই করে MCQ আমদানি</button>
+        <div id="masterQuestionImportMessage" class="notice" role="status" aria-live="polite"></div>
+      </div>
+      <div class="panel" style="margin-top:16px">
+        <div class="sectionhead"><h2>সংরক্ষিত প্রশ্ন</h2><button type="button" class="btn ghost" id="refreshMasterQuestionList">তালিকা রিফ্রেশ</button></div>
+        <p class="muted">সর্বশেষ ৫০টি মাস্টার প্রশ্ন এখানে দেখা যাবে। ভুল প্রশ্ন হলে এখান থেকেই মুছতে পারবেন।</p>
+        <div id="masterQuestionListMessage" class="notice" role="status" aria-live="polite"></div>
+        <div id="masterQuestionList" class="itemlist"><div class="listempty">তালিকা লোড হচ্ছে…</div></div>
+      </div>
+    </section>
+    <section id="exams" class="view">
+      <div class="panel">
+        <div class="sectionhead"><h2>পরীক্ষা পরিচালনা</h2><button type="button" class="btn" data-central-action="new">＋ নতুন পরীক্ষা তৈরি</button></div>
+        <p class="muted">পরীক্ষার নাম চাপলে লিংক কপি হবে। পাশে ☰ চাপলে প্রয়োজনীয় কাজের মেনু খুলবে।</p>
+        <div class="workflow-intro"><div class="workflow-number">✓</div><div><strong>পরীক্ষা নির্বাচন করে কাজ করুন</strong><div class="muted">Job Care-এর মতো একই পরিচালনা-পদ্ধতি; Academic Care-এর শ্রেণি → বিষয় → অধ্যায় → সেট কাঠামো অপরিবর্তিত।</div></div></div>
+        <div class="exam-step-pane" data-exam-pane="1">
+        <form id="examForm" class="formgrid">
+          <div class="field"><label for="examTitle">পরীক্ষার নাম</label><input id="examTitle" required placeholder="যেমন: বাংলা মডেল টেস্ট"></div>
+          <div class="field"><label for="examType">পরীক্ষার ধরন</label><select id="examType"><option value="MCQ">MCQ — স্বয়ংক্রিয় মূল্যায়ন</option><option value="CQ">CQ — লিখিত পরীক্ষা</option><option value="MCQ_CQ">MCQ + CQ</option></select></div>
+          <div class="field"><label for="examDuration">সময় (মিনিট)</label><input id="examDuration" type="number" min="1" value="30" required></div>
+          <div class="field"><label for="examVisibility">প্রকাশের অবস্থা</label><select id="examVisibility"><option value="draft">খসড়া — পরে প্রকাশ করবেন</option><option value="published">প্রকাশিত — শিক্ষার্থীরা দেখতে পাবে</option></select></div>
+          <div class="field full"><label for="examNotes">নোট (ঐচ্ছিক)</label><textarea id="examNotes" placeholder="বিষয়, শ্রেণি বা প্রস্তুতি-সংক্রান্ত নোট"></textarea></div>
+          <div class="field full"><div class="btnrow"><button class="btn" type="submit">পরীক্ষা তৈরি করুন</button><button class="btn ghost" type="reset">ফর্ম পরিষ্কার</button></div></div>
+        </form>
+        </div>
+      <div class="workflow-step exam-step-pane" data-exam-pane="2"><div class="sectionhead"><h2 data-step="২">প্রশ্ন যোগ করুন</h2></div><p class="workflow-help">পরীক্ষা তৈরি করার পর সেটি নির্বাচন করুন। MCQ পরীক্ষায় MCQ, CQ পরীক্ষায় CQ এবং MCQ + CQ পরীক্ষায় দুই ধরনের প্রশ্নই যোগ করা যাবে।</p>
+      <div class="panel">
+        <div class="notice" id="questionEditNotice" hidden>আপনি একটি সংরক্ষিত প্রশ্ন সম্পাদনা করছেন। পরিবর্তন সংরক্ষণ করলে আগের প্রশ্নটি আপডেট হবে; নতুন প্রশ্ন তৈরি হবে না।</div>
+        <form id="questionForm" class="formgrid">
+          <div class="field full"><label for="questionExam">পরীক্ষা নির্বাচন</label><select id="questionExam" required><option value="">প্রথমে পরীক্ষা তৈরি করুন</option></select></div>
+          <div class="field"><label for="questionType">প্রশ্নের ধরন</label><select id="questionType"><option value="mcq">MCQ</option><option value="cq">CQ</option></select></div>
+          <div class="field"><label for="questionMarks">নম্বর</label><input id="questionMarks" type="number" min="0" step="0.5" value="1" required></div>
+          <div class="field"><label for="questionCategory">শ্রেণি</label><select id="questionCategory"><option value="">শ্রেণি নির্বাচন করুন</option></select></div>
+          <div class="field"><label for="questionFolder">বিষয়</label><select id="questionFolder"><option value="">বিষয় নির্বাচন করুন</option></select></div>
+          <div class="field"><label for="questionChapter">অধ্যায়</label><select id="questionChapter"><option value="">অধ্যায় নির্বাচন করুন</option></select></div>
+          <div class="field"><label for="questionSet">সেট</label><select id="questionSet"><option value="">সেট নির্বাচন করুন</option></select></div>
+          <div class="field"><label for="questionSubject">অতিরিক্ত বিষয়-নাম (ঐচ্ছিক)</label><input id="questionSubject" placeholder="প্রয়োজনে বিষয়-নাম লিখুন"></div>
+          <div class="field full"><label for="questionText">প্রশ্ন</label><textarea id="questionText" required></textarea></div>
+          <div class="field"><label for="optionA">ক অপশন</label><input id="optionA"></div><div class="field"><label for="optionB">খ অপশন</label><input id="optionB"></div>
+          <div class="field"><label for="optionC">গ অপশন</label><input id="optionC"></div><div class="field"><label for="optionD">ঘ অপশন</label><input id="optionD"></div>
+          <div class="field"><label for="correctOption">সঠিক উত্তর</label><select id="correctOption"><option value="a">ক</option><option value="b">খ</option><option value="c">গ</option><option value="d">ঘ</option></select></div>
+          <div class="field full"><div class="btnrow"><button class="btn" id="questionSubmitButton" type="submit">প্রশ্ন সংরক্ষণ</button><button class="btn ghost" id="cancelQuestionEdit" type="button" hidden>সম্পাদনা বাতিল</button></div></div>
+        </form>
+      </div>
+      </div><div class="workflow-step exam-step-pane" data-exam-pane="3"><div class="sectionhead"><h2 data-step="৩">ফলাফল ও প্রকাশের সেটিংস</h2></div><p class="workflow-help">ফলাফল দেখানো, পজিশন, ধন্যবাদ বার্তা ও Facebook গ্রুপ লিংক ঠিক করুন। সেটিংস পরে পরিবর্তন করলেও আগের জমা উত্তর অক্ষত থাকবে।</p>
+      <div class="panel"><form id="examSettingsForm" class="formgrid">
+        <div class="field full"><label for="settingsExam">পরীক্ষা নির্বাচন</label><select id="settingsExam" required><option value="">পরীক্ষা নির্বাচন করুন</option></select></div>
+        <div class="formgrid">
+          <div class="field"><label for="settingsDuration">সময় (মিনিট)</label><input id="settingsDuration" type="number" min="1" step="1" required></div>
+          <div class="field"><label for="settingsTotalQuestions">মোট প্রশ্ন (ঐচ্ছিক)</label><input id="settingsTotalQuestions" type="number" min="0" step="1" placeholder="প্রশ্ন সংখ্যা"></div>
+          <div class="field"><label for="settingsTotalMarks">মোট নম্বর (ঐচ্ছিক)</label><input id="settingsTotalMarks" type="number" min="0" step="0.5" placeholder="মোট নম্বর"></div>
+          <div class="field"><label for="settingsPassMark">পাস নম্বর</label><input id="settingsPassMark" type="number" min="0" step="0.5" value="0"></div>
+          <div class="field"><label for="settingsMarksPerQuestion">প্রতি প্রশ্নের নম্বর</label><input id="settingsMarksPerQuestion" type="number" min="0" step="0.5" value="1"></div>
+          <div class="field"><label for="settingsNegativeMark">নেগেটিভ মার্ক</label><input id="settingsNegativeMark" type="number" min="0" step="0.01" value="0"></div>
+          <div class="field"><label for="settingsExaminerName">পরীক্ষকের নাম</label><input id="settingsExaminerName" placeholder="ঐচ্ছিক"></div>
+          <div class="field"><label for="settingsExamDate">পরীক্ষার তারিখ</label><input id="settingsExamDate" type="date"></div>
+          <div class="field"><label for="settingsStartTime">শুরুর সময়</label><input id="settingsStartTime" type="time"></div>
+          <div class="field"><label for="settingsEndDate">শেষ তারিখ</label><input id="settingsEndDate" type="date"></div>
+          <div class="field"><label for="settingsEndTime">শেষ সময়</label><input id="settingsEndTime" type="time"></div>
+        </div>
+        <div class="field full"><label for="settingsSyllabus">সিলেবাস / নির্দেশনা</label><textarea id="settingsSyllabus" placeholder="পরীক্ষার সিলেবাস বা নির্দেশনা"></textarea></div>
+        <div class="field"><label><input id="showResults" type="checkbox"> জমার পর নম্বর দেখান</label></div>
+        <div class="field"><label><input id="showPosition" type="checkbox"> অবস্থান/পজিশন দেখান</label></div>
+        <div class="field"><label><input id="showAnswerPaper" type="checkbox"> শিক্ষার্থীর নিজের উত্তরপত্র দেখান</label></div>
+        <div class="field"><label><input id="settingsShowAnswers" type="checkbox"> সঠিক উত্তর ও ব্যাখ্যা দেখান</label></div>
+        <div class="field"><label><input id="settingsMultipleAttempts" type="checkbox"> একাধিকবার পরীক্ষা দেওয়ার অনুমতি</label></div>
+        <div class="field"><label><input id="settingsDeviceProtection" type="checkbox" checked> একই ডিভাইসে পুনরায় চেষ্টা সীমিত করুন</label></div>
+        <div class="field"><label><input id="settingsRandomQuestions" type="checkbox"> প্রশ্নের ক্রম এলোমেলো করুন</label></div>
+        <div class="field"><label><input id="settingsRandomOptions" type="checkbox"> অপশনের ক্রম এলোমেলো করুন</label></div>
+        <div class="field"><label><input id="settingsShowPageLink" type="checkbox"> ফলাফলে Facebook Page লিংক দেখান</label></div>
+        <div class="field full"><label for="settingsDisplayMode">প্রশ্ন দেখানোর ধরন</label><select id="settingsDisplayMode"><option value="all">সব প্রশ্ন একসাথে</option><option value="single">একটি করে প্রশ্ন</option></select></div>
+        <div class="field full"><label for="thankYouMessage">জমার পর ধন্যবাদ বার্তা</label><textarea id="thankYouMessage" maxlength="1000" placeholder="আপনার উত্তর জমা দেওয়ার জন্য ধন্যবাদ।"></textarea></div>
+        <div class="field"><label for="facebookPageUrl">Facebook Page URL (ঐচ্ছিক)</label><input id="facebookPageUrl" type="url" placeholder="https://www.facebook.com/..."></div>
+        <div class="field"><label for="facebookGroupUrl">Facebook Group URL (ঐচ্ছিক)</label><input id="facebookGroupUrl" type="url" placeholder="https://www.facebook.com/groups/..."></div>
+        <div class="field full"><button class="btn" type="submit">সেটিংস সংরক্ষণ</button></div>
+      </form></div>
+      </div><div class="workflow-step exam-step-pane active" data-exam-pane="4"><div class="sectionhead"><h2 data-step="৪">পরীক্ষা যাচাই ও প্রকাশ</h2><span class="muted" id="examListCount">০টি</span></div><p class="workflow-help">প্রশ্ন ও সেটিংস ঠিক আছে নিশ্চিত হয়ে এখান থেকে প্রকাশ করুন। শিক্ষার্থীর উত্তর জমা হলে নিরাপত্তার জন্য পরীক্ষা মুছে ফেলা যাবে না।</p>
+      <div class="central-exam-filters" id="centralExamFilters" hidden><div class="field"><label for="centralExamTypeFilter">পরীক্ষার ধরন</label><select id="centralExamTypeFilter"><option value="">সব ধরনের পরীক্ষা</option><option value="MCQ">MCQ</option><option value="CQ">CQ</option><option value="MCQ_CQ">MCQ + CQ</option></select></div><div class="field"><label for="centralExaminerFilter">পরীক্ষক</label><select id="centralExaminerFilter"><option value="">সকল পরীক্ষক</option></select></div></div>
+      <div class="panel" id="examList"><div class="listempty">এখনো কোনো খসড়া যোগ করা হয়নি।</div></div>
+    </section>
+    <section id="questionBank" class="view">
+      <div class="panel">
+        <div class="sectionhead"><h2>প্রশ্ন ব্যাংক</h2><button class="btn light" id="refreshQuestionBank" type="button">রিফ্রেশ</button></div>
+        <p class="muted">পরীক্ষায় যোগ করা প্রশ্ন এখানে স্বয়ংক্রিয়ভাবে আসবে। আপাতত প্রতিটি পরীক্ষা একটি ফোল্ডার এবং MCQ/CQ প্রশ্নের ধরন অনুযায়ী ভাগ করে দেখানো হবে।</p>
+        <div class="bank-tools">
+          <input id="bankSearch" type="search" placeholder="প্রশ্ন, বিষয় বা পরীক্ষার নাম খুঁজুন">
+          <select id="bankExamFilter"><option value="">সব পরীক্ষা</option></select>
+          <select id="bankTypeFilter"><option value="">সব ধরনের প্রশ্ন</option><option value="mcq">MCQ</option><option value="cq">CQ</option></select>
+          <select id="bankCategoryFilter"><option value="">সব ক্যাটাগরি</option></select>
+          <select id="bankFolderFilter"><option value="">সব বিষয়</option></select>
+          <select id="bankChapterFilter"><option value="">সব অধ্যায়</option></select>
+          <select id="bankSetFilter"><option value="">সব সেট</option></select>
+          <input id="bankSubjectFilter" type="search" placeholder="বিষয় দিয়ে ফিল্টার">
+        </div>
+        <div id="questionBankList"><div class="listempty">প্রশ্ন ব্যাংক লোড হচ্ছে…</div></div>
+      </div>
+    </section>
+    <section id="materials" class="view">
+      <div class="panel">
+        <div class="sectionhead"><h2>স্টাডি ম্যাটেরিয়ালের খসড়া</h2></div>
+        <div class="notice">PDF বা ছবি আপলোড করুন। প্রকাশিত হলে শিক্ষার্থীরা ফাইলটি দেখতে পারবে।</div>
+        <form id="materialForm" class="formgrid">
+          <div class="field"><label for="materialTitle">ম্যাটেরিয়ালের নাম</label><input id="materialTitle" required placeholder="যেমন: অধ্যায় ১-এর নোট"></div>
+          <div class="field"><label for="materialType">ধরন</label><select id="materialType"><option>PDF</option><option>নোট</option><option>ছবি</option><option>অন্যান্য</option></select></div>
+          <div class="field"><label for="materialSubject">বিষয় / বিভাগ</label><input id="materialSubject" placeholder="যেমন: বাংলা"></div>
+          <div class="field"><label for="materialStatus">পরিকল্পনার অবস্থা</label><select id="materialStatus"><option>খসড়া</option><option>প্রকাশিত</option></select></div>
+          <div class="field full"><label for="materialNotes">বিবরণ (ঐচ্ছিক)</label><textarea id="materialNotes" placeholder="এই উপকরণে কী আছে"></textarea></div><div class="field full"><label for="materialFile">PDF/ছবি আপলোড (সর্বোচ্চ ৫০ MB)</label><input id="materialFile" type="file" accept="application/pdf,image/jpeg,image/png,image/webp"></div>
+          <div class="field full"><div class="btnrow"><button class="btn" type="submit">খসড়া যোগ করুন</button><button class="btn ghost" type="reset">ফর্ম পরিষ্কার</button></div></div>
+        </form>
+      </div>
+      <div class="sectionhead"><h2>এই সেশনের খসড়া</h2><span class="muted" id="materialListCount">০টি</span></div>
+      <div class="panel" id="materialList"><div class="listempty">এখনো কোনো ম্যাটেরিয়াল যোগ করা হয়নি।</div></div>
+    </section>
+    <section id="reviews" class="view">
+      <div class="panel">
+        <div class="sectionhead"><h2>শিক্ষার্থীদের জমা উত্তর</h2><button class="btn light" id="refreshSubmissions" type="button">রিফ্রেশ</button></div>
+        <div class="field"><label for="reviewExam">পরীক্ষা নির্বাচন</label><select id="reviewExam"></select></div>
+        <div id="submissionList" class="listempty">পরীক্ষা নির্বাচন করে রিফ্রেশ করুন।</div>
+      </div>
+    </section>
+    <section id="settings" class="view">
+      <div class="panel">
+        <div class="sectionhead"><h2>বাস্তব সিস্টেম চালুর আগে</h2></div>
+        <div class="item"><strong>১. অ্যাডমিন প্রবেশাধিকার</strong><div class="muted">শুধু অনুমোদিত প্রশাসক পরীক্ষা ও ম্যাটেরিয়াল পরিচালনা করবেন। UI-তে লুকানো বাটন নিরাপত্তা নয়; সার্ভারেও অনুমতি যাচাই করতে হবে।</div></div>
+        <div class="item"><strong>২. ডেটাবেস ও পরীক্ষার লজিক</strong><div class="muted">প্রশ্ন, সময়সীমা, প্রতিটি পরীক্ষার সেটিংস, উত্তর, নম্বর ও ফলাফল নিরাপদভাবে সংরক্ষণ করতে হবে।</div></div>
+        <div class="item"><strong>৩. CQ উত্তর জমা</strong><div class="muted">শিক্ষার্থী ওয়েবসাইটে লিখতে পারবে অথবা উত্তরপত্রের ছবি আপলোড করতে পারবে। ফাইলের ধরন, আকার ও অ্যাক্সেস যাচাই প্রয়োজন।</div></div>
+        <div class="item"><strong>৪. পাবলিক কনটেন্ট</strong><div class="muted">প্রকাশিত পরীক্ষা ও ম্যাটেরিয়াল সবার জন্য উন্মুক্ত থাকবে; ব্যক্তিগত উত্তরপত্র ও পরিচয়-সংক্রান্ত তথ্য পাবলিক হবে না।</div></div>
+        <div class="item"><strong>৫. প্রকাশ ও পরীক্ষা</strong><div class="muted">মোবাইলে পরীক্ষা, সময় শেষ হলে জমা, পুনরায় লোড, ফলাফল দেখানোর নিয়ম এবং ব্যাকআপ যাচাই করতে হবে।</div></div>
+      </div>
+    </section>
+  </main>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script>
+const SUPABASE_URL="https://ydvbnalhcnfqpxkkmywr.supabase.co";
+const SUPABASE_KEY="sb_publishable_xCbSWDkASsbUPl-WmygyMw_eVrJY_9a";
+const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+const bnDigits=n=>String(n).replace(/\d/g,d=>"০১২৩৪৫৬৭৮৯"[Number(d)]);
+const exams=[],materials=[],bankQuestions=[];
+let editingQuestionId=null;
+const categoryRows=[];
+function categoryMessage(text,error=false){const el=document.getElementById("categoryManagerMessage");if(el){el.textContent=text;el.className=error?"notice error":"notice";}}
+function optionHtml(rows,idKey,labelKey,placeholder){return '<option value="">'+escapeHtml(placeholder)+'</option>'+rows.map(x=>'<option value="'+escapeHtml(x[idKey])+'">'+escapeHtml(x[labelKey])+'</option>').join("");}
+async function loadAcademicCategories(){
+ const {data,error}=await sb.from("academic_care_categories").select("id,name").order("name");
+ if(error){categoryMessage("ক্যাটাগরি লোড হয়নি: "+error.message,true);return}
+ categoryRows.splice(0,categoryRows.length,...(data||[]));
+ for(const id of ["categoryManager","questionCategory","bankCategoryFilter","masterCategory"]){
+  const el=document.getElementById(id);if(!el)continue;
+  const current=el.value;
+  el.innerHTML=optionHtml(categoryRows,"id","name",id==="bankCategoryFilter"?"সব শ্রেণি":"শ্রেণি নির্বাচন করুন");
+  if(categoryRows.some(x=>String(x.id)===current))el.value=current;
+ }
+ if(document.getElementById("categoryManager"))await loadManagerFolders();
+ await loadQuestionFolders();
+ await loadBankFolders();
+ await loadMasterQuestionFolders();
+}
+async function loadManagerFolders(selected=""){
+ const catId=document.getElementById("categoryManager").value,el=document.getElementById("folderManager");
+ const {data,error}=await sb.from("academic_care_folders").select("id,folder_name").eq("category_id",catId||0).order("folder_name");
+ if(error){categoryMessage("বিষয় লোড হয়নি: "+error.message,true);return}
+ el.innerHTML=optionHtml(data||[],"id","folder_name","বিষয় নির্বাচন করুন");
+ el.disabled=!catId || !(data||[]).length;
+ if(selected)el.value=String(selected);
+ await loadManagerSets();
+}
+async function loadManagerSets(selected=""){
+ const folderId=document.getElementById("folderManager").value,el=document.getElementById("setManager");
+ const {data,error}=await sb.from("academic_care_sets").select("id,set_name").eq("folder_id",folderId||0).order("set_name");
+ if(error){categoryMessage("সেট লোড হয়নি: "+error.message,true);return}
+ el.innerHTML=optionHtml(data||[],"id","set_name","সেট নির্বাচন করুন");
+ el.disabled=!folderId || !(data||[]).length;
+ if(selected)el.value=String(selected);
+}
+async function loadQuestionFolders(selected="",selectedChapter=""){
+ const catId=document.getElementById("questionCategory").value,el=document.getElementById("questionFolder");
+ const {data,error}=await sb.from("academic_care_folders").select("id,folder_name").eq("category_id",catId||0).order("folder_name");
+ if(error){categoryMessage("প্রশ্নের বিষয় লোড হয়নি: "+error.message,true);return}
+ el.innerHTML=optionHtml(data||[],"id","folder_name","বিষয় নির্বাচন করুন");
+ el.disabled=!catId || !(data||[]).length;
+ if(selected)el.value=String(selected);
+ await loadQuestionChapters(selectedChapter);
+}
+async function loadQuestionChapters(selected=""){
+ const folderId=document.getElementById("questionFolder").value,el=document.getElementById("questionChapter");
+ const {data,error}=await sb.from("academic_care_chapters").select("id,chapter_name").eq("folder_id",folderId||0).order("chapter_name");
+ if(error){categoryMessage("অধ্যায় লোড হয়নি: "+error.message,true);return}
+ el.innerHTML=optionHtml(data||[],"id","chapter_name","অধ্যায় নির্বাচন করুন");
+ el.disabled=!folderId || !(data||[]).length;
+ if(selected)el.value=String(selected);
+ await loadQuestionSets();
+}
+async function loadQuestionSets(selected=""){
+ const chapterId=document.getElementById("questionChapter").value,el=document.getElementById("questionSet");
+ const {data,error}=await sb.from("academic_care_sets").select("id,set_name").eq("chapter_id",chapterId||0).order("set_name");
+ if(error){categoryMessage("প্রশ্নের সেট লোড হয়নি: "+error.message,true);return}
+ el.innerHTML=optionHtml(data||[],"id","set_name","সেট নির্বাচন করুন");
+ el.disabled=!chapterId || !(data||[]).length;
+ if(selected)el.value=String(selected);
+}
+async function loadBankFolders(selected=""){
+ const catId=document.getElementById("bankCategoryFilter").value,el=document.getElementById("bankFolderFilter");
+ let q=sb.from("academic_care_folders").select("id,folder_name,category_id").order("folder_name");
+ if(catId)q=q.eq("category_id",catId);
+ const {data,error}=await q;
+ if(error){categoryMessage("ফিল্টার বিষয় লোড হয়নি: "+error.message,true);return}
+ el.innerHTML=optionHtml(data||[],"id","folder_name","সব বিষয়");
+ if(selected)el.value=String(selected);
+ await loadBankChapters();
+}
+async function loadBankChapters(selected=""){
+ const folderId=document.getElementById("bankFolderFilter").value,catId=document.getElementById("bankCategoryFilter").value,el=document.getElementById("bankChapterFilter");
+ let q=sb.from("academic_care_chapters").select("id,chapter_name,folder_id").order("chapter_name");
+ if(folderId)q=q.eq("folder_id",folderId);
+ else if(catId){
+  const {data:folders,error:folderError}=await sb.from("academic_care_folders").select("id").eq("category_id",catId);
+  if(folderError){categoryMessage("অধ্যায়ের বিষয় যাচাই হয়নি: "+folderError.message,true);return}
+  const folderIds=(folders||[]).map(x=>x.id);
+  if(folderIds.length)q=q.in("folder_id",folderIds);else q=q.eq("folder_id",0);
+ }
+ const {data,error}=await q;
+ if(error){categoryMessage("ফিল্টার অধ্যায় লোড হয়নি: "+error.message,true);return}
+ el.innerHTML=optionHtml(data||[],"id","chapter_name","সব অধ্যায়");
+ if(selected)el.value=String(selected);
+ await loadBankSets();
+}
+async function loadBankSets(selected=""){
+ const chapterId=document.getElementById("bankChapterFilter").value,el=document.getElementById("bankSetFilter");
+ let q=sb.from("academic_care_sets").select("id,set_name,chapter_id").order("set_name");
+ if(chapterId)q=q.eq("chapter_id",chapterId);
+ const {data,error}=await q;
+ if(error){categoryMessage("ফিল্টার সেট লোড হয়নি: "+error.message,true);return}
+ el.innerHTML=optionHtml(data||[],"id","set_name","সব সেট");
+ if(selected)el.value=String(selected);
+}
+async function loadMasterQuestionFolders(selected=""){
+ const catId=document.getElementById("masterCategory").value,el=document.getElementById("masterFolder");
+ let q=sb.from("academic_care_folders").select("id,folder_name,category_id").order("folder_name");
+ if(catId)q=q.eq("category_id",catId);else q=q.eq("category_id",0);
+ const {data,error}=await q;if(error){setMasterQuestionMessage("বিষয় লোড হয়নি: "+error.message,true);return}
+ el.innerHTML=optionHtml(data||[],"id","folder_name","বিষয় নির্বাচন করুন");el.disabled=!catId || !(data||[]).length;if(selected)el.value=String(selected);await loadMasterQuestionChapters()
+}
+async function loadMasterQuestionChapters(selected=""){
+ const folderId=document.getElementById("masterFolder").value,el=document.getElementById("masterChapter");
+ const {data,error}=await sb.from("academic_care_chapters").select("id,chapter_name").eq("folder_id",folderId||0).order("chapter_name");
+ if(error){setMasterQuestionMessage("অধ্যায় লোড হয়নি: "+error.message,true);return}
+ el.innerHTML=optionHtml(data||[],"id","chapter_name","অধ্যায় নির্বাচন করুন");el.disabled=!folderId || !(data||[]).length;if(selected)el.value=String(selected);await loadMasterQuestionSets()
+}
+async function loadMasterQuestionSets(selected=""){
+ const chapterId=document.getElementById("masterChapter").value,el=document.getElementById("masterSet");
+ const {data,error}=await sb.from("academic_care_sets").select("id,set_name").eq("chapter_id",chapterId||0).order("set_name");
+ if(error){setMasterQuestionMessage("সেট লোড হয়নি: "+error.message,true);return}
+ el.innerHTML=optionHtml(data||[],"id","set_name","সেট নির্বাচন করুন");el.disabled=!chapterId || !(data||[]).length;if(selected)el.value=String(selected)
+}
+function setMasterQuestionMessage(text,error=false){const el=document.getElementById("masterQuestionMessage");if(el){el.textContent=text;el.className=error?"notice error":"notice"}}
+function setMasterImportMessage(text,error=false){const el=document.getElementById("masterQuestionImportMessage");if(el){el.textContent=text;el.className=error?"notice error":"notice"}}
+function syncMasterQuestionType(){
+ const mcq=document.getElementById("masterQuestionType").value==="mcq";
+ ["masterOptionAField","masterOptionBField","masterOptionCField","masterOptionDField","masterCorrectField"].forEach(id=>document.getElementById(id).style.display=mcq?"flex":"none");
+ ["masterOptionA","masterOptionB","masterOptionC","masterOptionD"].forEach(id=>document.getElementById(id).required=mcq);
+ document.getElementById("masterCorrectOption").required=mcq
+}
+function masterQuestionLocation(){
+ const category=document.getElementById("masterCategory").value,folder=document.getElementById("masterFolder").value,chapter=document.getElementById("masterChapter").value,set=document.getElementById("masterSet").value;
+ if(category&&(!folder||!chapter||!set))throw Error("শ্রেণি নির্বাচন করলে বিষয়, অধ্যায় ও সেটও নির্বাচন করুন।");
+ if(folder&&!category)throw Error("বিষয় নির্বাচনের আগে শ্রেণি নির্বাচন করুন।");
+ if(chapter&&!folder)throw Error("অধ্যায় নির্বাচনের আগে বিষয় নির্বাচন করুন.");
+ if(set&&!chapter)throw Error("সেট নির্বাচনের আগে অধ্যায় নির্বাচন করুন.");
+ return {category_id:category?Number(category):null,folder_id:folder?Number(folder):null,set_id:set?Number(set):null}
+}
+function normalizeMasterHeader(value){return String(value??"").trim().toLowerCase().replace(/[\s\-_().]/g,"")}
+function masterImportField(row,names){for(const key of Object.keys(row)){if(names.includes(normalizeMasterHeader(key)))return row[key]}return ""}
+function masterCorrectOption(value){const v=String(value??"").trim().toLowerCase();return ({"ক":"a","খ":"b","গ":"c","ঘ":"d","a":"a","b":"b","c":"c","d":"d","1":"a","2":"b","3":"c","4":"d"})[v]||""}
+document.getElementById("masterCategory").addEventListener("change",()=>loadMasterQuestionFolders());
+document.getElementById("masterFolder").addEventListener("change",()=>loadMasterQuestionChapters());
+document.getElementById("masterChapter").addEventListener("change",()=>loadMasterQuestionSets());
+document.getElementById("masterQuestionType").addEventListener("change",syncMasterQuestionType);
+document.getElementById("masterQuestionForm").addEventListener("submit",async e=>{
+ e.preventDefault();
+ try{
+  const location=masterQuestionLocation(),type=document.getElementById("masterQuestionType").value,question=document.getElementById("masterQuestionText").value.trim(),marks=Number(document.getElementById("masterQuestionMarks").value);
+  if(!question)throw Error("প্রশ্ন লিখুন।");if(!Number.isFinite(marks)||marks<0)throw Error("নম্বর শূন্য বা তার বেশি হতে হবে।");
+  const optionIds=["masterOptionA","masterOptionB","masterOptionC","masterOptionD"],optionTexts=optionIds.map(id=>document.getElementById(id).value.trim());
+  if(type==="mcq"&&optionTexts.some(x=>!x))throw Error("MCQ-এর চারটি অপশন পূরণ করুন।");
+  const payload={question_text:question,explanation:document.getElementById("masterQuestionExplanation").value.trim()||null,question_type:type,options:type==="mcq"?optionTexts.map((text,i)=>({value:"abcd"[i],text})):[],marks,...location,subject:document.getElementById("masterSubject").value.trim()||null};
+  const {data:item,error}=await sb.from("academic_care_question_bank_items").insert(payload).select("id").single();
+  if(error)throw Error("প্রশ্ন সংরক্ষণ হয়নি: "+error.message);
+  if(type==="mcq"){
+   const {error:keyError}=await sb.from("academic_care_question_bank_answer_keys").insert({question_id:item.id,correct_option:document.getElementById("masterCorrectOption").value});
+   if(keyError){await sb.from("academic_care_question_bank_items").delete().eq("id",item.id);throw Error("সঠিক উত্তর সংরক্ষণ হয়নি; অসম্পূর্ণ প্রশ্নটি সরানোর চেষ্টা করা হয়েছে: "+keyError.message)}
+  }
+  e.target.reset();document.getElementById("masterQuestionMarks").value=1;syncMasterQuestionType();setMasterQuestionMessage(type==="mcq"?"MCQ ও সঠিক উত্তর মাস্টার প্রশ্ন ব্যাংকে সংরক্ষিত হয়েছে।":"CQ প্রশ্ন মাস্টার প্রশ্ন ব্যাংকে সংরক্ষিত হয়েছে।");await loadMasterQuestionList();
+ }catch(err){setMasterQuestionMessage(err.message||"প্রশ্ন সংরক্ষণ হয়নি।",true)}
+});
+document.getElementById("masterQuestionTemplate").addEventListener("click",()=>{
+ const csv='question,option_a,option_b,option_c,option_d,correct_option,marks,subject\n"বাংলাদেশের রাজধানী কী?",ঢাকা,চট্টগ্রাম,খুলনা,রাজশাহী,a,1,বাংলাদেশ';
+ const blob=new Blob(["\ufeff",csv],{type:"text/csv;charset=utf-8;"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="academic-care-mcq-template.csv";a.click();URL.revokeObjectURL(url)
+});
+document.getElementById("masterQuestionImport").addEventListener("click",async()=>{
+ const file=document.getElementById("masterQuestionFile").files[0];if(!file)return setMasterImportMessage("আগে CSV/Excel ফাইল নির্বাচন করুন।",true);
+ if(!window.XLSX)return setMasterImportMessage("CSV/Excel পাঠক লোড হয়নি; পেজ রিফ্রেশ করে চেষ্টা করুন।",true);
+ let location;try{location=masterQuestionLocation()}catch(err){return setMasterImportMessage(err.message,true)}
+ const button=document.getElementById("masterQuestionImport");button.disabled=true;setMasterImportMessage("ফাইল পড়া ও যাচাই করা হচ্ছে…");
+ try{
+  const workbook=XLSX.read(await file.arrayBuffer(),{type:"array"}),sheet=workbook.Sheets[workbook.SheetNames[0]],rows=XLSX.utils.sheet_to_json(sheet,{defval:"",raw:false});
+  if(!rows.length)throw Error("ফাইলে কোনো প্রশ্নের সারি পাওয়া যায়নি।");
+  const parsed=rows.map((row,index)=>{
+   const question=String(masterImportField(row,["question","questiontext","প্রশ্ন","প্রশ্নেরবিবরণ"])).trim();
+   const options=[["optiona","option1","কঅপশন","অপশনক","ক"],["optionb","option2","খঅপশন","অপশনখ","খ"],["optionc","option3","গঅপশন","অপশনগ","গ"],["optiond","option4","ঘঅপশন","অপশনঘ","ঘ"]].map(keys=>String(masterImportField(row,keys)).trim());
+   const correct=masterCorrectOption(masterImportField(row,["correctoption","correctanswer","answer","সঠিকউত্তর","উত্তর"]));
+   const rawMarks=String(masterImportField(row,["marks","mark","নম্বর","মান"])).trim(),marks=rawMarks===""?1:Number(rawMarks);
+   const subject=String(masterImportField(row,["subject","বিষয়","বিষয়"])).trim()||null,errors=[];
+   if(!question)errors.push("প্রশ্ন খালি");if(options.some(x=>!x))errors.push("চারটি অপশন পূরণ হয়নি");if(!correct)errors.push("সঠিক উত্তর ক/খ/গ/ঘ বা A/B/C/D হতে হবে");if(!Number.isFinite(marks)||marks<0)errors.push("নম্বর সঠিক নয়");
+   return {row:index+2,question,options,correct,marks,subject,errors}
+  });
+  const invalid=parsed.filter(x=>x.errors.length);if(invalid.length)throw Error("মোট "+bnDigits(invalid.length)+"টি সারিতে সমস্যা আছে; কোনো প্রশ্ন যোগ করা হয়নি। "+invalid.slice(0,8).map(x=>"সারি "+bnDigits(x.row)+": "+x.errors.join(", ")).join("। "));
+  if(!confirm("যাচাই সম্পন্ন: "+bnDigits(parsed.length)+"টি MCQ মাস্টার প্রশ্ন ব্যাংকে যোগ হবে। চালিয়ে যাবেন?"))return;
+  let saved=0;
+  for(const item of parsed){
+   const payload={question_text:item.question,question_type:"mcq",options:item.options.map((text,i)=>({value:"abcd"[i],text})),marks:item.marks,...location,subject:item.subject};
+   const {data:created,error}=await sb.from("academic_care_question_bank_items").insert(payload).select("id").single();
+   if(error)throw Error("সারি "+bnDigits(item.row)+" সংরক্ষণ হয়নি; সফলভাবে "+bnDigits(saved)+"টি যোগ হয়েছে। "+error.message);
+   const {error:keyError}=await sb.from("academic_care_question_bank_answer_keys").insert({question_id:created.id,correct_option:item.correct});
+   if(keyError){await sb.from("academic_care_question_bank_items").delete().eq("id",created.id);throw Error("সারি "+bnDigits(item.row)+"-এ সঠিক উত্তর সংরক্ষণ হয়নি; সফলভাবে "+bnDigits(saved)+"টি যোগ হয়েছে। "+keyError.message)}
+   saved++;
+  }
+  setMasterImportMessage("সফলভাবে "+bnDigits(saved)+"টি MCQ ও সঠিক উত্তর মাস্টার প্রশ্ন ব্যাংকে সংরক্ষিত হয়েছে।");document.getElementById("masterQuestionFile").value="";await loadMasterQuestionList();
+ }catch(err){setMasterImportMessage(err.message||"আমদানি করা যায়নি।",true)}
+ finally{button.disabled=false}
+});
+async function loadMasterQuestionList(){
+ const list=document.getElementById("masterQuestionList"),msg=document.getElementById("masterQuestionListMessage");
+ if(!list)return;list.innerHTML='<div class="listempty">প্রশ্ন লোড হচ্ছে…</div>';msg.textContent="";
+ try{
+  const {data:items,error}=await sb.from("academic_care_question_bank_items").select("id,question_text,question_type,options,marks,subject,explanation,created_at,category_id,folder_id,set_id").order("created_at",{ascending:false}).limit(50);
+  if(error)throw error;
+  if(!items||!items.length){list.innerHTML='<div class="listempty">এখনো কোনো প্রশ্ন যোগ করা হয়নি।</div>';return}
+  const ids=items.filter(x=>x.question_type==="mcq").map(x=>x.id);
+  let keys={};
+  if(ids.length){const {data:answers,error:answerError}=await sb.from("academic_care_question_bank_answer_keys").select("question_id,correct_option").in("question_id",ids);if(answerError)throw answerError;(answers||[]).forEach(x=>keys[x.question_id]=x.correct_option)}
+  list.innerHTML=items.map((x,i)=>{
+   const opts=Array.isArray(x.options)?x.options.map(o=>'<div>'+escapeHtml(({a:"ক",b:"খ",c:"গ",d:"ঘ"})[o.value]||o.value)+'. '+escapeHtml(o.text)+'</div>').join(""):"";
+   const answer=keys[x.id]?'<div><strong>সঠিক উত্তর: '+escapeHtml(({a:"ক",b:"খ",c:"গ",d:"ঘ"})[keys[x.id]]||keys[x.id])+'</strong></div>':"";
+   return '<div class="item"><strong>'+bnDigits(i+1)+'. ['+(x.question_type==="mcq"?"MCQ":"CQ")+'] '+escapeHtml(x.question_text)+'</strong><div class="muted">নম্বর: '+bnDigits(x.marks??1)+(x.subject?' · বিষয়: '+escapeHtml(x.subject):'')+'</div>'+opts+answer+'<div class="muted"><strong>ব্যাখ্যা:</strong> '+escapeHtml(x.explanation||"ব্যাখ্যা দেওয়া হয়নি")+'</div>'+'<div style="margin-top:8px"><button type="button" class="btn danger" data-delete-master-question="'+escapeHtml(x.id)+'">প্রশ্ন মুছুন</button></div></div>'
+  }).join("");
+  list.querySelectorAll("[data-delete-master-question]").forEach(b=>b.addEventListener("click",async()=>{
+   if(!confirm("এই প্রশ্নটি স্থায়ীভাবে মুছে ফেলবেন?"))return;
+   b.disabled=true;
+   try{const id=b.dataset.deleteMasterQuestion;const {error:keyErr}=await sb.from("academic_care_question_bank_answer_keys").delete().eq("question_id",id);if(keyErr)throw keyErr;const {error}=await sb.from("academic_care_question_bank_items").delete().eq("id",id);if(error)throw error;await loadMasterQuestionList()}
+   catch(err){b.disabled=false;msg.textContent="মুছতে সমস্যা হয়েছে: "+(err.message||"অজানা ত্রুটি");msg.className="notice error"}
+  }));
+ }catch(err){list.innerHTML='<div class="listempty">প্রশ্নের তালিকা লোড হয়নি।</div>';msg.textContent=err.message||"তালিকা লোড হয়নি।";msg.className="notice error"}
+}
+document.getElementById("refreshMasterQuestionList").addEventListener("click",loadMasterQuestionList);
+syncMasterQuestionType();
+loadMasterQuestionList();
+
+async function createAcademicCategory(){
+ const name=document.getElementById("newCategory").value.trim();if(!name)return categoryMessage("নতুন ক্যাটাগরির নাম লিখুন।",true);
+ const {data,error}=await sb.from("academic_care_categories").insert({name}).select("id,name").single();
+ if(error)return categoryMessage(error.message,true);
+ document.getElementById("newCategory").value="";await loadAcademicCategories();document.getElementById("categoryManager").value=String(data.id);document.getElementById("questionCategory").value=String(data.id);document.getElementById("masterCategory").value=String(data.id);await loadManagerFolders();await loadQuestionFolders();await loadMasterQuestionFolders();categoryMessage("নতুন ক্যাটাগরি তৈরি হয়েছে।");
+}
+async function renameAcademicCategory(){
+ const id=document.getElementById("categoryManager").value;if(!id)return categoryMessage("আগে ক্যাটাগরি নির্বাচন করুন।",true);
+ const old=categoryRows.find(x=>String(x.id)===id)?.name||"",name=prompt("নতুন ক্যাটাগরির নাম লিখুন:",old);if(name===null)return;
+ if(!name.trim())return categoryMessage("ক্যাটাগরির নাম খালি রাখা যাবে না।",true);
+ const {error}=await sb.from("academic_care_categories").update({name:name.trim()}).eq("id",id);if(error)return categoryMessage(error.message,true);
+ await loadAcademicCategories();categoryMessage("ক্যাটাগরির নাম পরিবর্তন হয়েছে। প্রশ্নের সোর্সে নতুন নাম দেখাবে।");
+}
+async function deleteAcademicCategory(){
+ const id=document.getElementById("categoryManager").value;if(!id)return categoryMessage("আগে ক্যাটাগরি নির্বাচন করুন।",true);
+ const [fr,qr]=await Promise.all([sb.from("academic_care_folders").select("id",{count:"exact",head:true}).eq("category_id",id),sb.from("academic_care_questions").select("id",{count:"exact",head:true}).eq("category_id",id)]);
+ if(fr.error||qr.error)return categoryMessage((fr.error||qr.error).message,true);
+ if((fr.count||0)||(qr.count||0))return categoryMessage("এই ক্যাটাগরিতে ফোল্ডার বা প্রশ্ন আছে। আগে সেগুলো অন্য ক্যাটাগরিতে সরান; কোনো রেকর্ড মুছে ফেলা হয়নি।",true);
+ if(!confirm("নির্বাচিত ক্যাটাগরি মুছে ফেলবেন?"))return;
+ const {error}=await sb.from("academic_care_categories").delete().eq("id",id);if(error)return categoryMessage(error.message,true);
+ await loadAcademicCategories();categoryMessage("ক্যাটাগরি মুছে ফেলা হয়েছে।");
+}
+async function createAcademicFolder(){
+ const category_id=document.getElementById("categoryManager").value,name=document.getElementById("newFolder").value.trim();
+ if(!category_id)return categoryMessage("আগে ক্যাটাগরি নির্বাচন করুন।",true);if(!name)return categoryMessage("ফোল্ডারের নাম লিখুন।",true);
+ const {data,error}=await sb.from("academic_care_folders").insert({category_id:Number(category_id),folder_name:name}).select("id").single();if(error)return categoryMessage(error.message,true);
+ document.getElementById("newFolder").value="";await loadManagerFolders(data.id);await loadQuestionFolders();await loadBankFolders();await loadMasterQuestionFolders();if(String(document.getElementById("masterCategory").value)===String(category_id)){document.getElementById("masterFolder").value=String(data.id);await loadMasterQuestionChapters()}categoryMessage("ফোল্ডার তৈরি হয়েছে।");
+}
+async function renameAcademicFolder(){
+ const id=document.getElementById("folderManager").value;if(!id)return categoryMessage("আগে ফোল্ডার নির্বাচন করুন।",true);
+ const old=document.getElementById("folderManager").selectedOptions[0]?.textContent||"",name=prompt("নতুন ফোল্ডারের নাম লিখুন:",old);if(name===null)return;if(!name.trim())return categoryMessage("ফোল্ডারের নাম খালি রাখা যাবে না।",true);
+ const {error}=await sb.from("academic_care_folders").update({folder_name:name.trim()}).eq("id",id);if(error)return categoryMessage(error.message,true);
+ await loadManagerFolders(id);await loadQuestionFolders();await loadBankFolders();await loadMasterQuestionFolders(id);categoryMessage("ফোল্ডারের নাম পরিবর্তন হয়েছে; প্রশ্নের সোর্সে নতুন নাম দেখাবে।");
+}
+async function deleteAcademicFolder(){
+ const id=document.getElementById("folderManager").value;if(!id)return categoryMessage("আগে ফোল্ডার নির্বাচন করুন।",true);
+ const [sr,qr]=await Promise.all([sb.from("academic_care_sets").select("id",{count:"exact",head:true}).eq("folder_id",id),sb.from("academic_care_questions").select("id",{count:"exact",head:true}).eq("folder_id",id)]);
+ if(sr.error||qr.error)return categoryMessage((sr.error||qr.error).message,true);if((sr.count||0)||(qr.count||0))return categoryMessage("এই ফোল্ডারে সেট বা প্রশ্ন আছে। আগে সেগুলো সরান; কোনো রেকর্ড মুছে ফেলা হয়নি।",true);
+ if(!confirm("নির্বাচিত ফোল্ডার মুছে ফেলবেন?"))return;const {error}=await sb.from("academic_care_folders").delete().eq("id",id);if(error)return categoryMessage(error.message,true);
+ await loadManagerFolders();await loadQuestionFolders();await loadBankFolders();await loadMasterQuestionFolders();categoryMessage("ফোল্ডার মুছে ফেলা হয়েছে।");
+}
+async function createAcademicSet(){
+ categoryMessage("সেট তৈরির আগে শ্রেণি → বিষয় → অধ্যায় নির্বাচন করতে হবে। কাঠামো ব্যবস্থাপনা খুলুন।",true);
+ window.open("https://fbpathshala.github.io/exam/taxonomy.html?section=academic","_blank","noopener");
+}
+async function renameAcademicSet(){
+ const id=document.getElementById("setManager").value;if(!id)return categoryMessage("আগে সেট নির্বাচন করুন।",true);
+ const old=document.getElementById("setManager").selectedOptions[0]?.textContent||"",name=prompt("নতুন সেটের নাম লিখুন:",old);if(name===null)return;if(!name.trim())return categoryMessage("সেটের নাম খালি রাখা যাবে না।",true);
+ const {error}=await sb.from("academic_care_sets").update({set_name:name.trim()}).eq("id",id);if(error)return categoryMessage(error.message,true);
+ await loadManagerSets(id);await loadQuestionSets();await loadBankSets();await loadMasterQuestionSets(id);categoryMessage("সেটের নাম পরিবর্তন হয়েছে; প্রশ্নের সোর্সে নতুন নাম দেখাবে।");
+}
+async function deleteAcademicSet(){
+ const id=document.getElementById("setManager").value;if(!id)return categoryMessage("আগে সেট নির্বাচন করুন।",true);
+ const {count,error:checkError}=await sb.from("academic_care_questions").select("id",{count:"exact",head:true}).eq("set_id",id);if(checkError)return categoryMessage(checkError.message,true);
+ if(count)return categoryMessage("এই সেটে প্রশ্ন আছে। আগে প্রশ্নগুলো অন্য সেটে সরান; কোনো রেকর্ড মুছে ফেলা হয়নি।",true);
+ if(!confirm("নির্বাচিত সেট মুছে ফেলবেন?"))return;const {error}=await sb.from("academic_care_sets").delete().eq("id",id);if(error)return categoryMessage(error.message,true);
+ await loadManagerSets();await loadQuestionSets();await loadBankSets();await loadMasterQuestionSets();categoryMessage("সেট মুছে ফেলা হয়েছে।");
+}
+function setupAcademicCategoryUI(){
+ const on=(id,fn)=>{const el=document.getElementById(id);if(el)el.addEventListener("click",fn)};
+ on("createCategory",createAcademicCategory);on("renameCategory",renameAcademicCategory);on("deleteCategory",deleteAcademicCategory);
+ on("createFolder",createAcademicFolder);on("renameFolder",renameAcademicFolder);on("deleteFolder",deleteAcademicFolder);
+ on("createSet",createAcademicSet);on("renameSet",renameAcademicSet);on("deleteSet",deleteAcademicSet);
+ const change=(id,fn)=>{const el=document.getElementById(id);if(el)el.addEventListener("change",fn)};
+ const input=(id,fn)=>{const el=document.getElementById(id);if(el)el.addEventListener("input",fn)};
+ change("categoryManager",()=>loadManagerFolders());
+ change("folderManager",()=>loadManagerSets());
+ change("questionCategory",()=>loadQuestionFolders());
+ change("questionFolder",()=>loadQuestionChapters());
+ change("questionChapter",()=>loadQuestionSets());
+ change("bankCategoryFilter",()=>{document.getElementById("bankFolderFilter").value="";document.getElementById("bankChapterFilter").value="";document.getElementById("bankSetFilter").value="";loadBankFolders();renderQuestionBank()});
+ change("bankFolderFilter",()=>{document.getElementById("bankChapterFilter").value="";document.getElementById("bankSetFilter").value="";loadBankChapters();renderQuestionBank()});
+ change("bankChapterFilter",()=>{document.getElementById("bankSetFilter").value="";loadBankSets();renderQuestionBank()});
+ change("bankSetFilter",renderQuestionBank);
+ input("bankSubjectFilter",renderQuestionBank);
+}
+
+const titles={home:"ড্যাশবোর্ড",questionCreate:"প্রশ্ন তৈরি",exams:"পরীক্ষা পরিচালনা",questionBank:"প্রশ্ন ব্যাংক",materials:"স্টাডি ম্যাটেরিয়াল",reviews:"উত্তর মূল্যায়ন",settings:"সিস্টেম সেটআপ"};
+const gate=document.getElementById("loginGate"),shell=document.querySelector(".shell"),authMessage=document.getElementById("authMessage");
+function message(t){authMessage.textContent=t}
+function showView(id){document.querySelectorAll(".view").forEach(v=>v.classList.toggle("active",v.id===id));document.querySelectorAll("[data-view]").forEach(b=>b.classList.toggle("active",b.dataset.view===id));document.getElementById("pageTitle").textContent=titles[id]||"ড্যাশবোর্ড";document.querySelector(".side")?.classList.remove("menu-open");document.getElementById("menuToggle")?.setAttribute("aria-expanded","false");if(id==="questionBank")loadQuestionBank();if(id==="questionCreate")loadMasterQuestionList();window.scrollTo({top:0,behavior:"smooth"})}
+document.getElementById("menuToggle").addEventListener("click",()=>{const side=document.querySelector(".side"),open=side.classList.toggle("menu-open");document.getElementById("menuToggle").setAttribute("aria-expanded",String(open));document.getElementById("menuToggle").setAttribute("aria-label",open?"মেনু বন্ধ করুন":"মেনু খুলুন")});
+document.querySelectorAll("[data-view]").forEach(b=>b.addEventListener("click",()=>showView(b.dataset.view)));
+document.querySelectorAll("[data-go]").forEach(b=>b.addEventListener("click",()=>showView(b.dataset.go)));
+function escapeHtml(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+let centralOpenExamId=null;
+function renderItems(arr,elId,countId,kind){if(kind==="exam"&&document.documentElement.classList.contains("central-exam-management")){const filter=document.getElementById("centralExamTypeFilter"),examiner=document.getElementById("centralExaminerFilter"),wrap=document.getElementById("centralExamFilters");if(filter&&wrap){wrap.hidden=false;const selected=filter.value,selectedExaminer=examiner?examiner.value:"";const normalizedType=x=>{const t=String(x.exam_type||String(x.meta||"").split(" · ")[0]||"MCQ").toUpperCase().replace(/[\s_-]/g,"");return t==="MCQ+CQ"||t==="MCQCQ"?"MCQ_CQ":t};arr=arr.filter(x=>(!selected||normalizedType(x)===selected)&&(!selectedExaminer||String(x.examiner||"নির্ধারিত নয়")===selectedExaminer))}}const el=document.getElementById(elId);document.getElementById(countId).textContent=bnDigits(arr.length)+"টি";if(!arr.length){const filtered=kind==="exam"&&document.documentElement.classList.contains("central-exam-management")&&(document.getElementById("centralExamTypeFilter")?.value||document.getElementById("centralExaminerFilter")?.value);el.innerHTML='<div class="listempty">' +(filtered?"এই ফিল্টারে কোনো পরীক্ষা পাওয়া যায়নি।":"এখনো কোনো পরীক্ষা যোগ করা হয়নি।")+'</div>';return}if(kind==="exam"&&document.documentElement.classList.contains("central-exam-management")){el.innerHTML=arr.map(x=>'<div class="central-exam-item"><div class="central-exam-row"><button type="button" class="btn light central-exam-name" data-copy-exam="'+escapeHtml(x.id)+'" data-token="'+escapeHtml(x.publicToken||"")+'">'+escapeHtml(x.title)+'</button><button type="button" class="btn ghost central-exam-menu" aria-label="কাজের মেনু" data-central-menu="'+escapeHtml(x.id)+'">'+(String(centralOpenExamId)===String(x.id)?"⌃":"☰")+'</button></div><div class="muted">'+escapeHtml(x.meta)+' · '+escapeHtml(x.status)+'</div>'+(String(centralOpenExamId)===String(x.id)?'<div class="central-exam-actions"><button type="button" class="btn" data-central-action="add" data-id="'+escapeHtml(x.id)+'">প্রশ্ন যোগ করুন</button><button type="button" class="btn light" data-central-action="remove-questions" data-id="'+escapeHtml(x.id)+'">প্রশ্ন বাদ দিন</button><button type="button" class="btn light" data-edit-exam="'+escapeHtml(x.id)+'">পরীক্ষার নাম পরিবর্তন</button><button type="button" class="btn light" data-central-action="settings" data-id="'+escapeHtml(x.id)+'">পরীক্ষার সেটিংস পরিবর্তন</button><button type="button" class="btn light" data-central-action="paper" data-id="'+escapeHtml(x.id)+'">প্রশ্নপত্র দেখুন/প্রিন্ট</button><button type="button" class="btn light" data-central-action="answer-key" data-id="'+escapeHtml(x.id)+'">সঠিক উত্তরপত্র দেখুন/প্রিন্ট</button><button type="button" class="btn light" data-central-action="review" data-id="'+escapeHtml(x.id)+'">ফলাফল / উত্তর পর্যালোচনা</button><button type="button" class="btn" data-toggle-status="exam" data-id="'+escapeHtml(x.id)+'" data-status="'+escapeHtml(x.dbStatus)+'">'+(x.dbStatus==="published"?"পরীক্ষা নিষ্ক্রিয় করুন":"পরীক্ষা সক্রিয়/প্রকাশ করুন")+'</button><button type="button" class="btn ghost" data-remove="exam" data-id="'+escapeHtml(x.id)+'">পরীক্ষা মুছুন</button></div>':'')+'</div>').join("");return}el.innerHTML=arr.map(x=>'<div class="item"><strong>'+escapeHtml(x.title)+'</strong><div class="muted">'+escapeHtml(x.meta)+' · '+escapeHtml(x.status)+'</div>'+(x.notes?'<p class="muted">'+escapeHtml(x.notes)+'</p>':'')+'<div class="btnrow" style="margin-top:10px">'+(kind==="exam"?'<button class="btn light" data-edit-exam="'+escapeHtml(x.id)+'">তথ্য সম্পাদনা</button>'+(x.dbStatus==="draft"?'<button class="btn light" data-preview-exam="'+escapeHtml(x.publicToken)+'">প্রিভিউ দেখুন</button>':''):'')+'<button class="btn" data-toggle-status="'+kind+'" data-id="'+escapeHtml(x.id)+'" data-status="'+escapeHtml(x.dbStatus)+'">'+(x.dbStatus==="published"?"অপ্রকাশিত করুন":"প্রকাশ করুন")+'</button><button class="btn ghost" data-remove="'+kind+'" data-id="'+escapeHtml(x.id)+'">মুছুন</button></div></div>').join("")}
+function updateQuestionExamOptions(){for(const id of ["questionExam","settingsExam","reviewExam"]){const sel=document.getElementById(id);const current=sel.value;sel.innerHTML=exams.map(x=>'<option value="'+escapeHtml(x.id)+'">'+escapeHtml(x.title)+'</option>').join("");if(!exams.length)sel.innerHTML='<option value="">প্রথমে পরীক্ষা তৈরি করুন</option>';else if(exams.some(x=>x.id===current))sel.value=current}loadSelectedSettings()}
+function updateCounts(){document.getElementById("examCount").textContent=bnDigits(exams.length);document.getElementById("materialCount").textContent=bnDigits(materials.length);document.getElementById("publishedCount").textContent=bnDigits([...exams,...materials].filter(x=>x.status==="published").length)}
+function examModel(x){return {id:x.id,title:x.title,publicToken:x.public_token,durationMinutes:Number(x.duration_minutes)||30,settings:x.settings||{},meta:(x.exam_type||"MCQ")+" · "+bnDigits(x.duration_minutes)+" মিনিট",examiner:String(x.examiner_name||x.created_by_name||x.creator_name||x.author_name||x.examiner||x.created_by||"নির্ধারিত নয়"),dbStatus:x.status,status:x.status==="published"?"প্রকাশিত":x.status==="draft"?"খসড়া":x.status,notes:x.description||""}}
+function materialModel(x){return {id:x.id,title:x.title,meta:(x.material_type||"ফাইল")+" · "+(x.subject||"বিষয় নির্ধারিত নয়"),dbStatus:x.status,status:x.status==="published"?"প্রকাশিত":x.status==="draft"?"খসড়া":x.status,notes:x.description||""}}
+document.getElementById("centralExamTypeFilter")?.addEventListener("change",()=>renderItems(exams,"examList","examListCount","exam"));
+document.getElementById("centralExaminerFilter")?.addEventListener("change",()=>renderItems(exams,"examList","examListCount","exam"));
+function updateCentralExaminerFilter(){const sel=document.getElementById("centralExaminerFilter");if(!sel)return;const current=sel.value,names=[...new Set(exams.map(x=>x.examiner||"নির্ধারিত নয়"))].sort((a,b)=>a.localeCompare(b,"bn"));sel.innerHTML='<option value="">সকল পরীক্ষক</option>'+names.map(n=>'<option value="'+escapeHtml(n)+'">'+escapeHtml(n)+'</option>').join("");if(names.includes(current))sel.value=current;}
+async function loadData(){document.getElementById("connectionState").textContent="ডেটাবেস লোড হচ্ছে";const [er,mr,sr,vr]=await Promise.all([sb.from("academic_care_exams").select("*").order("created_at",{ascending:false}),sb.from("academic_care_materials").select("*").order("created_at",{ascending:false}),sb.from("academic_care_submissions").select("id",{count:"exact",head:true}),sb.rpc("count_site_visitors")]);if(er.error||mr.error){document.getElementById("connectionState").textContent="ডেটাবেস ত্রুটি";alert("ডেটা লোড হয়নি: "+(er.error||mr.error).message);return}exams.splice(0,exams.length,...er.data.map(examModel));updateCentralExaminerFilter();materials.splice(0,materials.length,...mr.data.map(materialModel));renderItems(exams,"examList","examListCount","exam");renderItems(materials,"materialList","materialListCount","material");updateQuestionExamOptions();syncQuestionTypes();updateCounts();document.getElementById("examineeCount").textContent=sr.error?"—":bnDigits(sr.count||0);document.getElementById("visitorCount").textContent=vr.error?"—":bnDigits(vr.data||0);updateBankExamFilter();await loadAcademicCategories();document.getElementById("connectionState").textContent="ডেটাবেস সংযুক্ত"}
+
+document.querySelectorAll("[data-exam-step]").forEach(btn=>btn.addEventListener("click",()=>{const step=btn.dataset.examStep;document.querySelectorAll("[data-exam-step]").forEach(b=>{const active=b===btn;b.classList.toggle("active",active);b.setAttribute("aria-selected",String(active))});document.querySelectorAll("[data-exam-pane]").forEach(p=>p.classList.toggle("active",p.dataset.examPane===step));window.scrollTo({top:0,behavior:"smooth"})}));
+function updateBankExamFilter(){const sel=document.getElementById("bankExamFilter"),cur=sel.value;sel.innerHTML='<option value="">সব পরীক্ষা</option>'+exams.map(x=>'<option value="'+escapeHtml(x.id)+'">'+escapeHtml(x.title)+'</option>').join("");if(exams.some(x=>x.id===cur))sel.value=cur}
+async function loadQuestionBank(){const list=document.getElementById("questionBankList");list.innerHTML='<div class="listempty">প্রশ্ন ব্যাংক লোড হচ্ছে…</div>';const {data,error}=await sb.from("academic_care_questions").select("id,exam_id,question_text,question_type,options,marks,sort_order,created_at,category_id,folder_id,chapter_id,set_id,subject,academic_care_categories(name),academic_care_folders(folder_name),academic_care_sets(set_name)").order("created_at",{ascending:false});if(error){list.innerHTML='<div class="notice">প্রশ্ন লোড হয়নি: '+escapeHtml(error.message)+'</div>';return}bankQuestions.splice(0,bankQuestions.length,...data);renderQuestionBank()}
+function renderQuestionBank(){const list=document.getElementById("questionBankList"),q=document.getElementById("bankSearch").value.trim().toLocaleLowerCase(),examId=document.getElementById("bankExamFilter").value,type=document.getElementById("bankTypeFilter").value,catId=document.getElementById("bankCategoryFilter").value,folderId=document.getElementById("bankFolderFilter").value,chapterId=document.getElementById("bankChapterFilter").value,setId=document.getElementById("bankSetFilter").value,subject=document.getElementById("bankSubjectFilter").value.trim().toLocaleLowerCase();const filtered=bankQuestions.filter(x=>(!examId||x.exam_id===examId)&&(!type||x.question_type===type)&&(!catId||String(x.category_id)===catId)&&(!folderId||String(x.folder_id)===folderId)&&(!chapterId||String(x.chapter_id)===chapterId)&&(!setId||String(x.set_id)===setId)&&(!subject||String(x.subject||"").toLocaleLowerCase().includes(subject))&&(!q||(String(x.question_text||"")+" "+String(x.subject||"")+" "+(exams.find(e=>e.id===x.exam_id)?.title||"")).toLocaleLowerCase().includes(q)));if(!filtered.length){list.innerHTML='<div class="listempty">মিল পাওয়া যায়নি, অথবা এখনো কোনো প্রশ্ন যোগ করা হয়নি।</div>';return}const grouped=new Map();filtered.forEach(x=>{if(!grouped.has(x.exam_id))grouped.set(x.exam_id,[]);grouped.get(x.exam_id).push(x)});list.innerHTML=[...grouped.entries()].map(([id,items])=>{const ex=exams.find(e=>e.id===id),mcq=items.filter(x=>x.question_type==="mcq"),cq=items.filter(x=>x.question_type==="cq");return '<details class="bank-folder" open><summary>'+escapeHtml(ex?.title||"পরীক্ষা পাওয়া যায়নি")+' · '+bnDigits(items.length)+'টি প্রশ্ন</summary>'+(mcq.length?'<div class="notice" style="margin:10px 12px 0"><strong>MCQ সেট</strong> · '+bnDigits(mcq.length)+'টি</div>':'')+mcq.map(questionCard).join("")+(cq.length?'<div class="notice" style="margin:10px 12px 0"><strong>CQ সেট</strong> · '+bnDigits(cq.length)+'টি</div>':'')+cq.map(questionCard).join("")+'</details>'}).join("")}
+function questionCard(x,i){const opts=Array.isArray(x.options)?x.options:[];const source=[x.academic_care_categories?.name,x.academic_care_folders?.folder_name,x.academic_care_sets?.set_name,x.subject].filter(Boolean).join(" / ");return '<article class="bank-question"><span class="bank-tag">'+(x.question_type==="mcq"?"MCQ":"CQ")+'</span><span class="bank-tag">'+bnDigits(x.marks??0)+' নম্বর</span><p><strong>'+escapeHtml(x.question_text)+'</strong></p>'+(opts.length?'<div class="muted">'+opts.map((o,j)=>escapeHtml("কখগঘ"[j]||"")+'. '+escapeHtml(o.text||o.value||o)).join("　 ·　")+'</div>':'')+(source?'<div class="muted">Source: '+escapeHtml(source)+'</div>':'')+'<div class="bank-actions"><button class="btn light" type="button" data-edit-question="'+escapeHtml(x.id)+'">✏️ সম্পাদনা</button></div></article>'}
+document.getElementById("bankSearch").addEventListener("input",renderQuestionBank);document.getElementById("bankExamFilter").addEventListener("change",renderQuestionBank);document.getElementById("bankTypeFilter").addEventListener("change",renderQuestionBank);document.getElementById("refreshQuestionBank").addEventListener("click",loadQuestionBank);
+setupAcademicCategoryUI();
+let verifiedUserId=null;
+let verificationPromise=null;
+async function verifySession(session){
+  if(!session){verifiedUserId=null;gate.hidden=false;shell.hidden=true;return}
+  if(verifiedUserId===session.user.id&&!shell.hidden)return;
+  if(verificationPromise)return verificationPromise;
+  verificationPromise=(async()=>{
+    const {data,error}=await sb.rpc("academic_care_is_admin");
+    if(error){
+      gate.hidden=false;shell.hidden=true;
+      message("অ্যাডমিন অনুমতি যাচাই করা যায়নি। ইন্টারনেট/ডেটাবেস সংযোগ পরীক্ষা করে আবার চেষ্টা করুন। ("+error.message+")");
+      console.error("Academic Care admin verification RPC failed",error);
+      return;
+    }
+    if(data!==true){
+      verifiedUserId=null;
+      await sb.auth.signOut();
+      gate.hidden=false;shell.hidden=true;
+      message("এই লগইন অ্যাকাউন্টটি Academic Care অ্যাডমিন তালিকায় সক্রিয় নেই। সঠিক অ্যাডমিন ইমেইল দিয়ে প্রবেশ করুন বা অ্যাডমিন অনুমতি যাচাই করুন।");
+      return;
+    }
+    verifiedUserId=session.user.id;
+    gate.hidden=true;shell.hidden=false;message("");
+    const requestedView=new URLSearchParams(window.location.search).get("view");
+    if(document.documentElement.classList.contains("central-exam-management"))showView("exams");
+    else if(["questionCreate","exams","questionBank","materials","reviews","settings"].includes(requestedView))showView(requestedView);
+    try{await loadData()}catch(e){document.getElementById("connectionState").textContent="ডেটাবেস সংযোগে সমস্যা";console.error("Academic Care data load failed",e)}
+  })();
+  try{await verificationPromise}finally{verificationPromise=null}
+}
+document.getElementById("loginForm").addEventListener("submit",async e=>{e.preventDefault();message("প্রবেশ যাচাই হচ্ছে…");const {data,error}=await sb.auth.signInWithPassword({email:document.getElementById("loginEmail").value.trim(),password:document.getElementById("loginPassword").value});if(error){message("প্রবেশ করা যায়নি। ইমেইল/পাসওয়ার্ড যাচাই করুন।");return}await verifySession(data.session)});
+document.getElementById("logoutButton").addEventListener("click",async()=>{await sb.auth.signOut();gate.hidden=false;shell.hidden=true;message("আপনি লগআউট করেছেন।")});
+sb.auth.onAuthStateChange((event)=>{if(event==="SIGNED_OUT"){verifiedUserId=null;gate.hidden=false;shell.hidden=true}});
+let editingExamId=null;function resetExamEditor(){editingExamId=null;const f=document.getElementById("examForm");f.reset();document.getElementById("examDuration").value=30;document.getElementById("examVisibility").value="draft";f.querySelector('button[type="submit"]').textContent="ধাপ ১ · পরীক্ষা তৈরি করুন"}document.getElementById("examForm").addEventListener("submit",async e=>{e.preventDefault();const payload={title:document.getElementById("examTitle").value.trim(),exam_type:document.getElementById("examType").value,duration_minutes:Number(document.getElementById("examDuration").value),description:document.getElementById("examNotes").value.trim()||null};if(!payload.title||!Number.isInteger(payload.duration_minutes)||payload.duration_minutes<1){alert("পরীক্ষার নাম ও অন্তত ১ মিনিট সময় দিন।");return}if(editingExamId){const nextStatus=document.getElementById("examVisibility").value;const existing=exams.find(x=>x.id===editingExamId);if(nextStatus==="published"&&existing?.dbStatus!=="published"&&!confirm("প্রকাশ করলে শিক্ষার্থীরা পরীক্ষা দেখতে পারবে। প্রকাশ করবেন?"))return;const {data:saved,error}=await sb.from("academic_care_exams").update({...payload,status:nextStatus}).eq("id",editingExamId).select("id,title,exam_type,duration_minutes,status,description").maybeSingle();if(error||!saved){alert("পরীক্ষার তথ্য আপডেট হয়নি: "+(error?.message||"অ্যাডমিন অনুমতি যাচাই হয়নি"));return}if(saved.title!==payload.title||saved.exam_type!==payload.exam_type||Number(saved.duration_minutes)!==payload.duration_minutes||saved.status!==nextStatus){alert("পরীক্ষার তথ্য সংরক্ষণ যাচাই মেলেনি। পেজ রিফ্রেশ করে দেখুন।");return}resetExamEditor();await loadData();alert("পরীক্ষার তথ্য আপডেট ও যাচাই হয়েছে। আগের প্রশ্ন, উত্তর ও ফলাফল অক্ষত আছে।");return}const {data:{user}}=await sb.auth.getUser();payload.created_by=user?.id;payload.status="draft";const {error}=await sb.from("academic_care_exams").insert(payload);if(error){alert("পরীক্ষা সংরক্ষণ হয়নি: "+error.message);return}resetExamEditor();await loadData();alert("পরীক্ষার খসড়া ডেটাবেসে সংরক্ষিত হয়েছে।")});
+document.getElementById("materialForm").addEventListener("submit",async e=>{e.preventDefault();const file=document.getElementById("materialFile").files[0];let storagePath=null;if(file){if(file.size>50*1024*1024){alert("ফাইল ৫০ MB-এর বেশি হতে পারবে না");return}if(!["application/pdf","image/jpeg","image/png","image/webp"].includes(file.type)){alert("শুধু PDF, JPG, PNG বা WebP ফাইল দেওয়া যাবে");return}storagePath=crypto.randomUUID()+"/"+file.name.replace(/[^a-zA-Z0-9._-]/g,"_");const {error:upErr}=await sb.storage.from("academic-care-materials").upload(storagePath,file,{contentType:file.type,upsert:false});if(upErr){alert("ফাইল আপলোড হয়নি: "+upErr.message);return}}const payload={title:document.getElementById("materialTitle").value.trim(),material_type:document.getElementById("materialType").value,subject:document.getElementById("materialSubject").value.trim()||null,status:document.getElementById("materialStatus").value==="প্রকাশিত"?"published":"draft",description:document.getElementById("materialNotes").value.trim()||null,storage_path:storagePath};const {data:{user}}=await sb.auth.getUser();payload.created_by=user?.id;const {error}=await sb.from("academic_care_materials").insert(payload);if(error){if(storagePath)await sb.storage.from("academic-care-materials").remove([storagePath]);alert("ম্যাটেরিয়াল সংরক্ষণ হয়নি: "+error.message);return}e.target.reset();await loadData();alert("ম্যাটেরিয়াল সংরক্ষিত হয়েছে। অবস্থা প্রকাশিত হলে শিক্ষার্থীরা দেখতে পারবে।")});
+async function loadSubmissions(){const examId=document.getElementById("reviewExam").value;const list=document.getElementById("submissionList");if(!examId){list.textContent="প্রথমে একটি পরীক্ষা নির্বাচন করুন।";return}list.textContent="জমা উত্তর লোড হচ্ছে…";const {data,error}=await sb.from("academic_care_submissions").select("id,student_name,student_contact,answer_text,answer_file_path,mcq_answers,score,total_marks,grading_status,submitted_at").eq("exam_id",examId).order("submitted_at",{ascending:false});if(error){list.textContent="জমা উত্তর লোড হয়নি: "+error.message;return}if(!data.length){list.textContent="এই পরীক্ষায় এখনো কোনো উত্তর জমা হয়নি।";return}list.className="";list.innerHTML=data.map((x,i)=>'<article class="item" style="padding:16px 0"><strong>'+escapeHtml(bnDigits(i+1)+". "+x.student_name)+'</strong><div class="muted">জমা: '+escapeHtml(new Date(x.submitted_at).toLocaleString("bn-BD"))+' · অবস্থা: '+escapeHtml(x.grading_status)+'</div>'+(x.student_contact?'<p>যোগাযোগ: '+escapeHtml(x.student_contact)+'</p>':'')+(x.answer_text?'<div class="notice"><strong>লিখিত উত্তর</strong><p style="white-space:pre-wrap">'+escapeHtml(x.answer_text)+'</p></div>':'')+(x.answer_file_path?'<p><button class="btn light" type="button" data-answer-file="'+escapeHtml(x.answer_file_path)+'">উত্তরপত্রের ছবি খুলুন</button></p>':'')+'<details><summary>MCQ উত্তর দেখুন</summary><pre style="white-space:pre-wrap;overflow-wrap:anywhere">'+escapeHtml(JSON.stringify(x.mcq_answers,null,2))+'</pre></details><form class="gradeForm formgrid" data-submission="'+escapeHtml(x.id)+'" style="margin-top:12px"><div class="field"><label>প্রাপ্ত নম্বর</label><input name="score" type="number" min="0" step="0.5" value="'+(x.score==null?"":escapeHtml(x.score))+'" required></div><div class="field"><label>মোট নম্বর</label><input name="total" type="number" min="0" step="0.5" value="'+(x.total_marks==null?"":escapeHtml(x.total_marks))+'" required></div><div class="field full"><button class="btn" type="submit">নম্বর সংরক্ষণ / মূল্যায়ন সম্পন্ন</button></div></form></article>').join("")}
+document.getElementById("refreshSubmissions").addEventListener("click",loadSubmissions);
+document.getElementById("reviewExam").addEventListener("change",loadSubmissions);
+document.getElementById("submissionList").addEventListener("submit",async e=>{const form=e.target.closest(".gradeForm");if(!form)return;e.preventDefault();const score=Number(form.elements.score.value),total=Number(form.elements.total.value);if(score<0||total<0||score>total){alert("প্রাপ্ত নম্বর মোট নম্বরের চেয়ে বেশি হতে পারবে না");return}const {data:saved,error}=await sb.from("academic_care_submissions").update({score,total_marks:total,grading_status:"graded"}).eq("id",form.dataset.submission).select("id,score,total_marks,grading_status").maybeSingle();if(error){alert("নম্বর সংরক্ষণ হয়নি: "+error.message);return}if(!saved||Number(saved.score)!==score||Number(saved.total_marks)!==total||saved.grading_status!=="graded"){alert("নম্বর সংরক্ষণ যাচাই হয়নি। অ্যাডমিন অনুমতি ও সংযোগ পরীক্ষা করুন।");return}alert("নম্বর সংরক্ষণ ও যাচাই হয়েছে");await loadSubmissions()});
+document.getElementById("submissionList").addEventListener("click",async e=>{const b=e.target.closest("[data-answer-file]");if(!b)return;const {data,error}=await sb.storage.from("academic-care-answers").createSignedUrl(b.dataset.answerFile,300);if(error){alert("উত্তরপত্র খোলা যায়নি: "+error.message);return}window.open(data.signedUrl,"_blank","noopener")});
+function loadSelectedSettings(){const sel=document.getElementById("settingsExam");const x=exams.find(e=>e.id===sel.value);const st=x?.settings||{};document.getElementById("settingsDuration").value=x?.durationMinutes??30;document.getElementById("settingsTotalQuestions").value=st.total_questions??"";document.getElementById("settingsTotalMarks").value=st.total_marks??"";document.getElementById("settingsPassMark").value=st.pass_mark??0;document.getElementById("settingsMarksPerQuestion").value=st.marks_per_question??1;document.getElementById("settingsNegativeMark").value=st.negative_mark??0;document.getElementById("settingsExaminerName").value=st.examiner_name||"";document.getElementById("settingsExamDate").value=st.exam_date||"";document.getElementById("settingsStartTime").value=st.start_time||"";document.getElementById("settingsEndDate").value=st.end_date||"";document.getElementById("settingsEndTime").value=st.end_time||"";document.getElementById("settingsSyllabus").value=st.syllabus||"";document.getElementById("showResults").checked=st.show_results===true;document.getElementById("showPosition").checked=st.show_position===true;document.getElementById("showAnswerPaper").checked=st.show_answer_paper===true;document.getElementById("settingsShowAnswers").checked=st.show_answers===true;document.getElementById("settingsMultipleAttempts").checked=st.multiple_attempts===true;document.getElementById("settingsDeviceProtection").checked=st.device_attempt_protection!==false;document.getElementById("settingsRandomQuestions").checked=st.random_questions===true;document.getElementById("settingsRandomOptions").checked=st.random_options===true;document.getElementById("settingsShowPageLink").checked=st.show_page_link===true;document.getElementById("settingsDisplayMode").value=st.question_display_mode==="single"?"single":"all";document.getElementById("thankYouMessage").value=st.thank_you_message||"";document.getElementById("facebookPageUrl").value=st.facebook_page_url||"";document.getElementById("facebookGroupUrl").value=st.facebook_group_url||""}
+document.getElementById("settingsExam").addEventListener("change",loadSelectedSettings);
+document.getElementById("examSettingsForm").addEventListener("submit",async e=>{e.preventDefault();const id=document.getElementById("settingsExam").value;if(!id)return;const x=exams.find(e=>e.id===id);const num=id=>{const v=document.getElementById(id).value.trim();return v===""?null:Number(v)};const settings={...(x?.settings||{}),total_questions:num("settingsTotalQuestions"),total_marks:num("settingsTotalMarks"),pass_mark:num("settingsPassMark")??0,marks_per_question:num("settingsMarksPerQuestion")??1,negative_mark:num("settingsNegativeMark")??0,examiner_name:document.getElementById("settingsExaminerName").value.trim(),exam_date:document.getElementById("settingsExamDate").value||null,start_time:document.getElementById("settingsStartTime").value||null,end_date:document.getElementById("settingsEndDate").value||null,end_time:document.getElementById("settingsEndTime").value||null,syllabus:document.getElementById("settingsSyllabus").value.trim(),show_results:document.getElementById("showResults").checked,show_position:document.getElementById("showPosition").checked,show_answer_paper:document.getElementById("showAnswerPaper").checked,show_answers:document.getElementById("settingsShowAnswers").checked,multiple_attempts:document.getElementById("settingsMultipleAttempts").checked,device_attempt_protection:document.getElementById("settingsDeviceProtection").checked,random_questions:document.getElementById("settingsRandomQuestions").checked,random_options:document.getElementById("settingsRandomOptions").checked,show_page_link:document.getElementById("settingsShowPageLink").checked,question_display_mode:document.getElementById("settingsDisplayMode").value,thank_you_message:document.getElementById("thankYouMessage").value.trim(),facebook_page_url:document.getElementById("facebookPageUrl").value.trim(),facebook_group_url:document.getElementById("facebookGroupUrl").value.trim()};for(const [label,value] of [["মোট প্রশ্ন",settings.total_questions],["মোট নম্বর",settings.total_marks],["পাস নম্বর",settings.pass_mark],["প্রতি প্রশ্নের নম্বর",settings.marks_per_question],["নেগেটিভ মার্ক",settings.negative_mark]])if(value!==null&&(!Number.isFinite(value)||value<0||(label==="মোট প্রশ্ন"&&!Number.isInteger(value)))){alert(label+" সঠিকভাবে দিন। ঋণাত্মক মান দেওয়া যাবে না।");return}if(settings.total_marks!==null&&settings.pass_mark>settings.total_marks){alert("পাস নম্বর মোট নম্বরের চেয়ে বেশি হতে পারবে না।");return}for(const [label,value] of [["Facebook Page",settings.facebook_page_url],["Facebook Group",settings.facebook_group_url]])if(value){try{const u=new URL(value);if(!["http:","https:"].includes(u.protocol))throw Error()}catch(_){alert(label+"-এর সঠিক http/https লিংক দিন।");return}}const duration=Number(document.getElementById("settingsDuration").value);if(!Number.isInteger(duration)||duration<1){alert("পরীক্ষার সময় অন্তত ১ মিনিট দিন।");return}const {data:saved,error}=await sb.from("academic_care_exams").update({settings,duration_minutes:duration}).eq("id",id).select("id,settings,duration_minutes").maybeSingle();if(error){alert("সেটিংস সংরক্ষণ হয়নি: "+error.message);return}if(!saved){alert("সেটিংস সংরক্ষণ হয়নি: এই পরীক্ষায় অ্যাডমিন আপডেট অনুমতি পাওয়া যায়নি। আবার লগইন করে চেষ্টা করুন।");return}if(!saved.settings||saved.settings.show_results!==settings.show_results||saved.settings.show_position!==settings.show_position||saved.settings.show_answer_paper!==settings.show_answer_paper||saved.settings.facebook_group_url!==settings.facebook_group_url||saved.settings.question_display_mode!==settings.question_display_mode){alert("সেটিংস সংরক্ষণের যাচাই মেলেনি। পেজ রিফ্রেশ করে আবার চেষ্টা করুন।");return}await loadData();document.getElementById("settingsExam").value=id;loadSelectedSettings();alert("পরীক্ষার সেটিংস সংরক্ষণ ও যাচাই হয়েছে। আগের জমা উত্তর অক্ষত আছে।")})
+document.getElementById("questionType").addEventListener("change",()=>{const mcq=document.getElementById("questionType").value==="mcq";["optionA","optionB","optionC","optionD","correctOption"].forEach(id=>{document.getElementById(id).closest(".field").style.display=mcq?"flex":"none";document.getElementById(id).required=mcq&&id!=="correctOption"})});
+function syncQuestionTypes(){const ex=exams.find(x=>x.id===document.getElementById("questionExam").value);const sel=document.getElementById("questionType");const current=sel.value;const allowed=ex?.settings?.unused_question_types?["mcq","cq"]:ex?.exam_type==="MCQ"?["mcq"]:ex?.exam_type==="CQ"?["cq"]:["mcq","cq"];sel.innerHTML=allowed.map(t=>'<option value="'+t+'">'+(t==="mcq"?"MCQ — বহুনির্বাচনী":"CQ — লিখিত")+"</option>").join("");if(allowed.includes(current))sel.value=current;sel.dispatchEvent(new Event("change"));}
+document.getElementById("questionExam").addEventListener("change",syncQuestionTypes);
+function clearQuestionEdit(resetForm=true){editingQuestionId=null;if(resetForm)document.getElementById("questionForm").reset();document.getElementById("questionMarks").value=1;document.getElementById("questionExam").disabled=false;document.getElementById("questionType").disabled=false;document.getElementById("questionEditNotice").hidden=true;document.getElementById("questionSubmitButton").textContent="প্রশ্ন সংরক্ষণ";document.getElementById("cancelQuestionEdit").hidden=true;document.getElementById("questionType").dispatchEvent(new Event("change"))}
+async function startQuestionEdit(id){const question=bankQuestions.find(x=>x.id===id);if(!question){alert("প্রশ্নটি তালিকায় পাওয়া যায়নি। রিফ্রেশ করে আবার চেষ্টা করুন।");return}let answerKey=null;if(question.question_type==="mcq"){const {data,error}=await sb.from("academic_care_answer_keys").select("question_id,correct_option").eq("question_id",id).maybeSingle();if(error){alert("সঠিক উত্তর লোড হয়নি: "+error.message);return}answerKey=data}showView("exams");editingQuestionId=id;document.getElementById("questionExam").value=question.exam_id;syncQuestionTypes();document.getElementById("questionExam").disabled=true;document.getElementById("questionType").value=question.question_type;document.getElementById("questionType").disabled=true;document.getElementById("questionMarks").value=question.marks??1;document.getElementById("questionCategory").value=question.category_id?String(question.category_id):"";await loadQuestionFolders(question.folder_id||"",question.chapter_id||"");await loadQuestionSets(question.set_id||"");document.getElementById("questionSubject").value=question.subject||"";document.getElementById("questionText").value=question.question_text||"";const opts=Array.isArray(question.options)?question.options:[];for(const [value,field] of [["a","optionA"],["b","optionB"],["c","optionC"],["d","optionD"]])document.getElementById(field).value=opts.find(o=>o.value===value)?.text||"";if(answerKey?.correct_option)document.getElementById("correctOption").value=answerKey.correct_option;document.getElementById("questionType").dispatchEvent(new Event("change"));document.getElementById("questionEditNotice").hidden=false;document.getElementById("questionSubmitButton").textContent="পরিবর্তন সংরক্ষণ";document.getElementById("cancelQuestionEdit").hidden=false;document.getElementById("questionForm").scrollIntoView({behavior:"smooth",block:"start"})}
+document.getElementById("cancelQuestionEdit").addEventListener("click",()=>clearQuestionEdit());
+document.getElementById("questionBankList").addEventListener("click",e=>{const button=e.target.closest("[data-edit-question]");if(button)startQuestionEdit(button.dataset.editQuestion)});
+document.getElementById("questionForm").addEventListener("submit",async e=>{e.preventDefault();const examId=document.getElementById("questionExam").value;if(!examId){alert("আগে একটি পরীক্ষা তৈরি করুন");return}const exam=exams.find(x=>x.id===examId);const type=document.getElementById("questionType").value;if(exam?.exam_type==="MCQ"&&type!=="mcq"||exam?.exam_type==="CQ"&&type!=="cq"){alert("এই পরীক্ষার ধরন অনুযায়ী প্রশ্নের ধরন নির্বাচন করুন।");return}const opts=[["a","optionA"],["b","optionB"],["c","optionC"],["d","optionD"]].map(([value,id])=>({value,text:document.getElementById(id).value.trim()}));if(type==="mcq"&&opts.some(o=>!o.text)){alert("MCQ-এর চারটি অপশনই পূরণ করুন");return}const categoryId=document.getElementById("questionCategory").value,folderId=document.getElementById("questionFolder").value,chapterId=document.getElementById("questionChapter").value,setId=document.getElementById("questionSet").value;if(categoryId&&(!folderId||!chapterId||!setId)){alert("শ্রেণি নির্বাচন করলে বিষয়, অধ্যায় ও সেটও নির্বাচন করুন।");return}const payload={question_text:document.getElementById("questionText").value.trim(),options:type==="mcq"?opts:[],marks:Number(document.getElementById("questionMarks").value),category_id:categoryId?Number(categoryId):null,folder_id:folderId?Number(folderId):null,chapter_id:chapterId?Number(chapterId):null,set_id:setId?Number(setId):null,subject:document.getElementById("questionSubject").value.trim()||null};if(editingQuestionId){const id=editingQuestionId;const {error}=await sb.from("academic_care_questions").update(payload).eq("id",id);if(error){alert("প্রশ্নের পরিবর্তন সংরক্ষণ হয়নি: "+error.message);return}if(type==="mcq"){const {data:key,error:keyReadError}=await sb.from("academic_care_answer_keys").select("question_id,correct_option").eq("question_id",id).maybeSingle();if(keyReadError){alert("প্রশ্ন আপডেট হয়েছে, কিন্তু সঠিক উত্তর যাচাই হয়নি: "+keyReadError.message);await loadQuestionBank();return}const correct_option=document.getElementById("correctOption").value;const result=key?await sb.from("academic_care_answer_keys").update({correct_option}).eq("question_id",id):await sb.from("academic_care_answer_keys").insert({question_id:id,correct_option});if(result.error){alert("প্রশ্ন আপডেট হয়েছে, কিন্তু সঠিক উত্তর সংরক্ষণ হয়নি: "+result.error.message+"। প্রশ্নটি অক্ষত আছে; আবার সম্পাদনা করে সঠিক উত্তর সংরক্ষণ করুন।");await loadQuestionBank();return}}clearQuestionEdit();await loadQuestionBank();alert("প্রশ্ন, অপশন, নম্বর ও সঠিক উত্তর আপডেট হয়েছে। আগের প্রশ্নটি অক্ষত রেখে সেটিই পরিবর্তন করা হয়েছে।");return}const {data:lastQuestion,error:orderError}=await sb.from("academic_care_questions").select("sort_order").eq("exam_id",examId).order("sort_order",{ascending:false}).limit(1).maybeSingle();if(orderError){alert("প্রশ্নের ক্রমিক নম্বর যাচাই হয়নি: "+orderError.message);return}const nextSortOrder=Number(lastQuestion?.sort_order??0)+1;const {data:q,error}=await sb.from("academic_care_questions").insert({exam_id:examId,...payload,question_type:type,sort_order:nextSortOrder}).select("id").single();if(error){alert("প্রশ্ন সংরক্ষণ হয়নি: "+error.message);return}if(type==="mcq"){const {error:keyErr}=await sb.from("academic_care_answer_keys").insert({question_id:q.id,correct_option:document.getElementById("correctOption").value});if(keyErr){alert("প্রশ্ন সংরক্ষিত হয়েছে, কিন্তু সঠিক উত্তর সংরক্ষণ হয়নি: "+keyErr.message);return}}e.target.reset();document.getElementById("questionMarks").value=1;alert("প্রশ্ন সংরক্ষণ হয়েছে।")});
+async function openCentralRemoveQuestions(examId){
+  const host=document.getElementById("examList");
+  const row=[...host.querySelectorAll(".central-exam-item")].find(el=>el.querySelector('[data-central-menu="'+CSS.escape(String(examId))+'"]'));
+  if(!row)return;
+  row.querySelector(".central-remove-questions")?.remove();
+  const panel=document.createElement("section");panel.className="panel central-remove-questions";
+  panel.innerHTML='<h3>এই পরীক্ষা থেকে প্রশ্ন বাদ দিন</h3><p class="muted">শিক্ষার্থীর জমা উত্তর থাকলে রেকর্ডের নিরাপত্তার জন্য প্রশ্ন মোছা বন্ধ থাকবে।</p><div class="listempty">প্রশ্ন লোড হচ্ছে…</div><div class="btnrow"><button type="button" class="btn ghost" data-remove-cancel>বন্ধ করুন</button><button type="button" class="btn" data-remove-confirm disabled>নির্বাচিত প্রশ্ন বাদ দিন</button></div><p class="muted" data-remove-message></p>';
+  row.append(panel);
+  panel.querySelector("[data-remove-cancel]").onclick=()=>panel.remove();
+  const list=panel.querySelector(".listempty"),msg=panel.querySelector("[data-remove-message]"),confirmBtn=panel.querySelector("[data-remove-confirm]");
+  const [qr,sr]=await Promise.all([
+    sb.from("academic_care_questions").select("id,question_text,question_type,sort_order").eq("exam_id",examId).order("sort_order"),
+    sb.from("academic_care_submissions").select("id",{count:"exact",head:true}).eq("exam_id",examId)
+  ]);
+  if(qr.error||sr.error){list.textContent="প্রশ্ন বা শিক্ষার্থীর রেকর্ড যাচাই করা যায়নি। নিরাপত্তার জন্য মোছা বন্ধ।";msg.textContent=(qr.error||sr.error).message;return}
+  if((sr.count||0)>0){list.textContent="এই পরীক্ষায় শিক্ষার্থীর জমা উত্তর আছে। রেকর্ড অক্ষত রাখতে প্রশ্ন মোছা বন্ধ রাখা হয়েছে।";return}
+  if(!qr.data?.length){list.textContent="এই পরীক্ষায় কোনো প্রশ্ন নেই।";return}
+  list.className="";list.replaceChildren();const chosen=new Set();
+  qr.data.forEach(q=>{const label=document.createElement("label");label.className="q";const cb=document.createElement("input");cb.type="checkbox";cb.value=String(q.id);cb.onchange=()=>{cb.checked?chosen.add(cb.value):chosen.delete(cb.value);confirmBtn.disabled=!chosen.size};const text=document.createElement("span");text.textContent=(q.question_type==="mcq"?"MCQ: ":"CQ: ")+(q.question_text||"প্রশ্ন");label.append(cb,text);list.append(label)});
+  confirmBtn.disabled=false;confirmBtn.onclick=async()=>{
+    if(!chosen.size){msg.textContent="আগে প্রশ্ন নির্বাচন করুন।";return}
+    if(!confirm("নির্বাচিত প্রশ্নগুলো এই পরীক্ষা থেকে স্থায়ীভাবে বাদ দেবেন?"))return;
+    confirmBtn.disabled=true;
+    const ids=[...chosen];
+    const keyResult=await sb.from("academic_care_answer_keys").delete().in("question_id",ids);
+    if(keyResult.error){msg.textContent="সঠিক উত্তর মুছতে সমস্যা: "+keyResult.error.message;confirmBtn.disabled=false;return}
+    const del=await sb.from("academic_care_questions").delete().eq("exam_id",examId).in("id",ids);
+    if(del.error){msg.textContent="প্রশ্ন বাদ হয়নি: "+del.error.message;confirmBtn.disabled=false;return}
+    msg.textContent="নির্বাচিত প্রশ্ন বাদ দেওয়া হয়েছে।";await loadData();const updated=[...document.querySelectorAll(".central-exam-item")].find(el=>el.querySelector('[data-central-menu="'+CSS.escape(String(examId))+'"]'));if(updated){centralOpenExamId=String(examId);renderItems(exams,"examList","examListCount","exam");}
+  };
+}
+async function printCentralExamPaper(examId,withAnswers){
+ const exam=exams.find(x=>String(x.id)===String(examId));if(!exam)return;
+ const qr=await sb.from("academic_care_questions").select("id,question_text,question_type,options,marks,sort_order").eq("exam_id",examId).order("sort_order");
+ if(qr.error){alert("প্রশ্নপত্র লোড হয়নি: "+qr.error.message);return}
+ const questions=qr.data||[];let keys={};
+ if(withAnswers){const ids=questions.filter(q=>q.question_type==="mcq").map(q=>q.id);if(ids.length){const kr=await sb.from("academic_care_answer_keys").select("question_id,correct_option").in("question_id",ids);if(kr.error){alert("সঠিক উত্তর লোড হয়নি: "+kr.error.message);return}keys=Object.fromEntries((kr.data||[]).map(k=>[k.question_id,k.correct_option]))}}
+ const letters={a:"ক",b:"খ",c:"গ",d:"ঘ"};
+ const body=questions.map((q,i)=>{const opts=Array.isArray(q.options)?q.options:[];let out="<article><b>"+bnDigits(i+1)+". "+escapeHtml(q.question_text||"")+"</b> ("+escapeHtml(q.marks??1)+" নম্বর)";if(opts.length)out+="<ol>"+opts.map(o=>"<li>"+escapeHtml(o.text||"")+(withAnswers&&keys[q.id]===o.value?" ✓":"")+"</li>").join("")+"</ol>";if(withAnswers&&keys[q.id])out+="<p><b>সঠিক উত্তর: "+escapeHtml(letters[keys[q.id]]||keys[q.id])+"</b></p>";return out+"</article>"}).join("");
+ const w=window.open("","_blank");if(!w){alert("প্রিন্ট পেজ খুলতে ব্রাউজারের পপ-আপ অনুমতি দিন।");return}
+ w.document.write('<!doctype html><html lang="bn"><meta charset="utf-8"><title>'+escapeHtml(exam.title)+(withAnswers?" — সঠিক উত্তরপত্র":" — প্রশ্নপত্র")+'</title><style>body{font-family:system-ui,sans-serif;max-width:850px;margin:30px auto;padding:0 20px;color:#111}h1{text-align:center}article{margin:18px 0;break-inside:avoid}button{padding:8px 14px}@media print{button{display:none}}</style><h1>'+escapeHtml(exam.title)+(withAnswers?" — সঠিক উত্তরপত্র":" — প্রশ্নপত্র")+'</h1><p>সময়: '+bnDigits(exam.durationMinutes)+' মিনিট</p>'+body+'<button onclick="window.print()">প্রিন্ট / PDF হিসেবে সংরক্ষণ</button></html>');w.document.close();
+}
+function openCentralExamPane(step,examId){document.documentElement.classList.remove("central-review-open");document.querySelectorAll("[data-exam-pane]").forEach(p=>p.classList.toggle("active",p.dataset.examPane===String(step)));if(step==="2"){document.getElementById("questionExam").value=examId||"";document.getElementById("questionExam").dispatchEvent(new Event("change"))}if(step==="3"){document.getElementById("settingsExam").value=examId||"";document.getElementById("settingsExam").dispatchEvent(new Event("change"))}window.scrollTo({top:0,behavior:"smooth"})}
+document.addEventListener("click",async e=>{const menu=e.target.closest("[data-central-menu]");if(menu){centralOpenExamId=String(centralOpenExamId)===String(menu.dataset.centralMenu)?null:menu.dataset.centralMenu;renderItems(exams,"examList","examListCount","exam");return}const copyExam=e.target.closest("[data-copy-exam]");if(copyExam){const x=exams.find(v=>String(v.id)===String(copyExam.dataset.copyExam));const url=new URL("student.html?exam="+encodeURIComponent(x?.publicToken||""),location.href).href;try{await navigator.clipboard.writeText(url);alert("পরীক্ষার লিংক কপি হয়েছে।")}catch(_){prompt("পরীক্ষার লিংক কপি করুন",url)}return}const centralAction=e.target.closest("[data-central-action]");if(centralAction){const action=centralAction.dataset.centralAction;if(action==="new"){editingExamId=null;resetExamEditor();openCentralExamPane("1");return}const id=centralAction.dataset.id;if(action==="add"){openCentralExamPane("2",id);return}if(action==="remove-questions"){openCentralRemoveQuestions(id);return}if(action==="paper"){printCentralExamPaper(id,false);return}if(action==="answer-key"){printCentralExamPaper(id,true);return}if(action==="settings"){openCentralExamPane("3",id);return}if(action==="review"){document.documentElement.classList.add("central-review-open");document.querySelectorAll(".view").forEach(v=>v.classList.toggle("active",v.id==="reviews"));document.getElementById("reviewExam").value=id;document.getElementById("reviewExam").dispatchEvent(new Event("change"));document.getElementById("refreshSubmissions").click();const review=document.getElementById("reviews");review.insertAdjacentHTML("afterbegin",'<button type="button" class="btn ghost central-review-back" data-central-action="back">← পরীক্ষা তালিকায় ফিরুন</button>');window.scrollTo({top:0,behavior:"smooth"});return}if(action==="back"){document.documentElement.classList.remove("central-review-open");document.querySelectorAll(".view").forEach(v=>v.classList.toggle("active",v.id==="exams"));document.getElementById("reviews").querySelectorAll(".central-review-back").forEach(b=>b.remove());return}}const editExam=e.target.closest("[data-edit-exam]");if(editExam){const x=exams.find(v=>v.id===editExam.dataset.editExam);if(!x)return;editingExamId=x.id;document.getElementById("examTitle").value=x.title;document.getElementById("examType").value=x.exam_type||"MCQ";document.getElementById("examDuration").value=x.durationMinutes;document.getElementById("examVisibility").value=x.dbStatus==="published"?"published":"draft";document.getElementById("examNotes").value=x.notes||"";document.querySelector('[data-view="exams"]').click();if(document.documentElement.classList.contains("central-exam-management"))openCentralExamPane("1");document.getElementById("examForm").querySelector('button[type="submit"]').textContent="পরীক্ষার তথ্য আপডেট করুন";document.getElementById("examTitle").focus();return}const preview=e.target.closest("[data-preview-exam]");if(preview){window.open("student.html?preview="+encodeURIComponent(preview.dataset.previewExam),"_blank","noopener");return}const toggle=e.target.closest("[data-toggle-status]");if(toggle){const kind=toggle.dataset.toggleStatus,table=kind==="exam"?"academic_care_exams":"academic_care_materials",nextStatus=toggle.dataset.status==="published"?"draft":"published";if(nextStatus==="published"&&!confirm("এই আইটেমটি প্রকাশ করলে শিক্ষার্থীরা এটি দেখতে পারবে। প্রকাশ করবেন?"))return;toggle.disabled=true;const {error}=await sb.from(table).update({status:nextStatus}).eq("id",toggle.dataset.id);if(error){alert("অবস্থা পরিবর্তন হয়নি: "+error.message);toggle.disabled=false;return}await loadData();alert(nextStatus==="published"?"প্রকাশ করা হয়েছে।":"অপ্রকাশিত করা হয়েছে।");return}const b=e.target.closest("[data-remove]");if(!b)return;if(!confirm("এই আইটেমটি মুছবেন?"))return;const table=b.dataset.remove==="exam"?"academic_care_exams":"academic_care_materials";if(table==="academic_care_exams"){const {count,error:countError}=await sb.from("academic_care_submissions").select("id",{count:"exact",head:true}).eq("exam_id",b.dataset.id);if(countError){alert("পরীক্ষার জমা উত্তর যাচাই করা যায়নি; নিরাপত্তার জন্য মুছতে দেওয়া হচ্ছে না।");return}if(count>0){alert("এই পরীক্ষায় শিক্ষার্থীর উত্তর জমা হয়েছে। রেকর্ড সুরক্ষার জন্য পরীক্ষাটি মুছতে দেওয়া হচ্ছে না।");return}}const {error}=await sb.from(table).delete().eq("id",b.dataset.id);if(error){alert("মুছতে সমস্যা: "+error.message);return}await loadData()});
+if(new URLSearchParams(window.location.search).get("central")==="1"){
+  document.querySelector(".side")?.remove();
+  document.querySelector(".top")?.remove();
+  document.getElementById("home")?.remove();
+  document.querySelector(".shell")?.style.setProperty("display","block","important");
+  document.querySelector(".shell")?.style.setProperty("min-height","0","important");
+  document.querySelector("main")?.style.setProperty("padding","12px","important");
+}
+(async()=>{const {data:{session}}=await sb.auth.getSession();await verifySession(session)})();
+</script>
+
+</body>
+</html>
