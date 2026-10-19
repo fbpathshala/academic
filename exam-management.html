@@ -38,17 +38,25 @@
 
     /* Central exam-management entry: show only Academic Care exam workflow, not the full dashboard */
     html.central-exam-management .shell{display:block;min-height:100vh}
-    html.central-exam-management .side,html.central-exam-management .top,
-    html.central-exam-management #home,html.central-exam-management #questionCreate,
-    html.central-exam-management #questionBank,html.central-exam-management #materials,
-    html.central-exam-management #reviews,html.central-exam-management #settings,
-    html.central-exam-management .view:not(#exams):not(#reviews),
-    html.central-exam-management [data-view],html.central-exam-management #menuToggle{display:none!important}
+    html.central-exam-management .side,
+    html.central-exam-management .top,
+    html.central-exam-management #home,
+    html.central-exam-management #questionCreate,
+    html.central-exam-management #questionBank,
+    html.central-exam-management #materials,
+    html.central-exam-management #reviews,
+    html.central-exam-management #settings,
+    html.central-exam-management .view:not(#exams),
+    html.central-exam-management [data-view],
+    html.central-exam-management #menuToggle,
+    html.central-exam-management body>header,
+    html.central-exam-management body>nav,
+    html.central-exam-management body>footer{display:none!important}
     html.central-exam-management #exams{display:block!important}
     html.central-exam-management #exams [data-exam-pane]:not(.active){display:none!important}
     html.central-exam-management #exams [data-exam-pane].active{display:block!important}
     html.central-exam-management main{padding:18px clamp(12px,3vw,28px) 40px;max-width:1100px;margin:0 auto}
-    html.central-exam-management #exams{display:block!important}html.central-exam-management.central-review-open #exams{display:none!important}html.central-exam-management.central-review-open #reviews{display:block!important}html.central-exam-management.central-review-open #reviews.view.active{display:block!important}
+    html.central-exam-management #exams{display:block!important}html.central-exam-management.central-review-open #exams{display:none!important}html.central-exam-management.central-review-open #reviews{display:none!important}html.central-exam-management.central-review-open #reviews.view.active{display:none!important}
     html.central-exam-management #exams>.panel:first-child .sectionhead h2{font-size:1.3rem}
     html.central-exam-management #exams:before{content:"🎓 Academic Care — পরীক্ষা পরিচালনা";display:block;font-size:1.45rem;font-weight:800;margin:0 0 18px;color:#193449}
     /* Central exam-management must open the exam list (step 4), not the exam-creation wizard (step 1). */
