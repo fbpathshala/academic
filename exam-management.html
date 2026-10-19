@@ -294,6 +294,7 @@ async function loadAcademicCategories(){
   el.innerHTML=optionHtml(categoryRows,"id","name",id==="bankCategoryFilter"?"সব বিভাগ":"বিভাগ নির্বাচন করুন");
   el.value="";
  }
+ updateReviewFilters();
  if(document.getElementById("categoryManager"))await loadManagerFolders();
  await loadQuestionFolders();
  await loadBankFolders();
