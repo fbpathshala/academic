@@ -1,12 +1,24 @@
 <!doctype html>
-<html lang="bn"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>Academic Care — লিংক খোঁজা হচ্ছে</title></head>
+<html lang="bn"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>Academic Care — লিংক খোঁজা হচ্ছে</title><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script></head>
 <body><p id="status">আপনার চাওয়া পৃষ্ঠা খোঁজা হচ্ছে…</p><script>
 (function(){
  const p=location.pathname;
  let m=p.match(/^\/academic\/exam\/([^/]+)\/?$/);
  if(m){location.replace('/academic/student.html?examid='+encodeURIComponent(m[1]));return;}
  m=p.match(/^\/academic\/material\/([^/]+)\/?$/);
- if(m){location.replace('/academic/student.html?material='+encodeURIComponent(m[1])+'#materials');return;}
+ if(m){resolveMaterial(m[1]);return;}
+ async function resolveMaterial(id){
+  try{
+   const sb=supabase.createClient('https://ydvbnalhcnfqpxkkmywr.supabase.co','sb_publishable_xCbSWDkASsbUPl-WmygyMw_eVrJY_9a');
+   const own=await sb.from('academic_care_materials').select('id').eq('id',id).eq('status','published').maybeSingle();
+   if(own.error)throw own.error;
+   if(own.data){location.replace('/academic/student.html?material='+encodeURIComponent(id)+'#materials');return;}
+   const shared=await sb.from('study_materials').select('id,department').eq('id',id).eq('published',true).eq('department','academic_care').maybeSingle();
+   if(shared.error)throw shared.error;
+   if(shared.data){location.replace('/exam/academic-study-materials.html#material-'+encodeURIComponent(id));return;}
+   document.getElementById('status').textContent='এই স্টাডি ম্যাটেরিয়ালটি পাওয়া যায়নি অথবা প্রকাশিত নয়।';
+  }catch(e){document.getElementById('status').textContent='লিংকটি খোলা যাচ্ছে না। কিছুক্ষণ পর আবার চেষ্টা করুন.';}
+ }
  document.getElementById('status').textContent='এই লিংকটি পাওয়া যায়নি। Academic Care হোম পেইজে ফিরে যান।';
 })();
 </script></body></html>
