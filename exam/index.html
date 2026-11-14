@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#155e75">
+<title>Academic Care — পরীক্ষার সূচিপত্র</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{font-family:system-ui,-apple-system,"Noto Sans Bengali",sans-serif;color:#193449;background:#f3f7fa;--teal:#155e75;--line:#dce6ec;--muted:#667987}
+*{box-sizing:border-box}body{margin:0}header{background:white;border-bottom:1px solid var(--line);padding:16px max(18px,calc((100% - 1050px)/2));font-weight:800;color:var(--teal)}header a{color:inherit;text-decoration:none}
+main{max-width:1050px;margin:auto;padding:25px 18px 50px}.hero{padding:25px;border-radius:18px;background:linear-gradient(120deg,#155e75,#0f766e);color:white}.hero h1{margin:0 0 8px}.hero p{line-height:1.7;margin:0}
+.panel{margin-top:22px;background:white;border:1px solid var(--line);border-radius:14px;padding:18px}.panel h2{margin:0 0 12px;color:var(--teal)}
+.count{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:#fff}.count strong{font-size:25px;color:var(--teal)}
+.notice{background:#fff8e7;border:1px solid #f1dfa8;border-radius:10px;padding:12px;line-height:1.6;color:#66521b}.notice.success{background:#eaf8f0;border-color:#b9e3c9;color:#17633a}.notice.error{background:#fff0f0;border-color:#f2c3c3;color:#a12626}
+.table-wrap{width:100%;overflow-x:auto;border:2px solid #526b7c;border-radius:4px;margin-top:14px}
+table{width:100%;min-width:480px;border-collapse:collapse;table-layout:fixed;background:#fff;color:#193449}
+caption{caption-side:top;padding:12px 10px;background:#eaf1f4;color:#24495c;font-size:17px;font-weight:800;border-bottom:1px solid #9aabb6}
+th,td{border:1px solid #8497a5;padding:13px 12px;vertical-align:middle;font-size:14px;line-height:1.65}
+th{background:#e1edf0;color:#174b5d;text-align:center;font-weight:800;border-bottom:2px solid #526b7c}
+tbody tr:nth-child(even) td{background:#f7f9f9}tbody tr:hover td{background:#eef7f7}
+.number{width:72px;text-align:center;font-weight:800;color:#294e66}
+.exam-title{font-weight:700;text-align:left;overflow-wrap:anywhere}
+.exam-link{color:#155e75;text-decoration:none;font-weight:800}.exam-link:hover{text-decoration:underline;color:#0f766e}
+.exam-meta{margin-top:3px;font-size:12px;color:#667987;font-weight:500}
+.exam-state{width:125px;text-align:center}
+.chip{display:inline-block;padding:7px 12px;border:1px solid #8db99b;border-radius:3px;background:#e8f5ed;color:#17633a;font-size:13px;font-weight:800;white-space:nowrap}
+.back{display:inline-block;margin-top:16px;color:var(--teal);font-weight:700;text-decoration:none}
+footer{text-align:center;padding:20px;color:var(--muted)}
+@media(max-width:600px){main{padding:18px 12px 35px}.hero{padding:19px}.panel{padding:13px}th,td{padding:10px 9px;font-size:12px}.number{width:58px}.exam-state{width:105px}}
+</style>
+</head>
+<body>
+<header><a href="/academic/student.html">🎓 Academic Care</a></header>
+<main>
+<section class="hero"><h1>পরীক্ষার সূচিপত্র</h1><p>প্রকাশিত পরীক্ষাগুলো থেকে আপনার নির্দিষ্ট পরীক্ষাটি নির্বাচন করুন।</p></section>
+<section class="panel">
+ <h2>📋 প্রকাশিত পরীক্ষাসমূহ</h2>
+ <div class="count"><strong>মোট প্রকাশিত পরীক্ষা</strong><strong id="examCount">লোড হচ্ছে…</strong></div>
+ <div id="message" class="notice">পরীক্ষার তালিকা লোড হচ্ছে…</div>
+ <div id="examTable"></div>
+ <a class="back" href="/academic/student.html">← Academic Care হোম পেইজে ফিরে যান</a>
+</section>
+</main>
+<footer>Academic Care · শিক্ষা সবার জন্য</footer>
+<script>
+(function(){
+ const sb=window.supabase.createClient("https://ydvbnalhcnfqpxkkmywr.supabase.co","sb_publishable_xCbSWDkASsbUPl-WmygyMw_eVrJY_9a");
+ const bn=n=>String(n).replace(/\d/g,d=>"০১২৩৪৫৬৭৮৯"[Number(d)]);
+ const message=document.getElementById("message"),host=document.getElementById("examTable"),count=document.getElementById("examCount");
+ function td(row,value,cls){const cell=document.createElement("td");if(cls)cell.className=cls;cell.textContent=value;row.append(cell);return cell}
+ async function load(){
+  try{
+   const {data,error}=await sb.from("academic_care_exams").select("id,title,exam_type,duration_minutes,description,created_at").eq("status","published").order("created_at",{ascending:false});
+   if(error)throw error;
+   const rows=data||[];count.textContent=bn(rows.length);
+   if(!rows.length){message.textContent="এখনো কোনো পরীক্ষা প্রকাশিত হয়নি।";host.replaceChildren();return}
+   message.className="notice success";message.textContent=bn(rows.length)+"টি প্রকাশিত পরীক্ষা পাওয়া গেছে।";
+   const wrap=document.createElement("div");wrap.className="table-wrap";const table=document.createElement("table");
+   const caption=document.createElement("caption");caption.textContent="সূচিপত্র";table.append(caption);
+   const cols=document.createElement("colgroup"),c1=document.createElement("col"),c2=document.createElement("col"),c3=document.createElement("col");c1.style.width="72px";c3.style.width="125px";cols.append(c1,c2,c3);table.append(cols);
+   const thead=document.createElement("thead"),hr=document.createElement("tr");
+   ["ক্রমিক","পরীক্ষার নাম","পরীক্ষার স্ট্যাটাস"].forEach(label=>{const th=document.createElement("th");th.scope="col";th.textContent=label;hr.append(th)});
+   thead.append(hr);table.append(thead);
+   const tbody=document.createElement("tbody");
+   rows.forEach((item,index)=>{
+    const tr=document.createElement("tr");td(tr,bn(index+1),"number");
+    const title=td(tr,"","exam-title"),link=document.createElement("a");link.className="exam-link";link.href="/academic/exam/"+encodeURIComponent(item.id);link.textContent=item.title||"নামহীন পরীক্ষা";title.append(link);
+    const meta=document.createElement("div");meta.className="exam-meta";meta.textContent=(item.exam_type||"পরীক্ষা")+" · "+bn(item.duration_minutes||0)+" মিনিট · আইডি: "+bn(item.id);title.append(meta);
+    const state=td(tr,"","exam-state"),chip=document.createElement("span");chip.className="chip";chip.textContent="প্রকাশিত";state.append(chip);tbody.append(tr);
+   });
+   table.append(tbody);wrap.append(table);host.replaceChildren(wrap);
+  }catch(error){count.textContent="—";message.className="notice error";message.textContent="পরীক্ষার তালিকা লোড করা যায়নি। কিছুক্ষণ পর আবার চেষ্টা করুন।";console.error("Academic exam index error:",error)}
+ }
+ load();
+})();
+</script>
+</body></html>
