@@ -3,9 +3,9 @@
 <body><p id="status">আপনার চাওয়া পৃষ্ঠা খোঁজা হচ্ছে…</p><script>
 (function(){
  const p=location.pathname;
- let m=p.match(/^\\/academic\\/exam\\/([^/]+)\\/?$/);
+ let m=p.match(/^\/academic\/exam\/([^/]+)\/?$/);
  if(m){location.replace('/academic/student.html?examid='+encodeURIComponent(m[1]));return;}
- m=p.match(/^\\/academic\\/material\\/([^/]+)\\/?$/);
+ m=p.match(/^\/academic\/material\/([^/]+)\/?$/);
  if(m){location.replace('/academic/student.html?material='+encodeURIComponent(m[1])+'#materials');return;}
  document.getElementById('status').textContent='এই লিংকটি পাওয়া যায়নি। Academic Care হোম পেইজে ফিরে যান।';
 })();
